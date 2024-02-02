@@ -1,0 +1,1277 @@
+# Webalizer V2.23-08 Incremental Data - 07/30/2023 23:24:56
+2023 7 30 23 24 56
+6649 5809 165 158 77 90 1171653244 4607 253 0
+6 2 623 12 30
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+14 7 18248 2 7 3
+1351 1199 101638277 33 812 45
+409 356 34570033 7 244 9
+167 154 12514445 3 62 3
+291 254 36506309 35 143 25
+107 95 15290887 22 46 22
+219 191 19881856 6 137 9
+95 90 2648491 2 74 7
+282 223 21795279 4 196 10
+207 176 10973032 12 139 10
+155 132 20218401 14 89 14
+150 126 12777483 7 75 9
+488 442 24134696 9 397 24
+86 82 7706554 4 62 7
+339 293 14580035 6 267 7
+904 824 477476131 7 701 9
+722 611 250356413 6 598 18
+158 124 19912825 7 129 7
+505 430 88653849 6 429 17
+0 0 0 0 0 0
+316 283 32082756 175
+236 200 35694052 124
+362 336 47555297 178
+532 425 53758559 370
+244 209 25894088 211
+119 106 2859822 103
+255 226 42239121 171
+75 60 7317929 56
+186 143 10261894 145
+261 226 23335823 162
+1514 1399 114128224 1051
+945 834 228595258 777
+480 415 253850352 362
+47 43 45287563 19
+132 102 127510169 55
+41 36 2455663 24
+4 4 6003 2
+15 14 2385057 6
+38 34 5484002 19
+130 118 19870899 116
+204 156 33904446 121
+156 136 43668586 89
+319 274 11057561 247
+38 30 2450120 24
+3
+0
+0
+5809
+0
+0
+0
+0
+0
+21
+0
+51
+579
+0
+145
+0
+0
+0
+0
+0
+0
+3
+0
+0
+0
+0
+0
+0
+0
+0
+3
+0
+0
+0
+0
+31
+0
+0
+4
+0
+0
+# -urls- 
+/faculty-tasks/get-task/get-submissions-attachments
+0 36 0 1303 3 2
+/.well-known/acme-challenge/letsencrypt_1689512962_8144a9ca8be3e813
+0 1 0 0 0 0
+/faculty-tasks/completed
+0 22 0 93305 0 0
+/faculty-tasks/get-task
+0 5 0 0 0 0
+/admin-home
+0 224 0 565343 16 19
+/faculty-tasks/missing
+0 16 0 66817 0 0
+/admin/images/home.svg
+0 7 0 2796 0 0
+/.well-known/acme-challenge/YpqJs4hTSUbSIYHg4P42yTztz3oDmce47e90MKIxnYc
+0 2 0 1023 0 0
+/admin-requests/account/reject
+0 1 0 2 0 0
+/admin/images/pattern4.svg
+0 25 0 4577 0 0
+/faculty/css/faculty_tasks_sidebar.css
+0 22 0 8474 0 0
+/register-faculty
+0 33 0 47130 0 1
+/admin-tasks/admin/images/home.svg
+0 3 0 54 0 0
+/logo.png
+0 2 0 17126 0 0
+/admin/images/user.png
+0 25 0 386998 0 0
+/faculty-tasks/get-task/instructions/unsubmit
+0 16 0 368 0 2
+/faculty/css/faculty_department_request.css
+0 8 0 2429 0 0
+/login-faculty
+0 164 0 326477 10 7
+/faculty/css/faculty_dashboard_my_tasks.css
+0 25 0 66132 0 0
+/faculty-tasks/get-task/instructions/turn-in
+0 34 0 5865 2 2
+/admin-tasks
+0 293 0 2760369 6 11
+/faculty-profile
+0 20 0 115941 0 0
+/admin-tasks/get-task/submissions/decide
+0 11 0 110 0 0
+/admin-tasks/get-task/preview-file-selected/loading
+0 50 0 26117 0 0
+/faculty-tasks/get-task/instructions
+0 94 0 865873 3 0
+/admin/css/admin_show_department_sidebar.css
+0 12 0 4460 0 0
+/auth/images/background_admin.jpg
+0 24 0 425406865 0 0
+/.well-known/acme-challenge/letsencrypt_1689512962_b5d96f816f5360e1
+0 1 0 0 0 0
+/auth/images/PUPLogo.png
+0 144 0 16980466 0 0
+/faculty/images/pattern4.svg
+0 12 0 1990 0 0
+/admin/images/PUPLogo.png
+0 31 0 2594977 0 0
+/admin/css/admin_navbar.css
+0 25 0 7268 0 0
+/faculty/css/faculty_get_task_instructions.css
+0 27 0 78520 0 0
+/unzipper.php
+0 3 0 0 0 0
+/admin/css/admin_tasks.css
+0 17 0 35385 0 0
+/admin-requests/department/accept
+0 6 0 12 0 0
+/admin/css/admin_requests_account.css
+0 14 0 14232 0 0
+/faculty/css/faculty_home_department_assigned_tasks.css
+0 33 0 71460 0 0
+/logs
+0 1 0 18 0 0
+/faculty-home/department/members
+0 26 0 116991 1 1
+/faculty-dashboard/assigned-task/timeline
+0 29 0 97107 0 0
+/faculty/css/faculty_dashboard_sidebar.css
+0 23 0 8920 0 0
+/admin-tasks/department/category/search
+0 9 0 3205 0 0
+/admin-tasks/get-task/download-file
+0 1 0 46 0 0
+/faculty/images/PUPLogo.png
+0 27 0 2947943 0 0
+/admin/css/admin_show_department_assigned_tasks.css
+0 12 0 23720 0 0
+/faculty/css/faculty_navbar.css
+0 46 0 12306 0 0
+/faculty/css/faculty_dashboard_assigned_task_timeline.css
+0 14 0 36072 0 0
+/admin-home/show-department/assigned-tasks
+0 68 0 543475 0 1
+/register-admin
+0 6 0 9729 0 0
+/admin-dashboard/department-task/get-statistics
+0 119 0 10187 0 1
+/faculty-tasks/get-task/undefined
+0 6 0 108 0 1
+/admin/css/requests_sidebar.css
+0 14 0 5352 0 0
+/admin-home/show-department/assigned-tasks/ongoing
+0 10 0 91865 0 0
+/faculty-tasks
+0 130 0 507501 2 5
+/admin-tasks/late-completed
+0 37 0 349001 0 0
+/admin/css/admin_dashboard_department_tasks.css
+0 14 0 36072 0 0
+/admin/css/admin_get_task_instructions.css
+0 19 0 41820 0 0
+/faculty-home/department/assigned-tasks/late-completed
+0 14 0 74152 0 0
+/favicon.ico
+0 231 0 1915 0 0
+/admin-logs/search
+0 12 0 26963 0 0
+/faculty-profile/validate-fields
+0 47 0 2544 0 0
+/dashboard/get-statistics
+0 1 0 18 0 0
+/admin-dashboard/department-task/timeline
+0 30 0 166503 0 0
+/admin/css/admin_dashboard_assigned_task_timeline.css
+0 9 0 21042 0 0
+/choose-login
+0 118 0 146520 0 0
+/faculty-password-forgot
+0 3 0 5085 0 0
+/faculty-home/department/leave
+0 4 0 206 0 0
+/faculty/css/faculty_profile.css
+0 12 0 13900 0 0
+/faculty-home/join-department
+0 16 0 263 0 1
+/admin-dashboard/department-task/timeline/get-statistics
+0 35 0 1195 0 0
+/admin/css/admin_get_task_task_overview.css
+0 12 0 32461 0 0
+/admin-tasks/missing
+0 28 0 261439 0 0
+/auth/images/home.svg
+0 15 0 7376 0 0
+/admin-tasks/get-task/instructions
+0 127 0 1237420 0 0
+/faculty-home/department/assigned-tasks/missing
+0 11 0 57494 0 0
+/Public/home/js/check.js
+0 5 0 7190 0 0
+/admin-home/show-department/members
+0 19 0 69206 0 0
+/faculty/css/faculty_home_department_sidebar.css
+0 24 0 9366 0 0
+/admin-tasks/filter-department
+0 38 0 30152 0 0
+/faculty-tasks/get-task/preview-file-selected
+0 48 0 4759 0 1
+/admin-logs
+0 136 0 616332 11 8
+/faculty-tasks/get-task/preview-file-selected/loading
+0 20 0 10660 0 0
+/admin/css/admin_show_department_overview.css
+0 5 0 8853 0 0
+/auth/css/faculty_forgot_password.css
+0 1 0 1195 0 0
+/dashboard
+0 1 0 18 0 0
+/.well-known/acme-challenge/letsencrypt_1689512962_3cee2a74c55b0f37
+0 1 0 0 0 0
+/faculty-home
+0 45 0 125633 2 1
+/auth/images/faculty_bg.jpg
+0 58 0 97806375 0 0
+/admin/css/tasks_sidebar.css
+0 21 0 8474 0 0
+/admin-tasks/get-task/task-overview
+0 52 0 165276 0 1
+/admin-home/show-department/assigned-tasks/create-task
+0 2 0 1872 0 0
+/admin-dashboard/get-statistics
+0 1 0 18 0 0
+/auth/css/login_faculty.css
+0 56 0 30376 0 0
+/login-admin
+0 168 0 328518 21 17
+/auth/css/login_admin.css
+0 49 0 29311 0 0
+/admin-tasks/ongoing
+0 42 0 392955 0 3
+/auth/images/pup_sample_pic.jpg
+0 96 0 533091722 0 0
+/admin/css/admin_show_department_members.css
+0 5 0 4800 0 0
+/submit-register-faculty
+0 2 0 36 1 0
+/admin-dashboard
+0 1 0 18 0 0
+/admin-requests/department
+0 42 0 191108 1 0
+/.well-known/acme-challenge/K931KwT3vj6CxZNQvNNWvFr3DlFed4_K_HRsuc69Se8
+0 2 0 1023 0 0
+/admin/css/admin_selected_task_sidebar.css
+0 19 0 7582 0 0
+/admin-requests/department/acceptAll
+0 3 0 6 0 0
+/admin-tasks/create-task
+0 14 0 23281 0 0
+/faculty-home/department/members/search
+0 6 0 1172 0 0
+/admin-dashboard/department-task/statistics
+0 162 0 857419 2 2
+/auth/css/register_faculty.css
+0 12 0 12961 0 0
+/admin/css/admin_get_task_submissions.css
+0 13 0 34656 0 0
+/auth/images/admin_bg.jpg
+0 33 0 71903272 0 0
+/admin-tasks/update-task
+0 12 0 891 0 0
+/admin-tasks/completed
+0 48 0 451867 0 0
+/admin-tasks/category/filter-department
+0 21 0 5533 0 0
+/admin-tasks/get-task/submissions/get-attachments
+0 59 0 5627 1 0
+/admin-tasks/search
+0 2 0 780 0 0
+/static/admin/javascript/hetong.js
+0 5 0 7190 0 0
+/admin/images/PUPLogo2.png
+0 1 0 122050 0 0
+/
+0 189 0 352586 119 20
+/faculty-tasks/late-completed
+0 13 0 55011 0 0
+/auth/css/register_admin.css
+0 2 0 1280 0 0
+/faculty-tasks/get-task/get-attachments
+0 91 0 2484 5 0
+/faculty-home/department/assigned-tasks/ongoing
+0 12 0 63049 0 0
+/admin-home/show-department/assigned-tasks/late-completed
+0 12 0 110661 0 0
+/faculty/images/user.png
+0 30 0 437476 0 0
+/auth/images/user.svg
+0 18 0 6400 0 0
+/admin-tasks/get-task/submissions
+0 103 0 779261 0 15
+/admin-home/show-department/assigned-tasks/missing
+0 11 0 101026 0 0
+/dashboard/statistics
+0 1 0 18 0 0
+/admin-password-forgot
+0 1 0 2517 0 0
+/admin/css/admin_requests_department.css
+0 14 0 14232 0 0
+/admin-home/show-department/overview
+0 15 0 50954 0 0
+/auth/css/choose_login.css
+0 85 0 37282 0 0
+/admin-tasks/get-department-members
+0 100 0 83574 0 0
+/faculty-home/department/assigned-tasks
+0 122 0 643887 4 5
+/robots.txt
+0 4 0 2024 0 0
+/.well-known/acme-challenge/letsencrypt_1689512962_9aeaee2d57cf7830
+0 1 0 0 0 0
+/admin/css/admin_home.css
+0 25 0 7314 0 0
+/standards/loading_standards.js
+0 142 0 27244 0 0
+/admin-tasks/get-task/preview-file-selected
+0 27 0 3403 0 0
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+0 5 0 6705 4 0
+/faculty-tasks/ongoing
+0 12 0 50237 0 0
+/faculty/images/home.svg
+0 5 0 1864 0 0
+/admin-requests/account/search
+0 2 0 4 0 0
+/standards/loading_standards.css
+0 140 0 55848 0 0
+/admin-home/show-department/assigned-tasks/completed
+0 13 0 119988 0 0
+/faculty-profile/save
+0 9 0 2208 0 0
+/faculty/images/user-profile.png
+0 43 0 282282 0 0
+/faculty-tasks/get-task/download-file
+0 7 0 322 0 0
+/admin-tasks/get-task/get-attachments
+0 89 0 2434 26 0
+/admin/css/admin_logs.css
+0 18 0 38672 0 0
+/faculty-dashboard/my-tasks
+0 73 0 233337 2 0
+/faculty/css/faculty_selected_task_sidebar.css
+0 26 0 11150 0 0
+/faculty/css/faculty_home_department_members.css
+0 9 0 8330 0 0
+/faculty-home/department/assigned-tasks/completed
+0 17 0 90062 0 0
+/admin-requests/account
+0 166 0 720479 5 5
+/faculty/css/faculty_home.css
+0 13 0 5522 0 0
+/standards/css_standards.css
+0 136 0 40616 0 0
+# End Of Table - urls
+# -sites- (monthly)
+65.154.226.170
+0 8 7 2573115 1 1689505016
+/
+66.249.75.200
+0 1 1 506 0 0
+-
+173.252.107.9
+0 1 1 122050 0 0
+-
+69.171.249.4
+0 1 1 122050 0 0
+-
+52.58.51.176
+0 1 1 2672 1 1689244360
+/
+205.169.39.247
+0 11 9 2572497 1 1689501292
+/
+112.203.133.247
+0 1 1 0 1 1689936852
+/admin-home
+18.218.9.43
+0 4 2 3024 0 0
+-
+47.254.76.138
+0 1 1 2677 1 1689546892
+/
+69.63.184.3
+0 1 1 122050 0 0
+-
+112.203.130.16
+0 930 845 419020488 5 1690460734
+/choose-login
+173.252.83.2
+0 1 1 122050 0 0
+-
+173.252.83.1
+0 1 1 122050 0 0
+-
+196.196.37.11
+0 1 1 2674 1 1689715953
+/
+173.252.83.5
+0 1 1 122646 0 0
+-
+173.252.79.9
+0 1 1 122439 0 0
+-
+173.252.79.2
+0 1 1 122050 0 0
+-
+110.54.166.200
+0 94 89 9414877 2 1689388113
+/admin-dashboard/get-statistics
+54.186.239.111
+0 9 9 2692215 1 1689247338
+/
+51.68.184.196
+0 7 7 2567494 1 1689258793
+/
+93.159.230.90
+0 4 4 10714 4 1690686196
+/
+173.252.107.5
+0 1 1 122050 0 0
+-
+173.245.203.3
+0 2 2 127085 1 1689618555
+/
+212.102.57.88
+0 2 2 127085 1 1689594810
+/
+112.203.129.72
+0 250 215 12895272 8 1690014930
+/login-admin
+173.252.79.5
+0 1 1 122050 0 0
+-
+69.63.189.1
+0 1 1 122050 0 0
+-
+112.203.130.223
+0 482 437 58825177 6 1690549162
+/login-faculty
+66.249.75.199
+0 5 5 5708 1 1690609331
+/
+133.242.140.127
+0 2 2 3001 1 1689524916
+/
+196.242.46.100
+0 1 1 2674 1 1689247664
+/
+112.203.134.220
+0 175 152 10329920 4 1689693899
+/login-admin
+112.203.134.40
+0 62 56 2705689 5 1690103290
+/admin-dashboard/department-task/statistics
+173.252.127.10
+0 1 1 122050 0 0
+-
+155.190.2.33
+0 2 1 3633 1 1690010779
+/
+47.251.15.21
+0 2 2 2876 0 0
+-
+34.254.53.125
+0 18 18 5384444 1 1689498628
+/
+63.246.149.131
+0 8 8 4401495 1 1689245183
+/
+173.252.79.119
+0 1 1 122050 0 0
+-
+131.226.103.22
+0 235 211 21072991 7 1690448189
+/login-faculty
+69.171.231.8
+0 1 1 122646 0 0
+-
+66.115.189.178
+0 1 1 2533 1 1689498661
+/
+47.88.87.97
+0 2 2 2876 0 0
+-
+69.171.231.117
+0 1 1 122439 0 0
+-
+13.38.66.98
+0 2 2 127085 1 1689618554
+/
+77.74.177.119
+0 1 1 2673 1 1690455401
+/
+66.249.77.99
+0 2 2 1850 1 1690353519
+/
+69.171.249.8
+0 1 1 122646 0 0
+-
+180.190.214.30
+0 176 142 201970852 6 1690706854
+/faculty-tasks
+112.203.132.7
+0 319 292 6346963 17 1690196145
+/faculty-home/department/assigned-tasks
+66.220.149.8
+0 2 1 123033 0 0
+-
+124.220.185.184
+0 9 7 2568632 1 1689617757
+/
+178.128.173.223
+0 2 1 3639 1 1689608593
+/
+23.83.130.182
+0 2 2 127085 1 1689252808
+/
+112.203.129.240
+0 126 87 490965 4 1690583474
+/admin-tasks
+131.226.103.102
+0 563 537 27187045 6 1689919350
+/admin-home
+93.159.230.87
+0 1 1 2672 1 1689245685
+/
+69.171.251.1
+0 1 1 122050 0 0
+-
+112.203.135.6
+0 418 359 58257670 10 1690703735
+/faculty-home/department/assigned-tasks
+47.242.105.176
+0 12 12 19596 4 1689548397
+/
+112.203.134.97
+0 339 278 17281635 9 1689856191
+/login-faculty
+176.67.82.3
+0 1 1 1341 1 1689595089
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+175.176.16.52
+0 137 118 58843840 1 1690493924
+/admin-tasks
+52.87.44.246
+0 8 8 2567494 1 1689591194
+/
+67.21.32.155
+0 2 2 127085 1 1689594810
+/
+18.246.42.78
+0 2 0 1990 0 0
+-
+180.190.31.41
+0 35 32 9648411 3 1689998723
+/login-faculty
+134.238.202.161
+0 2 1 3632 1 1690011633
+/
+185.162.223.37
+0 1 1 2681 1 1690590049
+/
+152.32.70.168
+0 26 23 6224551 2 1690352664
+/submit-register-faculty
+69.171.249.1
+0 1 1 122050 0 0
+-
+112.121.59.108
+0 134 115 27052579 3 1689283195
+/login-faculty
+143.244.44.174
+0 1 1 0 1 1689936751
+/admin-home
+18.236.212.96
+0 7 7 2567493 1 1689245601
+/
+120.28.64.121
+0 11 10 2570700 1 1689713760
+/
+112.203.135.116
+0 78 73 5097364 5 1690271247
+/admin-logs
+112.198.97.10
+0 59 54 10629253 3 1689832198
+/login-admin
+173.252.79.3
+0 1 1 122050 0 0
+-
+69.171.251.120
+0 1 0 1029 1 1689242262
+/
+34.235.127.144
+0 2 1 3634 1 1689826635
+/
+112.203.133.107
+0 2 2 3604 1 1689589700
+/login-admin
+173.252.87.112
+0 2 2 124878 1 1689211891
+/
+112.203.128.112
+0 726 612 34083368 16 1689249262
+/login-admin
+135.125.173.82
+0 7 7 2567492 1 1689251457
+/
+52.58.12.201
+0 1 1 2671 1 1689898993
+/
+93.180.239.151
+0 7 7 2567494 1 1689247009
+/
+66.249.75.198
+0 10 10 12906 2 1690644724
+/
+193.128.114.40
+0 1 0 923 1 1689248683
+/
+35.167.34.179
+0 1 1 122617 0 0
+-
+47.88.101.3
+0 1 1 1438 0 0
+-
+173.252.95.7
+0 1 1 4340 1 1689211889
+/
+209.35.167.163
+0 8 8 2372208 1 1689897863
+/login-admin
+136.158.39.249
+0 139 105 19886533 1 1690635928
+/admin-tasks/get-task/submissions/decide
+112.202.209.11
+0 11 11 4683097 1 1689719699
+/login-faculty
+107.178.231.238
+0 2 2 3839 1 1689243382
+/
+198.91.81.11
+0 8 4 4112 0 0
+-
+112.204.163.188
+0 124 102 16969676 4 1690084260
+/choose-login
+183.129.153.157
+0 4 3 8992 3 1689617695
+/
+54.188.110.138
+0 1 1 2443689 0 0
+-
+47.88.94.28
+0 1 1 2674 1 1689546892
+/
+107.178.231.249
+0 2 2 1205 0 0
+-
+34.133.2.115
+0 4 2 7274 1 1689498729
+/
+173.252.95.15
+0 4 2 1920 2 1690339901
+/
+122.13.77.124
+0 1 0 960 1 1689247455
+/
+69.63.184.9
+0 1 1 122439 0 0
+-
+61.9.112.113
+0 19 19 6932881 1 1689330788
+/login-admin
+23.178.112.104
+0 2 1 1499 0 0
+-
+112.203.128.231
+0 11 5 9124 2 1689159207
+/
+161.49.105.35
+0 135 123 7586298 1 1690353916
+/faculty-dashboard/my-tasks
+193.36.118.237
+0 2 2 127085 1 1689252808
+/
+112.203.132.249
+0 156 141 17604622 3 1689507295
+/admin-tasks/get-task/preview-file-selected
+131.226.103.82
+0 11 5 6537 3 1690679767
+/login-faculty
+179.43.169.181
+0 1 1 4542 1 1689498650
+/
+112.203.133.185
+0 219 177 5688940 2 1689336423
+/admin-home
+45.88.97.226
+0 2 2 127085 1 1689618554
+/
+173.252.87.4
+0 1 1 122050 0 0
+-
+173.252.83.117
+0 1 1 122646 0 0
+-
+173.252.87.11
+0 2 1 123033 0 0
+-
+146.70.128.203
+0 1 1 2530 1 1689498660
+/
+23.178.112.107
+0 2 1 1503 0 0
+-
+175.176.36.252
+0 18 18 6938267 1 1690184644
+/choose-login
+94.46.220.96
+0 2 2 127085 1 1689618554
+/
+112.203.133.73
+0 2 1 2039 1 1690759496
+/login-admin
+139.59.157.153
+0 2 1 3633 1 1689654528
+/
+171.244.43.14
+0 2 2 3002 1 1689525020
+/
+35.92.56.111
+0 1 1 0 1 1689245601
+/
+112.198.97.28
+0 20 19 4749995 5 1690315167
+/login-admin
+104.164.173.149
+0 9 9 22810 1 1689498605
+/register-admin
+75.98.84.163
+0 11 5 19125 1 1690012025
+/
+173.252.87.9
+0 1 1 122439 0 0
+-
+112.203.132.209
+0 32 31 4680292 5 1689760215
+/admin-home
+47.88.94.161
+0 1 1 1438 0 0
+-
+112.198.104.212
+0 12 12 19453472 5 1690677483
+/login-admin
+35.233.62.116
+0 1 0 960 1 1689564328
+/
+197.242.159.199
+0 8 8 741326 1 1689595095
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+103.14.143.67
+0 9 8 2567703 1 1689246967
+/
+47.254.16.187
+0 2 2 2876 0 0
+-
+3.125.4.121
+0 1 1 1341 1 1689595089
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+173.252.95.4
+0 1 1 3176 1 1689978769
+/
+173.252.111.119
+0 1 1 122050 0 0
+-
+47.254.85.182
+0 1 1 1438 0 0
+-
+35.237.4.214
+0 1 1 4542 1 1690231550
+/
+65.154.226.166
+0 8 7 2573114 1 1689501269
+/
+164.90.197.236
+0 2 1 3632 1 1689922380
+/
+198.12.64.40
+0 1 1 1341 1 1689595090
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+94.46.220.95
+0 1 1 1341 1 1689595089
+/z0f76a1d14fd21a8fb5fd0d03e0fdc3d3cedae52f
+107.178.236.26
+0 2 2 3839 1 1689243372
+/
+213.33.190.199
+0 1 1 4542 1 1690454443
+/
+35.88.108.30
+0 7 7 2567493 1 1689308098
+/
+205.169.39.253
+0 9 9 2570575 1 1689306304
+/
+202.43.6.55
+0 2 2 127085 1 1689594810
+/
+112.206.245.78
+0 1 1 0 1 1690111761
+/
+91.214.64.31
+0 1 1 2672 1 1689293095
+/
+173.252.95.6
+0 2 1 4136 1 1689507169
+/
+173.252.87.118
+0 1 1 628 0 0
+-
+88.99.39.129
+0 1 1 2530 1 1689503387
+/
+66.220.149.12
+0 1 1 122050 0 0
+-
+35.196.132.85
+0 1 1 4542 1 1690231620
+/
+47.251.11.3
+0 1 1 2676 1 1689541950
+/
+69.171.251.3
+0 1 1 122050 0 0
+-
+173.252.111.9
+0 1 1 3176 1 1689998480
+/
+205.169.39.242
+0 9 9 2570577 1 1689246983
+/
+175.176.17.196
+0 1 1 0 1 1690061263
+/
+47.88.90.156
+0 1 1 1438 0 0
+-
+47.251.13.32
+0 1 1 2674 1 1689541950
+/
+# End Of Table - sites (monthly)
+# -sites- (daily)
+93.159.230.90
+0 1 1 2680 1 1690686196
+/
+180.190.214.30
+0 74 65 30385425 2 1690706854
+/faculty-tasks
+112.203.135.6
+0 418 359 58257670 10 1690703735
+/faculty-home/department/assigned-tasks
+131.226.103.82
+0 9 3 4224 2 1690679767
+/login-faculty
+112.203.133.73
+0 2 1 2039 1 1690759496
+/login-admin
+112.198.104.212
+0 1 1 1811 1 1690677483
+/login-admin
+# End Of Table - sites (daily)
+# -referrers- 
+https://pupqcfms.elementfx.com/admin/css/admin_home.css
+0 25
+https://pupqcfms.elementfx.com/admin-home/show-department/assigned-tasks/completed
+0 21
+https://pupqcfms.elementfx.com/auth/css/choose_login.css
+0 83
+https://pupqcfms.elementfx.com/admin-home
+0 385
+https://pupqcfms.elementfx.com/faculty-profile
+0 107
+https://l.messenger.com/
+0 2
+https://pupqcfms.elementfx.com/faculty-home/department/assigned-tasks/ongoing
+0 12
+https://pupqcfms.elementfx.com/dashboard
+0 1
+https://pupqcfms.elementfx.com/admin-tasks/get-task/submissions
+0 194
+https://pupqcfms.elementfx.com/login-admin
+0 290
+https://pupqcfms.elementfx.com/dashboard/get-statistics
+0 1
+https://pupqcfms.elementfx.com/admin-tasks/get-task/task-overview
+0 69
+http://www.pupqcfms.elementfx.com/.well-known/acme-challenge/K931KwT3vj6CxZNQvNNWvFr3DlFed4_K_HRsuc69Se8
+0 2
+https://www.pupqcfms.elementfx.com/auth/css/choose_login.css
+0 3
+https://pupqcfms.elementfx.com/validate-login-faculty
+0 2
+http://pupqcfms.elementfx.com/auth/css/login_admin.css
+0 1
+https://pupqcfms.elementfx.com/faculty-tasks/completed
+0 30
+https://pupqcfms.elementfx.com/
+0 493
+https://pupqcfms.elementfx.com/dashboard/statistics
+0 1
+http://pupqcfms.elementfx.com/.well-known/acme-challenge/YpqJs4hTSUbSIYHg4P42yTztz3oDmce47e90MKIxnYc
+0 2
+https://pupqcfms.elementfx.com/register-admin
+0 10
+https://pupqcfms.elementfx.com/logs
+0 1
+https://pupqcfms.elementfx.com/admin-home/show-department/overview
+0 25
+https://pupqcfms.elementfx.com/admin-tasks
+0 515
+https://pupqcfms.elementfx.com/admin-dashboard/department-task/timeline
+0 102
+https://pupqcfms.elementfx.com/faculty-home/department/assigned-tasks/late-completed
+0 12
+https://pupqcfms.elementfx.com/admin-home/show-department/assigned-tasks/missing
+0 9
+http://pupqcfms.elementfx.com/login-faculty
+0 5
+https://pupqcfms.elementfx.com/faculty-home/department/assigned-tasks/completed
+0 19
+https://pupqcfms.elementfx.com/admin-requests/account
+0 216
+- (Direct Request)
+0 367
+https://pupqcfms.elementfx.com/faculty-home/department/assigned-tasks/missing
+0 11
+https://pupqcfms.elementfx.com/admin-tasks/get-task/instructions
+0 315
+https://pupqcfms.elementfx.com/auth/images/PUPLogo.png
+0 15
+https://pupqcfms.elementfx.com/faculty-tasks/ongoing
+0 22
+https://pupqcfms.elementfx.com/faculty-tasks/missing
+0 24
+https://pupqcfms.elementfx.com/register-faculty
+0 67
+https://pupqcfms.elementfx.com/admin-dashboard/get-statistics
+0 1
+https://pupqcfms.elementfx.com/admin-tasks/missing
+0 35
+https://pupqcfms.elementfx.com/admin-home/show-department/assigned-tasks
+0 137
+http://m.facebook.com/
+0 8
+https://pupqcfms.elementfx.com/admin-logs
+0 185
+https://pupqcfms.elementfx.com/faculty-tasks/get-task/instructions
+0 494
+https://pupqcfms.elementfx.com/faculty-dashboard/assigned-task/timeline
+0 46
+http://pupqcfms.elementfx.com/login-admin
+0 17
+https://pupqcfms.elementfx.com/faculty-password-forgot
+0 3
+https://www.pupqcfms.elementfx.com/
+0 17
+https://pupqcfms.elementfx.com/auth/css/login_admin.css
+0 55
+https://pupqcfms.elementfx.com/choose-login
+0 124
+https://pupqcfms.elementfx.com/faculty-tasks/late-completed
+0 23
+https://pupqcfms.elementfx.com/admin-tasks/completed
+0 64
+https://pupqcfms.elementfx.com/admin-tasks/late-completed
+0 41
+https://pupqcfms.elementfx.com/admin-dashboard
+0 1
+https://pupqcfms.elementfx.com/admin-tasks/ongoing
+0 58
+https://pupqcfms.elementfx.com/faculty-tasks
+0 242
+https://pupqcfms.elementfx.com/admin-tasks/get-task/preview-file-selected/loading
+0 8
+https://pupqcfms.elementfx.com/admin-home/show-department/assigned-tasks/ongoing
+0 11
+https://pupqcfms.elementfx.com/faculty-home
+0 118
+https://pupqcfms.elementfx.com/faculty-dashboard/my-tasks
+0 164
+https://pupqcfms.elementfx.com/login-faculty
+0 393
+https://pupqcfms.elementfx.com/admin-dashboard/department-task/statistics
+0 343
+https://pupqcfms.elementfx.com/faculty-home/department/assigned-tasks
+0 286
+https://pupqcfms.elementfx.com/admin-home/show-department/assigned-tasks/late-completed
+0 12
+https://l.facebook.com/
+0 6
+http://pupqcfms.elementfx.com
+0 6
+https://pupqcfms.elementfx.com/faculty-home/department/members
+0 50
+https://pupqcfms.elementfx.com/faculty-tasks/get-task/undefined
+0 5
+http://pupqcfms.elementfx.com/
+0 37
+http://pupqcfms.elementfx.com/auth/css/login_faculty.css
+0 1
+https://pupqcfms.elementfx.com/admin-home/show-department/members
+0 32
+https://pupqcfms.elementfx.com/auth/css/login_faculty.css
+0 57
+http://pupqcfms.elementfx.com/auth/css/choose_login.css
+0 6
+https://pupqcfms.elementfx.com/faculty-tasks/get-task/preview-file-selected/loading
+0 13
+https://pupqcfms.elementfx.com/faculty/css/faculty_profile.css
+0 6
+https://pupqcfms.elementfx.com/admin-requests/department
+0 65
+http://pupqcfms.elementfx.com/choose-login
+0 14
+https://pupqcfms.elementfx.com/faculty/css/faculty_home.css
+0 6
+# End Of Table - referrers
+# -agents- 
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+0 3746
+Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36
+0 14
+Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0
+0 7
+Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+0 7
+Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.75 Safari/535.7
+0 9
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36
+0 2
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Mobile Safa
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36
+0 22
+Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.67 Safari/537.36
+0 1
+Mozilla/5.0 (Linux; arm_64; Android 12; CPH2205) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 YaBrowser/23.3.3.86.
+0 2
+Mozilla/5.0 (Linux; Android 13; V2036 Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/10
+0 18
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+0 101
+Mozilla/5.082584686 Mozilla/5.0 (iPhone; CPU iPhone OS 11_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version
+0 2
+Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0
+0 1
+Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)
+0 2
+Mozilla/5.0 (compatible; Let's Encrypt validation server; +https://www.letsencrypt.org)
+0 10
+curl/7.83.1
+0 8
+Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile S
+0 1
+Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+0 5
+Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36
+0 2
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Messenger/97.11.116 Chrome/83.0.4103.1
+0 1
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/
+0 12
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
+0 861
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.1.2 Safari/603.3.8
+0 1
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9) Gecko
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+0 4
+Mozilla/5.0 (Linux; U; Android 4.4.2; en-US; HM NOTE 1W Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBr
+0 1
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322)
+0 1
+Mozilla/5.0 (Linux; Android 8.1.0; DUB-LX3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Mobile Safari/537.36 
+0 50
+Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.182
+0 843
+Mozilla/5.0 (Linux; Android 13; RMX3392) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Mobile Safari/537.36
+0 5
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+0 2
+Mozilla/5.0 (Macintosh; U; PPC Mac OS X; de-de) AppleWebKit/312.1 (KHTML, like Gecko) Safari/312.3.1
+0 1
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36
+0 2
+Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.1 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/534.1
+0 2
+Mozilla/5.0 (Windows; U; BeOS; en-US; rv:1.9.0.7) Gecko/2009021910
+0 1
+Googlebot-Image/1.0
+0 1
+Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.179 Mobile
+0 6
+Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36
+0 468
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+0 9
+Mozilla/5.0 (Linux; Android 8.1.0; DUB-LX3 Build/HUAWEIDUB-LX3; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome
+0 16
+Mozilla/5.0 (Linux; Android 11; vivo 1906; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.141 Mobile
+0 11
+Mozilla/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36
+0 2
+Mozilla/5.0 (X11; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+0 1
+Mozilla/5.0 (Linux; Android 10; SM-M013F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36
+0 4
+Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36
+0 2
+Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-au; rv:1.9.0.1) Gecko/2008070206
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
+0 2
+Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2225.0 Safari/537.36
+0 1
+Mozilla/5.0 (Windows; U; Windows NT 5.0; de-AT; rv:1.8a4) Gecko/20040927
+0 1
+facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
+0 42
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+0 3
+Mozilla/5.0 (X11; OpenBSD i386) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36
+0 1
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/112.0.5615.121 Safari/537.36
+0 16
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+0 8
+Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0
+0 6
+Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+0 11
+Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
+0 2
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36 (Ecosia android@101
+0 51
+Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/114.0.5
+0 5
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET4.0E; .NET4.0C; InfoPath.2; .NET CLR 2.0.50727; .NET CLR 
+0 8
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36
+0 7
+python-requests/2.31.0
+0 1
+Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+0 7
+Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36
+0 8
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+0 4
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9a1) Gecko/20060814 Firefox/51.0
+0 1
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11
+0 1
+Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Mobile Safari/537.36
+0 12
+Mozilla/5.0 (Linux; Android 11; vivo 1906 Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrom
+0 10
+Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.47 Mobile/15E
+0 7
+Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.66 Safari/535.11
+0 1
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/68.0.3440.106 Chrome/68.0.3440.106 Saf
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.190
+0 95
+Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16
+0 2
+Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36
+0 1
+Mozilla/5.0 (Linux; Android 13; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36
+0 4
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/109.0.5414.46 Safari/537.36
+0 1
+Mozilla/5.0 (Linux; Android 11; M2004J15SC) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Mobile Safari/537.36
+0 14
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
+0 12
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.151
+0 1
+Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0
+0 16
+Mozlila/5.0 (Linux; Android 7.0; SM-G892A Bulid/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/60.0.31
+0 2
+Mozilla/5.0 (Linux; Android 11; M2010J19SI) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36
+0 2
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+0 6
+# End Of Table - agents
+# -search strings- 
+# End Of Table - search strings
+# -usernames- 
+# End Of Table - usernames

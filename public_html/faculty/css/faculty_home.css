@@ -1,0 +1,81 @@
+html{
+    background-image: url('../images/pattern4.svg');
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+body{
+    background-color: transparent;
+}
+
+.background{
+    margin-top: 4vh;
+    width: 60vw;
+    height: 84vh;
+    background-color: transparent;
+}
+
+.faculty{
+    position: relative;
+}
+
+.faculty-image{
+    transition: all 0.15s ease-out;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.20) 0px 4.8px 13.2px;
+}
+
+.hover{
+    opacity: .8;
+    filter: saturate(100%) blur(2.5px);
+    transform: scale(1.10);
+    border: 1px solid rgba(141, 141, 141, 0.448);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 4.8px 13.2px;
+}
+
+.faculty-name{
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.faculty-members{
+    color: rgba(72, 72, 72, 0.628);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: -1.5vh;
+    font-size: 12px;
+    text-align: center;
+}
+
+.join{
+    z-index: 999;
+    position: absolute;
+    top: 38.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    border: none;
+
+    filter: none;
+    color:rgb(27, 27, 27);
+    background-color: rgb(102, 227, 102);
+    box-shadow: rgba(0, 0, 0, 0.50) 4.8px 4.8px 10px;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.40s ease;
+}
+
+.join:hover{
+    background-color: rgb(91, 202, 91);
+}
+
+.join-show{
+    width: 100px;
+   
+    opacity: 1;
+    visibility: visible;
+}

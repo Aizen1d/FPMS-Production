@@ -1,0 +1,74 @@
+html{
+    background-image: url('../images/pup_sample_pic.jpg'); 
+    background-size: cover; 
+    background-repeat: no-repeat;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+body{
+    background: transparent;
+}
+
+.pick{
+    background-color: #F7F7F8;
+    width: 25%;
+    min-height: 100vh;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.pick h1{   
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 35px;
+}
+
+.logo{
+    text-align: center;
+}
+
+.choices{
+    text-align: center;
+}
+
+.choices button{
+    width: 40%;
+    height: 45px;
+    border-radius: 20px;
+    border: transparent;
+    box-shadow: rgba(0, 0, 0, 0.20) 1.7px 1.7px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.faculty {
+    background-color: var(--muted_maroon);
+    color: var(--white_text_label);
+}
+
+.faculty:hover {
+    background-color: var(--muted_maroon_hover);
+}
+
+.admin {
+    background-color: var(--light_yellow);
+}
+
+.admin:hover{
+    background-color: var(--light_yellow);
+    background-color: var(--light_yellow_hover);
+}
+
+.terms{
+    margin-top: 5%;
+    font-size: 13px;
+    text-align: center;
+}
+
+.label-css{
+    color:#7d7b7be1;
+}

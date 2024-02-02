@@ -1,0 +1,106 @@
+html{
+    background-image: radial-gradient(circle at center center, rgba(137, 137, 137, 0.45),rgb(10, 10, 10)),repeating-linear-gradient(135deg, rgb(33,33,33) 0px, rgb(33,33,33) 1px,transparent 1px, transparent 4px),repeating-linear-gradient(45deg, rgb(56,56,56) 0px, rgb(56,56,56) 5px,transparent 5px, transparent 6px),linear-gradient(90deg, rgb(33,33,33),rgb(33,33,33));
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body{
+    background: transparent;
+}
+
+.login{
+    background-color: #F7F7F8;
+    min-height: 80vh;
+    min-width: 60vw;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo{
+    text-align: center;
+    padding-top: 5%;
+}
+
+.title{   
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 300%;
+}
+
+.input{
+    margin-top: 5%;
+}
+
+.input-shadow{
+    box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
+}
+
+.form-control:focus{
+    box-shadow: none;
+    border-color: #808080;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.span-color{
+    background-color: #931111;
+}
+
+.span-color i{
+    color: #e9e9e9;
+}
+
+.label-css{
+    color: var(--info_text_label);
+}
+
+.form-group{
+    margin-bottom: 4%;
+}
+
+.forgot{
+    font-size: small;
+    margin-top: 5%;
+    text-decoration: underline;
+    color: black;
+}
+
+.submit{
+    text-align: center;
+    margin-top: 5%;
+}
+
+.return{
+    color: #080808 !important;
+    background-color: var(--dark_grey) !important;
+    box-shadow: rgba(0, 0, 0, 0.26) 4px 4px 12px !important;
+}
+
+.return:hover{
+    background-color: var(--dark_grey_hover) !important;
+}
+
+.sign-in:hover{
+    background-color: var(--muted_maroon_hover) !important;
+}
+
+.submit button{
+    width: 120px;
+    height: 40px;
+    border-radius: 17px;
+    border: transparent;
+    background-color: var(--muted_maroon);
+    color: #F7F7F8;
+    box-shadow: rgba(0, 0, 0, 0.45) 1.7px 1.7px 13px;
+    transition: background-color 0.3s ease;
+}
+
+.terms{
+    margin-top: 5%;
+    font-size: 13px;
+    text-align: center;
+}

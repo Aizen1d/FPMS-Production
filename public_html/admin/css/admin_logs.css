@@ -1,0 +1,646 @@
+html{
+    background-color: rgb(243, 242, 240);
+}
+
+body{
+    background-color: transparent;
+   
+}
+
+.margin{
+    padding-left: 17%;
+}
+
+.title{
+    font-size: 35px;
+    padding-top: .5%;
+}
+
+.search-input {
+    height: 45%;
+    width: 35%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    border-radius: 10px;
+    padding-left: 2%;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
+    transition: border-color 0.5s ease;
+}
+
+.search-input:focus {
+    border-bottom-color: rgba(44, 44, 44, 0.559);
+}
+
+.pages{
+    padding-top: 1.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-btn{
+    float: right;
+    margin-right: 3%;
+    height: 5vh;
+    width: 8vw;
+    border-radius: 10px;
+
+    border: none;
+    color: white;
+    background-color: var(--muted_maroon);
+    box-shadow: rgba(0, 0, 0, 0.20) 4px 4.7px 13px;
+
+    transition: all 0.3s ease;
+}
+
+.create-btn:hover{
+    border: none;
+    background-color: var(--muted_maroon_hover);
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.3) 4.7px 4.7px 13px;
+}
+
+.task-list{
+    background-color: rgb(251, 251, 251);
+    box-shadow: rgba(0, 0, 0, 0.07) 4.8px 4.8px 13.2px;
+    margin: auto;
+    margin-top: .4%;
+    margin-left: -.85% !important;
+    height: 77.4vh;
+    width: 100%;
+    border-radius: 30px;
+}
+
+.task-list-rows-data{
+    margin-left: -.7%;
+    border-radius: 30px;
+    height: 672px;
+    width: 101.5%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.column-name{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.task-row{
+    height: 8vh;
+    width: 101.55%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    transition: background-color 0.1s ease, box-shadow 0.1s ease, scale 0.25s ease-out;
+}
+
+.task-row img{
+    user-select: none;
+    height: 50px;
+}
+
+.task-row:nth-child(even) {
+    background-color: rgb(240, 240, 240);
+}
+
+.task-row:nth-child(odd) {
+    background-color: rgb(231, 231, 231);
+}
+
+.task-row:hover{
+    scale: 1.020;
+    background-color: #AADAF9;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3.8px 7px;
+    cursor: default;
+    position: relative;
+    z-index: 3;
+}
+
+.task-row-content{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+
+.faculties{
+    border-radius: 0.5em !important;
+}
+
+.faculty-name{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drop-down-container{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.drop-down{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    width: 200px;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin-right: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.create-dropdown{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    font-size: 15px !important;
+    width: 24vh;
+    height: auto;
+    margin-left: .5% !important;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.create-dropdown2{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    font-size: 15px !important;
+    width: 18vh;
+    height: auto;
+    margin-left: 3%;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.drop-down:hover{
+    background-color: #efefef;
+}
+
+.fa {
+    transition: all 0.35s ease;
+}
+
+.fa-rotate {
+    transform: rotate(-180deg);
+}
+
+.arrow{
+    font-size: 30px;
+}
+
+.wrapper{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.selectedImg{
+    user-select: none;
+    height: 30px;
+}
+
+.selected3{
+    font-size: 1vh;
+    margin-top: 1%;
+}
+
+.list{
+    z-index: 999;
+    background-color: #fff;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    border-radius: 0 0 15px 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    cursor: pointer;
+    max-height: 0px;
+    overflow-y: scroll;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.create-list{
+    z-index: 999;
+    font-size: 15px;
+    background-color: #fff;
+    position: absolute;
+    border-top-left-radius: 5px !important;
+    top: 34px;
+    left: 0;
+    border-radius: 0 0 15px 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    cursor: pointer;
+    max-height: 0px;
+    overflow-y: scroll;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.create-list2{
+    z-index: 999;
+    font-size: 15px;
+    background-color: #fff;
+    position: absolute;
+    border-top-left-radius: 5px !important;
+    top: 36px;
+    left: 0;
+    border-radius: 0 0 15px 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+    cursor: pointer;
+    max-height: 0px;
+    overflow-y: scroll;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.list img{
+    user-select: none;
+    height: 30px;
+}
+
+.show{
+    max-height: 200px;
+}
+
+.item{
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+}
+
+.item2{
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    width: 100% !important;
+    height: 50% !important;
+    cursor: default;
+}
+
+.item2:hover{
+    background-color: #AADAF9;
+}
+
+.item2 input[type="checkbox"] {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.item2 .text {
+    white-space: nowrap;
+}
+
+.create-dropdown .wrapper .selected {
+    font-size: 12px; /* Smaller font size */
+}
+  
+.create-dropdown .fa-caret-down {
+    font-size: 12px; /* Smaller caret size */
+}
+  
+.create-dropdown .list .item2 {
+    padding: 5px; /* Smaller padding */
+}
+  
+.create-dropdown .list .item2 img {
+    height: 15px; /* Smaller image height */
+}
+  
+.create-dropdown .list .item2 .text {
+    font-size: 12px; /* Smaller font size */
+}
+
+/* Create Task Select Faculty Drop Down */
+.create-dropdown2 .selectedImg {
+    height: 18px; /* Smaller font size */
+}
+
+.create-dropdown2 .wrapper .selected {
+    font-size: 1.2vh; /* Smaller font size */
+}
+  
+.create-dropdown2 .fa-caret-down {
+    font-size: 12px; /* Smaller caret size */
+}
+  
+.create-dropdown2 .list .item3 {
+    padding-left: 16px; /* Smaller padding */
+}
+  
+.create-dropdown2 .list .item3 img {
+    height: 20px; /* Smaller image height */
+}
+  
+.create-dropdown2 .list .item3 .text {
+    font-size: 12px; /* Smaller font size */
+}
+
+.item:hover{
+    background-color: #AADAF9;
+}
+
+.create-task-popup{
+    z-index: 9999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.425);
+    width: 40vw;
+    height: 54vh;
+    border-radius: 15px;
+    background-color: rgb(248, 248, 248);
+    transition: all 300ms;
+    visibility: hidden;
+}
+
+.create-task-popup-animate {
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1.525);
+}
+
+.overlay{
+    opacity:0.8;
+    background-color: transparent;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index: -1;
+    transition: all 500ms ease;
+}
+
+.blur {
+    z-index:100;
+    display: block;
+    background-color: rgba(167, 167, 167, 0.8);
+}
+
+.create-label{
+    margin-right: 5%;
+    margin-top: 3%;
+    margin-left: 5%;
+    flex-shrink: 0;
+}
+
+.body-frame{
+    border-radius: 10px;
+    width: 37vw;
+    height: 45vh;
+    margin-left: 4%;
+    padding-left: 2%;
+    margin-top: 1%;
+    padding-top: 1%;
+    padding-top: 2%;
+
+    border: 1px rgba(225, 225, 225, 0.605) solid;
+    background-color: rgb(235, 235, 235);
+}
+
+.deadline-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.set-deadline-label{
+    font-weight: bold;
+    font-size: 1vh;
+    margin-left: 26%;
+}
+
+#date-time-picker {
+    height: 10px;
+    width: 90%;
+    font-size: .9vh;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    border-radius: 5px;
+    transition: 300ms ease-out;
+}
+  
+#date-time-picker:focus {
+    outline: none;
+    border-bottom: 1px solid #434343;
+}
+
+.close-task-btn{
+    margin-top: 10%;
+    margin-right: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+    height: 2.8vh;
+    width: 2vw;
+    border-radius: 10px;
+
+    border: none;
+    color: white;
+    background-color: rgba(171, 14, 14, 0.737);
+    box-shadow: rgba(0, 0, 0, 0.20) 2px 3px 13px;
+
+    transition: background-color 0.3s ease;
+}
+
+.close-task-btn:hover{
+    background-color: rgba(151, 11, 11, 0.737);
+}
+
+.task-description-label{
+    margin-top: 3%;
+    margin-left: .2%;
+    font-size: 1.5vh;
+}
+
+.task-description-content{
+    resize: none;
+    margin-top: -.1% !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3vh;
+    margin-left: .2%;
+    width: 98%;
+    height: 40%;
+    padding: 5px 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    transition: all 300ms ease-out;
+}
+
+.task-description-content:focus {
+    outline: none;
+    border: 1px solid rgba(10, 10, 10, 0.7) !important;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    text-align: center;
+    font-size: 1.3vh;
+    width: 9vw;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.20) 2px 3px 13px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 300ms ease-out;
+}
+
+.custom-file-upload:hover{
+    background-color: #efefef;
+}
+
+#drop-zone {
+    margin-top: 5%;
+    border-radius: 7px;
+    width: 9vw; 
+    height: 10.5vh; 
+    border: 2px dashed #a4a4a4; 
+    background-color: #fff;
+    text-align:center
+}
+
+#drop-zone p {
+    font-size: 1.2vh;
+    line-height: 10.5vh;
+    color: rgba(84, 84, 84, 0.72);
+}
+
+#preview {
+    font-size: 1.2vh;
+    max-height: 15vh;
+    overflow-y: auto;
+    margin-left: .3%;
+    padding-left: .75%;
+    padding-top: .35%;
+    width: 16vw;
+    border-radius: 7px;
+    background-color: #fff;
+}
+
+.preview-no-items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: rgba(84, 84, 84, 0.72);
+}
+
+#preview::-webkit-scrollbar {
+    width: 10px;
+}
+
+#preview::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+
+#preview img {
+    max-width: 200px;
+}
+
+#preview p {
+    margin: 0;
+}
+
+.remove-file {
+    margin-left: 2%;
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor:pointer
+}
+
+#progress-bar {
+    width:0%; 
+    height:20px; 
+    background-color:#4CAF50
+}
+
+.file-container {
+    display:flex; 
+    flex-direction:row; 
+    align-items:center; 
+    justify-content:flex-start; 
+    padding-bottom: 3px
+}
+
+.file-container p{
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 14vw;
+}
+
+.create-task{
+    font-size: 1.2vh;
+    width: 8vw;
+    height: 3vh;
+    margin-top: -19.5% !important;
+    margin-right: 2.5% !important;
+}
+
+.edit {
+    display: none;
+}
+
+.task-name{
+    text-align: left;
+    margin-right: 35%;
+    margin-top: 4%;
+    flex-grow: 1;
+}
+
+#task {
+    width: 150%;
+}
+
+#taskLabel {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.newly-added {
+    animation: highlight 3s;
+}
+   
+@keyframes highlight {
+    0% {
+        background-color: rgb(231, 231, 231);
+    }
+    50% {
+        background-color: rgba(46, 188, 46, 0.887);
+    }
+    100% {
+        background-color: rgb(231, 231, 231);
+    }
+}
+

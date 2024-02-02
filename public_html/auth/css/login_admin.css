@@ -1,0 +1,119 @@
+html{
+    background-image: url('../images/background_admin.jpg');
+    background-size: cover; 
+    background-repeat: no-repeat;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+body{
+    background: transparent;
+}
+
+.login{
+    background-color: #F7F7F8;
+    width: 25%;
+    min-height: 100vh;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo{
+    text-align: center;
+}
+
+.login h1{   
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 300%;
+}
+
+.input{
+    margin-top: 5%;
+}
+
+.input-shadow{
+    box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
+}
+
+.form-control:focus{
+    box-shadow: none;
+    border-color: #808080;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.span-color{
+    background-color: #931111;
+}
+
+.span-color i{
+    color: #e9e9e9;
+}
+
+.icon-change-color{
+    color: #FFE644 !important;
+    transition: all 0.8s ease-in-out !important;
+}
+
+.label-css{
+    color: var(--info_text_label);
+}
+
+.form-group{
+    margin-bottom: 4%;
+}
+
+.submit{
+    text-align: center;
+    margin-top: -2.5%;
+}
+
+.hyperlinks{
+    font-size: small;
+    margin-top: 5%;
+    color: var(--info_text_label);
+}
+
+.hyperlinks a{
+    text-decoration: none;
+}
+
+.hyperlinks a:hover{
+    text-decoration: underline;
+    color: var(--info_text_label);
+}
+
+.return{
+    color: #080808 !important;
+    background-color: var(--dark_grey) !important;
+    box-shadow: rgba(0, 0, 0, 0.26) 4px 4px 12px !important;
+}
+
+.return:hover{
+    background-color: var(--dark_grey_hover) !important;
+}
+
+.sign-in:hover{
+    background-color: var(--muted_maroon_hover) !important;
+}
+
+.submit button{
+    width: 120px;
+    height: 40px;
+    border-radius: 17px;
+    border: transparent;
+    background-color: #A63737;
+    color: #F7F7F8;
+    box-shadow: rgba(0, 0, 0, 0.45) 1.7px 1.7px 13px;
+    transition: background-color 0.3s ease;
+}
+
+.terms{
+    margin-top: 5%;
+    font-size: 13px;
+    text-align: center;
+}

@@ -1,0 +1,44 @@
+html{
+    background-color: rgb(241, 241, 241);
+    background-image: url('../images/pattern4.svg');
+    background-size: cover; 
+    background-repeat: no-repeat;
+}
+
+body{
+    background-color: transparent;
+}
+
+.background{
+    margin-top: 4vh;
+    width: 60vw;
+    height: 84vh;
+    background-color: transparent;
+}
+
+.faculty-image{
+    transition: all 0.15s ease-out;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.20) 0px 4.8px 13.2px;
+}
+
+.faculty-image:hover{
+    cursor: pointer;
+    transform: scale(1.10);
+    border: 1px solid rgba(141, 141, 141, 0.448);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 4.8px 13.2px;
+}
+
+.faculty-name{
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.faculty-members{
+    color: rgba(72, 72, 72, 0.628);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: -1.5vh;
+    font-size: 12px;
+    text-align: center;
+}

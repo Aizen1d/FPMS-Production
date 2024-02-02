@@ -1,0 +1,54 @@
+.nav{
+    background-color: cornsilk;
+    border-bottom: solid 1px rgb(196, 191, 191);
+    box-shadow: rgba(0, 0, 0, 0.07) 4.8px 4.8px 13.2px;
+    z-index: 1;
+}
+
+.system{
+    color: #800000;
+    font-size: 20px;
+}
+
+.content{
+    color: black;
+    font-size: 17px;
+    transition: all 0.15s ease-out;
+}
+
+.content:active,
+.content:hover,
+.content:focus{
+    color: var(--muted_maroon);
+    transform: scale(1.05);
+}
+
+.navbar-active{
+    color: var(--muted_maroon) !important;
+}
+
+.user{
+    color: var(--muted_maroon);
+}
+
+.user:hover, 
+.user:active,
+.user:focus
+.user:default{
+    color: var(--muted_maroon);
+}
+
+.dropdown-menu{
+    min-width: 6rem;
+    margin-right: 25%;
+    font-size: 15px;
+}
+
+.dropdown-item:hover{
+    color: white;
+    background-color: var(--muted_maroon);
+}
+
+.logout{
+    justify-content: right;
+}
