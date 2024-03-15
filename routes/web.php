@@ -180,7 +180,7 @@ Route::get('/choose-login', [AuthController::class, 'chooseLogin'])->name("choos
 // Faculty Register Login Logout Route // 
 Route::get('/register-faculty', [AuthController::class, 'registerFaculty'])->name("register-faculty");
 Route::post('/submit-register-faculty', [AuthController::class, 'submitRegisterFaculty'])->name("submit-register-faculty");
-Route::post('/validate-login-faculty', [AuthController::class, 'validateLoginFaculty'])->name("validate-login-faculty")->middleware("throttle:5,3");
+Route::post('/validate-login-faculty', [AuthController::class, 'validateLoginFaculty'])->name("validate-login-faculty");
 Route::get('/logout-faculty', [AuthController::class, 'logoutFaculty'])->name("logout-faculty");
 
 // Faculty Forgot Password Route //

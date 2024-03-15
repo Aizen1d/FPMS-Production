@@ -1,5 +1,4 @@
 @extends('layouts.default')
-@include('layouts.loader')
 
 @section('title', 'PUPQC - Admin Tasks')
 
