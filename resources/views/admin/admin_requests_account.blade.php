@@ -34,7 +34,7 @@
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Username</h5>
             </div>
             <div class="col-3">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Email</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative; text-align:left; margin-left: 30%">Email</h5>
             </div>
             <div class="col-3">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Request Date</h5>
@@ -47,13 +47,13 @@
         @foreach ($items as $item)
             <div class="row item-row">
                 <div class="col-3 column-1">
-                    <h5 class="item-row-content my-2 column-1-text">{{ $item->username }}</h5>
+                    <h5 class="item-row-content my-2 column-1-text" style="text-align:left; margin-left: 38%">{{ $item->username }}</h5>
                 </div>
                 <div class="col-3 column-2">
-                    <h5 class="item-row-content px-3 my-2 column-2-text">{{ $item->email}}</h5>
+                    <h5 class="item-row-content px-3 my-2 column-2-text" style="text-align:left; margin-left: 26%">{{ $item->email}}</h5>
                 </div>
                 <div class="col-3 column-3">
-                    <h5 class="item-row-content my-2 column-3-text">{{ date('F j, Y', strtotime($item->request_date)) }}<br>{{ date('g:i A', strtotime($item->request_date)) }}</h5>
+                    <h5 class="item-row-content my-2 column-3-text" style="text-align:left; margin-left: 35%">{{ date('F j, Y', strtotime($item->request_date)) }}<br>{{ date('g:i A', strtotime($item->request_date)) }}</h5>
                 </div>
                 <div class="col-3 column-4 actions-btn">
                     <button class="accept-btn mx-2"><i class="fa fa-check"></i></button>

@@ -35,7 +35,7 @@
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">User Role</h5>
             </div>
             <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Action Made</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative; text-align:left; margin-left: 19%">Action Made</h5>
             </div>
             <div class="col-2">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Type of Action</h5>
@@ -50,22 +50,22 @@
             <div class="row task-row">
                 <div class="col-2">
                     @if ($task->user_id)
-                        <h5 class="task-row-content my-2 task-name-text">{{ $task->user_id }}</h5>
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">{{ $task->user_id }}</h5>
                     @else
-                    <h5 class="task-row-content my-2 task-name-text">Not Available</h5>
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">Not Available</h5>
                     @endif
                 </div>
                 <div class="col-2">
-                    <h5 class="task-row-content my-2 task-name-text">{{ $task->user_role }}</h5>
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 40%">{{ $task->user_role }}</h5>
                 </div>
                 <div class="col-4">
-                    <h5 class="task-row-content my-2 task-name-text">{{ $task->action_made }}</h5>
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 20%">{{ $task->action_made }}</h5>
                 </div>
                 <div class="col-2">
-                    <h5 class="task-row-content my-2 task-name-text">{{ $task->type_of_action }}</h5>
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 30%">{{ $task->type_of_action }}</h5>
                 </div>
                 <div class="col-2">
-                    <h5 class="task-row-content my-2 date-created">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>
+                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 40%">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>
                 </div>
             </div>
             @endforeach
@@ -148,19 +148,19 @@
                 // Add the task data to the row element
                 taskRow.innerHTML = `
                     <div class="col-2">
-                        <h5 class="task-row-content my-2 task-name-text">${task.user_id ? task.user_id : 'Not Available'}</h5>
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">${task.user_id ? task.user_id : 'Not Available'}</h5>
                     </div>
                     <div class="col-2">
-                        <h5 class="task-row-content my-2 task-name-text">${task.user_role}</h5>
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 40%">${task.user_role}</h5>
                     </div>
                     <div class="col-4">
-                        <h5 class="task-row-content my-2 task-name-text">${task.action_made}</h5>
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 20%">${task.action_made}</h5>
                     </div>
                     <div class="col-2">
-                        <h5 class="task-row-content my-2 task-name-text">${task.type_of_action}</h5>
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 30%">${task.type_of_action}</h5>
                     </div>
                     <div class="col-2">
-                        <h5 class="task-row-content my-2 date-created">${task.date}<br>${task.date_time}</h5>
+                        <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 40%">${task.date}<br>${task.date_time}</h5>
                     </div>
                 `;
 

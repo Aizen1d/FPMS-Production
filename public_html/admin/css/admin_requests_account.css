@@ -217,12 +217,6 @@ body{
     border-radius: 0.5em !important;
 }
 
-.column-2{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .drop-down-container{
     display: flex;
     justify-content: right;

@@ -37,19 +37,23 @@
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Join Date</h5>
             </div>
         </div>
-
+        
         @foreach ($items as $item)
-        <div class="row item-row">
-            <div class="col-6 column-1 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('faculty/images/user-profile.png') }}" alt=" " class="mr-3">
-                <h5 class="item-row-content my-2 column-1-text">
-                    {{ $item->first_name }} {{ $item->middle_name }} {{ $item->last_name }}
-                </h5>
+            <div class="row item-row">
+                <div class="col-6">
+                    <div style="text-align:left; margin-left: 44%; display: flex">
+                        <img src="{{ asset('faculty/images/user-profile.png') }}" alt="" class="px-2">
+                        <h5 class="item-row-content my-3 column-1-text">
+                            {{ $item->first_name }} {{ $item->middle_name }} {{ $item->last_name }}
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h5 class="item-row-content my-2 column-2-text" style="text-align:left; margin-left: 45%">
+                        {{ date('F j, Y', strtotime($item->department_join_date)) }}<br>{{ date('g:i A', strtotime($item->department_join_date)) }}
+                    </h5>
+                </div>
             </div>
-            <div class="col-6 column-2">
-                <h5 class="item-row-content my-2 column-2-text">{{ date('F j, Y', strtotime($item->department_join_date)) }}<br>{{ date('g:i A', strtotime($item->department_join_date)) }}</h5>
-            </div>
-        </div>
         @endforeach
 
         <div id="loading-overlay" style="display: none; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; justify-content: center; align-items: center;">

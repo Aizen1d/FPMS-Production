@@ -21,7 +21,7 @@
             {{ $tasks->links()  }}
         </div>
         <div class="col-3 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search task">
+            <input type="text" class="search-input mx-5 px-3" style="width: 200px;" id="search-input" placeholder="Search task name..">
             <div id="search-results"></div>
         </div>
     </div>
@@ -117,30 +117,30 @@
 
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Date Created</h5>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Due Date</h5>
             </div>
         </div>
 
         @foreach ($tasks as $task)
         <div class="row task-row">
-            <div class="col-6">
-                <h5 class="task-row-content my-2 task-name-text">{{ $task->task_name }}</h5>
+            <div class="col-4">
+                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $task->task_name }}</h5>
             </div>
-            <div class="col-3">
-                <h5 class="task-row-content my-2 date-created">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>
+            <div class="col-4">
+                <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 @if (Carbon\Carbon::parse($task->due_date)->isPast())
-                <h5 class="task-row-content my-2 text-danger due-date">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
+                <h5 class="task-row-content my-2 text-danger due-date" style="text-align:left; margin-left: 42%">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
                 @else
-                <h5 class="task-row-content my-2 due-date">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
+                <h5 class="task-row-content my-2 due-date" style="text-align:left; margin-left: 42%">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
                 @endif
             </div>
         </div>
@@ -764,14 +764,14 @@
 
                 // Add the task data to the row element
                 taskRow.innerHTML = `
-                <div class="col-6">
-                    <h5 class="task-row-content my-2 task-name-text">${task.task_name}</h5>
+                <div class="col-4">
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">${task.task_name}</h5>
                 </div>
-                <div class="col-3">
-                    <h5 class="task-row-content my-2 date-created">${task.date_created_formatted}<br>${task.date_created_time}</h5>
+                <div class="col-4">
+                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">${task.date_created_formatted}<br>${task.date_created_time}</h5>
                 </div>
-                <div class="col-3">
-                    <h5 class="task-row-content my-2 due-date">${task.due_date_formatted}<br>${task.due_date_time}</h5>
+                <div class="col-4">
+                    <h5 class="task-row-content my-2 due-date" style="text-align:left; margin-left: 42%">${task.due_date_formatted}<br>${task.due_date_time}</h5>
                 </div>
                 `;
 
