@@ -21,7 +21,7 @@
             {{ $researches->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search research name...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search research title...">
             <div id="search-results"></div>
         </div>
     </div>
@@ -103,8 +103,6 @@
                     const researches = Object.values(data.researches)
                     const researchContainer = document.querySelector('.task-container');
                     researchContainer.innerHTML = '';
-
-                    console.log(researches);
 
                     researches.forEach(research => {
                         const row = `
