@@ -139,6 +139,17 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-tasks/ongoing', [AdminController::class, 'showAdminTasksGetCategory'])->name("admin-tasks/ongoing");
     Route::get('/admin-tasks/missing', [AdminController::class, 'showAdminTasksGetCategory'])->name("admin-tasks/missing");
 
+    Route::get('/admin-tasks/researches', [AdminController::class, 'showAdminTasksResearches'])->name("admin-tasks/researches");
+    Route::get('/admin-tasks/researches/search', [AdminController::class, 'showAdminTasksResearchesSearch'])->name("admin-tasks/researches/search");
+
+    Route::get('/admin-tasks/researches/presented', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/presented");
+    Route::get('/admin-tasks/researches/completed', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/completed");
+    Route::get('/admin-tasks/researches/published', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/published");
+
+    Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/extensions");
+    Route::get('/admin-tasks/attendance', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/attendance");
+    Route::get('/admin-tasks/seminars', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/seminars");
+
     Route::post('/admin-tasks/get-department-members', [AdminController::class, 'adminGetDepartmentMembers'])->name("/admin-tasks/get-department-members");
     Route::post('/admin-tasks/create-task', [AdminController::class, 'adminCreateTask'])->name("admin-tasks/create-task");
     Route::post('/admin-tasks/update-task', [AdminController::class, 'adminUpdateTask'])->name("admin-tasks/update-task");
