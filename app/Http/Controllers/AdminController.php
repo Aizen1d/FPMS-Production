@@ -9,6 +9,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Models\AdminTasks;
+use App\Models\AdminTasksResearchesPresented;
+use App\Models\AdminTasksResearchesCompleted;
+use App\Models\AdminTasksResearchesPublished;
+use App\Models\Extension;
+use App\Models\Attendance;
+use App\Models\Seminars;
 use App\Models\Faculty;
 use App\Models\FacultyPendingAccounts;
 use App\Models\DepartmentPendingJoins;
@@ -26,6 +32,9 @@ use ZipArchive;
 use Illuminate\Support\Str;
 use PhpParser\Node\Stmt\Return_;
 use Illuminate\Support\Facades\Mail;
+
+// Import LengthAwarePaginator
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AdminController extends Controller
 {
@@ -397,6 +406,92 @@ class AdminController extends Controller
             $tasks = AdminTasks::orderBy('created_at', 'desc')->paginate(9);
             $departments = Departments::all();
             return view('admin.admin_tasks', ['tasks' => $tasks], ['departments' => $departments]);
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksResearches() 
+    {
+        if (Auth::guard('admin')->check()) {
+            // TODO: Implement pagination for researches (presented, completed, published) and sort by date created (desc)
+            $researchesPresented = AdminTasksResearchesPresented::orderBy('created_at', 'desc')->get()->each(function ($item) {
+                $item->type = 'Presented';
+            });
+            $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')->get()->each(function ($item) {
+                $item->type = 'Completed';
+            });
+            $researchesPublished = AdminTasksResearchesPublished::orderBy('created_at', 'desc')->get()->each(function ($item) {
+                $item->type = 'Published';
+            });
+            
+            $researches = $researchesPresented->concat($researchesCompleted)->concat($researchesPublished);
+            
+            $researches = $researches->sortByDesc('created_at');
+            
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 3;
+            $currentItems = $researches->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($researches), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+            
+            return view('admin.admin_tasks_researches', ['researches' => $paginator]);
+            
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksResearchesSearch(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $query = $request->input('query');
+
+            $researchesPresented = AdminTasksResearchesPresented::where('title', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Presented';
+                });
+
+            $researchesCompleted = AdminTasksResearchesCompleted::where('title', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Completed';
+                });
+
+            $researchesPublished = AdminTasksResearchesPublished::where('title', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Published';
+                });
+
+            $researches = $researchesPresented->concat($researchesCompleted)->concat($researchesPublished);
+
+            $researches = $researches->sortByDesc('created_at')->values();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 3;
+            $currentItems = $researches->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($researches), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedResearches = $paginator->map(function ($item) {
+                return [
+                    'title' => $item->title,
+                    'authors' => $item->authors,
+                    'type' => $item->type,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+            
+            return response()->json(['researches' => $formattedResearches]);
         } else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');
         } else {
