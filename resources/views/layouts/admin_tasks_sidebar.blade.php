@@ -37,15 +37,15 @@
                     <span><b>All Researches</b></span>
                 </a>
                 <div id="sub-task">
-                    <a href="{{ route('admin-tasks/researches/presented') }}?category=completed" class="list-group-item list-group-item-action py-2 sub ripple bg
+                    <a href="{{ route('admin-tasks/researches/presented') }}" class="list-group-item list-group-item-action py-2 sub ripple bg
                     {{ (request()->is('admin-tasks/researches/presented')) ? 'active' : '' }}">
                         <span>Presented</span>
                     </a>
-                    <a href="{{ route('admin-tasks/researches/completed') }}?category=late-completed" class="list-group-item list-group-item-action py-2 sub ripple bg
+                    <a href="{{ route('admin-tasks/researches/completed') }}" class="list-group-item list-group-item-action py-2 sub ripple bg
                     {{ (request()->is('admin-tasks/researches/completed')) ? 'active' : '' }}">
                         <span>Completed</span>
                     </a>
-                    <a href="{{ route('admin-tasks/researches/published') }}?category=ongoing" class="list-group-item list-group-item-action py-2 sub ripple bg
+                    <a href="{{ route('admin-tasks/researches/published') }}" class="list-group-item list-group-item-action py-2 sub ripple bg
                     {{ (request()->is('admin-tasks/researches/published')) ? 'active' : '' }}"">
                         <span>Published</span>
                     </a>

@@ -11,3 +11,7 @@
     --info_text_label: #7d7b7be1; /* infos like username, email, pass, forgot pass */
     --white_text_label: #F7F7F8; /* in some buttons, this was used */
 }
+
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
