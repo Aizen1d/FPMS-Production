@@ -413,6 +413,7 @@ class AdminController extends Controller
         }
     }
 
+    // View all researches
     function showAdminTasksResearches() 
     {
         if (Auth::guard('admin')->check()) {
@@ -445,6 +446,409 @@ class AdminController extends Controller
         }
     }
 
+    // View a specific research category (Presented, Completed, Published)
+    function showAdminTasksResearchesView(Request $request) {
+        if (Auth::guard('admin')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $faculties = Faculty::all();
+
+            if (!$category || !$id) {
+                return back();
+            }
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+
+                if ($research) {
+                    return view('admin.admin_tasks_researches_presented_view', 
+                    [
+                        'research' => $research,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+
+                if ($research) {
+                    return view('admin.admin_tasks_researches_completed_view', 
+                    [
+                        'research' => $research,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+
+                if ($research) {
+                    return view('admin.admin_tasks_researches_published_view', 
+                    [
+                        'research' => $research,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else {
+                $research = null;
+            }
+
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    // Get attachments of a specific research
+    function showAdminTasksResearchGetAttachments(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $folderPath = '';
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+                $folderPath = 'Researches/Presented/' . $research->title;
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+                $folderPath = 'Researches/Completed/' . $research->title;
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+                $folderPath = 'Researches/Published/' . $research->title;
+            } 
+            else {
+                $research = null;
+            }
+
+            if ($research) {
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            } 
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    // Return the URL of the selected file
+    function showAdminTasksResearchPreviewFileSelected(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $fileName = $request->input('fileName');
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+                $folderPath = 'Researches/Presented/' . $research->title;
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+                $folderPath = 'Researches/Completed/' . $research->title;
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+                $folderPath = 'Researches/Published/' . $research->title;
+            } 
+            else {
+                $research = null;
+            }
+
+            // Set up the Google Drive API client
+            $client = new Google_Client();
+            $client->setClientId(env('GOOGLE_DRIVE_CLIENT_ID'));
+            $client->setClientSecret(env('GOOGLE_DRIVE_CLIENT_SECRET'));
+            $client->fetchAccessTokenWithRefreshToken(env('GOOGLE_DRIVE_REFRESH_TOKEN'));
+    
+            // Set up the Google Drive service
+            $service = new Google_Service_Drive($client);
+
+            // Find the file on Google Drive
+            $findFile = Storage::disk('google')->get($folderPath . '/' . $fileName);
+
+            if (!$findFile) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            
+            $results = $service->files->listFiles([
+                'q' => "name = '$fileName'",
+                'fields' => 'files(id, webViewLink)',
+            ]);
+
+            // Check if the file was found
+            if (count($results->getFiles()) === 0) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            else {
+                // Get the file's metadata
+                $file = $results->getFiles()[0];
+
+                // Get the webViewLink property
+                $url = $file->getWebViewLink();
+
+                return response()->json(['url' => $url]);
+            }
+
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    // Update the selected file
+    function adminTasksResearchUpdate(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+
+            // Update the research with corresponding category and id
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+
+                $title = $request->input('title');
+                $initialTitle = $request->input('initialTitle');
+
+                $authors = $request->input('authors');
+                $host = $request->input('host');
+                $level = $request->input('level');
+                $files = $request->file('files');
+
+                // Check if the title is unique
+                if (AdminTasksResearchesPresented::where('title', $title)->where('id', '!=', $id)->exists()) {
+                    return response()->json(['error' => 'A research with this title already exists.']);
+                }
+
+                $currentPath = $research->certificates;
+                $researchesPresentedPath = 'Researches/Presented';
+
+                if ($initialTitle !== $title) { // If the title has been changed
+                    // Create new folder named $taskname (the new task name) 
+                    Storage::disk('google')->makeDirectory($researchesPresentedPath . '/' . $title);
+                    $newFolderPath = $researchesPresentedPath . '/' . $title;
+
+                    // Get the $files and store them into the new folder
+                    foreach ($files as $file) {
+                        Storage::disk('google')->putFileAs($newFolderPath,
+                        $file, 
+                        $file->getClientOriginalName());
+                        Storage::disk('google')->setVisibility($newFolderPath, 'public');
+                        Storage::disk('google')->setVisibility($newFolderPath . '/' . $file->getClientOriginalName(), 'public');
+                    }
+            
+                    // Get the contents of the old folder
+                    $contents = Storage::disk('google')->listContents($currentPath);
+
+                    // Copy the files from the old folder to the new folder
+                    if (Storage::disk('google')->exists($newFolderPath)) {
+                        foreach ($contents as $item) {
+                            Storage::disk('google')->copy($item['path'], $newFolderPath . '/' . basename($item['path']));
+                        }
+
+                    }
+
+                    // Remove files from the new folder that wasn't found on $files array
+                    $folderPath = $newFolderPath;
+                    $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                    foreach ($filesInFolder as $fileInFolder) {
+                        $found = false;
+                        foreach ($files as $file) {
+                            if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            Storage::disk('google')->delete($fileInFolder);
+                        }
+                    }
+                    
+                    // Delete the old folder
+                    Storage::disk('google')->deleteDirectory($currentPath);
+                }
+                else {
+                    $folderPath = $currentPath;
+                    Storage::disk('google')->setVisibility($folderPath . '/' . $initialTitle, 'public');
+                    foreach ($files as $file) {
+                        $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                        if (!Storage::disk('google')->exists($filePath)) {
+                            // The file does not exist yet, upload it
+                            $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                        
+                            // Set the visibility of the file to "public"
+                            Storage::disk('google')->setVisibility($path, 'public');
+                        }
+                    }
+
+                    // Remove files from the new folder that wasn't found on $files array
+                    $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                    foreach ($filesInFolder as $fileInFolder) {
+                        $found = false;
+                        foreach ($files as $file) {
+                            if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            Storage::disk('google')->delete($fileInFolder);
+                        }
+                    }
+                }
+
+                // Update the research
+                $research->title = $title;
+                $research->authors = $authors;
+                $research->host = $host;
+                $research->level = $level;
+                $research->certificates = 'Researches/Presented/' . $title . '';
+                $research->save();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has updated a research named (' . $title . ').',
+                    'type_of_action' => 'Update Research',
+                ]);
+
+                return response()->json(['success' => 'Research updated successfully.']);
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+            } 
+            else {
+                $research = null;
+            }
+        }
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function adminTasksResearchDelete(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+            } 
+            else {
+                $research = null;
+            }
+
+            if ($research) {
+                $title = $research->title;
+                $folderPath = $research->certificates;
+
+                // Delete the folder and its contents
+                Storage::disk('google')->deleteDirectory($folderPath);
+
+                // Delete the research
+                $research->delete();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has deleted a research named (' . $title . ').',
+                    'type_of_action' => 'Delete Research',
+                ]);
+
+                return response()->json(['message' => 'Research deleted successfully.']);
+            } 
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    // Search for researches by title for all categories
     function showAdminTasksResearchesSearch(Request $request)
     {
         if (Auth::guard('admin')->check()) {
@@ -499,6 +903,7 @@ class AdminController extends Controller
         }
     }
 
+    // Search for researches by category
     function showAdminTasksResearchesCategorySearch(Request $request)
     {
         if (Auth::guard('admin')->check()) {
