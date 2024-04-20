@@ -140,11 +140,19 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-tasks/missing', [AdminController::class, 'showAdminTasksGetCategory'])->name("admin-tasks/missing");
 
     Route::get('/admin-tasks/researches', [AdminController::class, 'showAdminTasksResearches'])->name("admin-tasks/researches");
+    Route::get('/admin-tasks/researches/view', [AdminController::class, 'showAdminTasksResearchesView'])->name("admin-tasks/researches/view");
     Route::get('/admin-tasks/researches/search', [AdminController::class, 'showAdminTasksResearchesSearch'])->name("admin-tasks/researches/search");
+    Route::get('/admin-tasks/researches/getAttachments', [AdminController::class, 'showAdminTasksResearchGetAttachments'])->name("admin-tasks/researches/getAttachments");
+    Route::get('/admin-tasks/researches/attachment/preview', [AdminController::class, 'showAdminTasksResearchPreviewFileSelected'])->name("admin-tasks/researches/attachment/preview");
+    
+    Route::post('/admin-tasks/researches/update', [AdminController::class, 'adminTasksResearchUpdate'])->name("admin-tasks/researches/update");
+    Route::post('/admin-tasks/researches/delete', [AdminController::class, 'adminTasksResearchDelete'])->name("admin-tasks/researches/delete");
 
-    Route::get('/admin-tasks/researches/presented', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/presented");
-    Route::get('/admin-tasks/researches/completed', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/completed");
-    Route::get('/admin-tasks/researches/published', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/researches/published");
+    Route::get('/admin-tasks/researches/presented', [AdminController::class, 'showAdminTasksResearchesPresented'])->name("admin-tasks/researches/presented");
+    Route::get('/admin-tasks/researches/completed', [AdminController::class, 'showAdminTasksResearchesCompleted'])->name("admin-tasks/researches/completed");
+    Route::get('/admin-tasks/researches/published', [AdminController::class, 'showAdminTasksResearchesPublished'])->name("admin-tasks/researches/published");
+
+    Route::get('/admin-tasks/researches/category/search', [AdminController::class, 'showAdminTasksResearchesCategorySearch'])->name("admin-tasks/researches/category/search");
 
     Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/extensions");
     Route::get('/admin-tasks/attendance', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/attendance");
@@ -155,6 +163,8 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::post('/admin-tasks/update-task', [AdminController::class, 'adminUpdateTask'])->name("admin-tasks/update-task");
     Route::post('/admin-tasks/filter-department', [AdminController::class, 'adminFilterDepartment'])->name("admin-tasks/filter-department");
     Route::post('/admin-tasks/category/filter-department', [AdminController::class, 'adminCategoryFilterDepartment'])->name("admin-tasks/category/filter-department");
+
+    Route::post('/admin-tasks/researches/create-research', [AdminController::class, 'adminCreateResearch'])->name("admin-tasks/researches/create-research");
 
     Route::get('/admin-requests/account', [AdminController::class, 'showAdminRequestsAccount'])->name("admin-requests/account");
     Route::get('/admin-requests/account/search', [AdminController::class, 'showAdminRequestsAccountSearch'])->name("admin-requests/account/search");
