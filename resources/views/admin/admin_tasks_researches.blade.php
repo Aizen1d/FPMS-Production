@@ -232,7 +232,7 @@
 
         // NEW FUNCTIONALITY FOR RESEARCHES
         function getSelectedResearchRow(research) {
-            console.log(research);
+            window.location.href = `/admin-tasks/researches/view?category=${research.type}&id=${research.id}`;
         }
     </script>
 
