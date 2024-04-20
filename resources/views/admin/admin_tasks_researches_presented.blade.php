@@ -315,19 +315,8 @@
         function handleFiles(files) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                if (file.type.startsWith("image/") ||
-                    file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-                    file.type === "application/pdf" ||
-                    file.type === "application/vnd.ms-excel" ||
-                    file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-                    file.type === "application/vnd.ms-powerpoint" ||
-                    file.type === "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
-                    selectedFiles.push(file);
-                } else {
-                    showNotification("Only allowed files only (Images, Docx, PDF, PPTX, Excel)", '#fe3232bc');
-                    //alert("Only docx, pdf, excel, png and jpeg files are allowed.");
-                    break;
-                }
+                
+                selectedFiles.push(file);
             }
             updatePreview();
         }
@@ -610,7 +599,7 @@
 
         // On row click
         function getSelectedResearchRow(research) {
-            console.log(research);
+            window.location.href = `/admin-tasks/researches/view?category=Presented&id=${research.id}`;
         }
 
     </script>
