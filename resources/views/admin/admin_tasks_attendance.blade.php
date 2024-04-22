@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Researches Presented')
+@section('title', 'PUPQC - Attendance')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_researches_presented.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_attendance.css') }}">
 @endsection
 
 @section('body')
@@ -15,16 +15,16 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-4">
-            <h1 class="my-4 title">Researches (Presented)</h1>
+            <h1 class="my-4 title">Attendance</h1>
         </div>
         <div class="col-2 pages">
-            {{ $researches->links()  }}
+            {{ $items->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search research title...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search name of act...">
             <div id="search-results"></div>
 
-            <button class="my-4 create-btn" onclick="createNewTask()">Add Research</button>
+            <button class="my-4 create-btn" onclick="createNewTask()">Add Attendance</button>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         <div class="row">
           <div class="d-flex flex-col col-9">
             <h5 class="create-label">
-                Add Research (Presented)
+                Add Attendance
             </h5>
           </div>
           <div class="col-3">
@@ -44,83 +44,41 @@
             <div class="col-12">
                 <div class="ms-3">
                     <div class="d-flex flex-column">
-                        <label for="" class="ms-3">Title*</label>
-                        <input class="research-input" id="research-title-input" type="text" placeholder="Enter title">
+                        <label for="" class="ms-3">Name of Activity*</label>
+                        <input class="research-input" id="name-input" type="text" placeholder="Enter name of activity">
                     </div>
-
-                    <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Authors*</label>
-                        <div class="drop-down create-dropdown-faculties">
-                            <div class="wrapper">
-                                <div class="selected">Select authors</div>
-                            </div>
-                            <i class="fa fa-caret-down caret2"></i>
-    
-                            <div class="list create-list-faculties">
-                                @foreach ($faculties as $faculty)
-                                <div class="item2">
-                                    <input type="checkbox" id="all">
-                                    <div class="text">
-                                        {{ $faculty->first_name }} {{ $faculty->middle_name ? $faculty->middle_name . ' ' : '' }}{{ $faculty->last_name }}
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Conference Organizer / Host*</label>
-                        <input class="research-input" id="host-input" type="text" placeholder="Enter Conference Organizer / Host">
-                    </div>
-
-                    <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Level*</label>
-                        <div class="drop-down create-dropdown-level">
-                            <div class="wrapper">
-                                <div class="selected">Select Level</div>
-                            </div>
-                            <i class="fa fa-caret-down caret-level"></i>
                     
-                            <div class="list create-list-level">
-                                <div class="item2">
-                                    <input type="radio" name="level" id="local">
-                                    <div class="text">
-                                        Local
-                                    </div>
-                                </div>
-                                <div class="item2">
-                                    <input type="radio" name="level" id="national">
-                                    <div class="text">
-                                        National
-                                    </div>
-                                </div>
-                                <div class="item2">
-                                    <input type="radio" name="level" id="international">
-                                    <div class="text">
-                                        International
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
+                    <div class="d-flex flex-column mt-3">
+                      <label for="" class="ms-3">Venue*</label>
+                      <input class="research-input" id="venue-input" type="text" placeholder="Enter venue">
+                    </div>
+
+                    <div class="d-flex flex-column mt-3">
+                      <label for="" class="ms-3">Host*</label>
+                      <input class="research-input" id="host-input" type="text" placeholder="Enter host">
+                    </div>
+
+                    <div class="d-flex flex-column mt-3">
+                        <label for="" class="ms-3">Date Conducted*</label>
+                        <input class="ms-2" type="date" id="date-picker" min="1997-01-01" max="2030-01-01">
+                    </div>  
 
                     <div class="d-flex flex-column mt-3 ms-2" style="margin-left: 2% !important">
-                        <label for="" style="margin-left: 1% !important">S.O and Certificates*</label>
-                        <div style="display: flex; flex-direction: row">
-                            <div style="margin-right: 20px">
-                                <label for="file-upload" class="custom-file-upload">
-                                    <i class="fa fa-cloud-upload px-1" style="color: #82ceff;"></i> Upload Files
-                                </label>
-                                <input id="file-upload" type="file" multiple accept=".docx,.pdf,.xls,.xlsx,.png,.jpeg,.jpg,.ppt,.pptx" />
-                                <div id="drop-zone">
-                                    <p>Drop your files here</p>
-                                </div>
-                            </div>
-                            <div id="preview" class="preview-no-items" style="text-align:center; z-index: 99;">
-                                <p class="preview-label">Uploaded files are displayed here</p>
-                            </div>
-                        </div>
+                      <label for="" style="margin-left: 1% !important">S.O and Certificates*</label>
+                      <div style="display: flex; flex-direction: row">
+                          <div style="margin-right: 20px">
+                              <label for="file-upload" class="custom-file-upload">
+                                  <i class="fa fa-cloud-upload px-1" style="color: #82ceff;"></i> Upload Files
+                              </label>
+                              <input id="file-upload" type="file" multiple accept=".docx,.pdf,.xls,.xlsx,.png,.jpeg,.jpg,.ppt,.pptx" />
+                              <div id="drop-zone">
+                                  <p>Drop your files here</p>
+                              </div>
+                          </div>
+                          <div id="preview" class="preview-no-items" style="text-align:center; z-index: 99;">
+                              <p class="preview-label">Uploaded files are displayed here</p>
+                          </div>
+                      </div>
                     </div>
 
                     <div class="d-flex justify-content-center items-center mt-3">
@@ -137,38 +95,32 @@
                 <div class="spinner-border text-dark" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div id="loading-text" style="margin-top: 3px;">Creating research, this may take a few seconds.</div>
+                <div id="loading-text" style="margin-top: 3px;">Creating attendance, this may take a few seconds.</div>
             </div>
         </div>
     </div>
 
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
-            <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Title</h5>
+            <div class="col-6">
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Name of Activity</h5>
             </div>
-            <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Authors</h5>
-            </div>
-            <div class="col-4">
+            <div class="col-6">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Created At</h5>
             </div>
         </div>
 
         <div class="task-container">
-            @foreach ($researches as $research)
-            <div class="row task-row" onclick="getSelectedResearchRow({{ $research }})">
-                <div class="col-4">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">{{ $research->title }}</h5>
+            @foreach ($items as $item)
+            <div class="row task-row" onclick="getSelectedItemRow({{ $item }})">
+                <div class="col-6">
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $item->name_of_activity }}</h5>
                 </div>
-                <div class="col-4">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 43.5%">{{ $research->authors }}</h5>
-                </div>
-                <div class="col-4">
-                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 41%">
-                        {{ date('F j, Y', strtotime($research->created_at)) }}
+                <div class="col-6">
+                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 44.5%">
+                        {{ date('F j, Y', strtotime($item->created_at)) }}
                         <br>
-                        {{ date('g:i A', strtotime($research->created_at)) }}
+                        {{ date('g:i A', strtotime($item->created_at)) }}
                     </h5>
                 </div>
             </div>
@@ -210,28 +162,19 @@
         }
 
         function resetForm() {
-            document.getElementById('research-title-input').value = '';
-            document.getElementById('host-input').value = '';
+          document.getElementById('name-input').value = '';
+          document.getElementById('venue-input').value = '';
+          document.getElementById('host-input').value = '';
 
-            const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
-            const radioButtons = document.querySelectorAll('.create-list-level input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.checked = false;
-            });
-
-            selectedFiles = [];
-            updatePreview();
+          selectedFiles = [];
+          updatePreview();
         }
 
         function loadingMessage() {
             let div = document.getElementById("loading-text");
-            let text = ["Creating research, this may take a few seconds.",
-                "Creating research, this may take a few seconds..",
-                "Creating research, this may take a few seconds..."
+            let text = ["Creating attendance, this may take a few seconds.",
+                "Creating attendance, this may take a few seconds..",
+                "Creating attendance, this may take a few seconds..."
             ];
 
             let i = 0;
@@ -241,7 +184,7 @@
             }, 400);
         }
 
-        // Dropdown for faculties
+        /* Dropdown for faculties
         const dropdown2 = document.querySelector('.create-dropdown-faculties');
         const list2 = document.querySelector('.create-list-faculties');
         const caret2 = document.querySelector('.caret2');
@@ -263,35 +206,11 @@
             item.addEventListener('click', (event) => {
                 event.stopPropagation();
             });
-        });
-
-        // Dropdown for level
-        const dropdownLevel = document.querySelector('.create-dropdown-level');
-        const listLevel = document.querySelector('.create-list-level');
-        const caretLevel = document.querySelector('.caret-level');
-
-        dropdownLevel.addEventListener('click', () => {
-            listLevel.classList.toggle('show');
-            caretLevel.classList.toggle('fa-rotate');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!dropdownLevel.contains(e.target)) {
-                listLevel.classList.remove('show');
-                caretLevel.classList.remove('fa-rotate');
-            }
-        });
-
-        let itemsLevel = document.querySelectorAll('.item2');
-        itemsLevel.forEach(item => {
-            item.addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-        });
+        });*/
 
         /// File Upload ///
 
-         document.getElementById("file-upload").onchange = function() {
+        document.getElementById("file-upload").onchange = function() {
             var files = document.getElementById("file-upload").files;
             if (files.length === 0) {
                 // The user clicked the cancel button in the file upload dialog
@@ -387,35 +306,31 @@
         const debouncedInputHandler = debounce(function(event) {
             document.getElementById('loading-overlay-search').style.display = 'flex';
 
-            const category = 'Presented'
             const query = encodeURIComponent(event.target.value);
-            fetch(`/admin-tasks/researches/category/search?category=${category}&query=${query}`)
+            fetch(`/admin-tasks/attendance/search?query=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    const researches = Object.values(data.researches)
-                    const researchContainer = document.querySelector('.task-container');
-                    researchContainer.innerHTML = '';
+                    const items = Object.values(data.items)
+                    const taskContainer = document.querySelector('.task-container');
+                    taskContainer.innerHTML = '';
 
-                    researches.forEach(research => {
+                    items.forEach(item => {
                         const row = `
-                            <div class="row task-row" onclick="getSelectedResearchRow(${JSON.stringify(research)})">
-                                <div class="col-4">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">${research.title}</h5>
+                            <div class="row task-row" onclick="getSelectedItemRow(${JSON.stringify(item)})">
+                                <div class="col-6">
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">${item.name_of_activity}</h5>
                                 </div>
-                                <div class="col-4">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 43.5%">${research.authors}</h5>
-                                </div>
-                                <div class="col-4">
-                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 41%">
-                                        ${research.date_created_formatted}
+                                <div class="col-6">
+                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 44.5%">
+                                        ${item.date_created_formatted}
                                         <br>
-                                        ${research.date_created_time}
+                                        ${item.date_created_time}
                                     </h5>
                                 </div>
                             </div>
                         `;
 
-                        researchContainer.innerHTML += row;
+                        taskContainer.innerHTML += row;
                     });
 
                     document.getElementById('loading-overlay-search').style.display = 'none';
@@ -434,37 +349,37 @@
         // Form handling
 
         function validateForm() {
-            const title = document.getElementById('research-title-input').value;
-            const authors = document.querySelectorAll('.item2 input[type="checkbox"]:checked');
-            const host = document.getElementById('host-input').value;
-            const level = document.querySelector('.create-list-level input[type="radio"]:checked');
+          const name = document.getElementById('name-input').value;
+          const venue = document.getElementById('venue-input').value;
+          const host = document.getElementById('host-input').value;
+          const date = document.getElementById('date-picker').value;
 
-            if (title === '') {
-                showNotification('Title is required', '#fe3232bc');
+          if (name.trim() === '') {
+            showNotification('Please enter the name of the activity.', '#fe3232bc');
+            return false;
+          }
+
+          if (venue.trim() === '') {
+            showNotification('Please enter the venue.', '#fe3232bc');
+            return false;
+          }
+
+          if (host.trim() === '') {
+            showNotification('Please enter the host.', '#fe3232bc');
+            return false;
+          }
+
+            if (date.trim() === '') {
+                showNotification('Please enter the date conducted.', '#fe3232bc');
                 return false;
             }
 
-            if (authors.length <= 0) {
-                showNotification('Authors are required', '#fe3232bc');
-                return false;
-            }
+          if (selectedFiles.length <= 0) {
+            showNotification('Please upload the S.O and Certificates.', '#fe3232bc');
+            return false;
+          }
 
-            if (host === '') {
-                showNotification('Conference Organizer / Host is required', '#fe3232bc');
-                return false;
-            }
-
-            if (!level) {
-                showNotification('Level is required', '#fe3232bc');
-                return false;
-            }
-
-            if (selectedFiles.length <= 0) {
-                showNotification('Files are required', '#fe3232bc');
-                return false;
-            }
-
-            return true;
+          return true;
         }
 
         function submitForm() {
@@ -472,35 +387,19 @@
                 return;
             }
             
-            const title = document.getElementById('research-title-input').value;
-            let authors = [];
-
-            const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    const authorName = checkbox.parentElement.querySelector('.text').textContent.trim();
-                    authors.push(authorName);
-                }
-            });
-
+            const name = document.getElementById('name-input').value;
+            const venue = document.getElementById('venue-input').value;
             const host = document.getElementById('host-input').value;
-
-            // Get the selected level
-            const selectedLevelElement = document.querySelector('.create-list-level input[type="radio"]:checked');
-            let level = '';
-            if (selectedLevelElement) {
-                level = selectedLevelElement.nextElementSibling.textContent.trim();
-            }
+            const date = document.getElementById('date-picker').value;
 
             const data = new FormData();
-            data.append('title', title);
-            data.append('authors', authors.join(', '));
+            data.append('name', name);
+            data.append('venue', venue);
             data.append('host', host);
-            data.append('level', level);
-            data.append('type', 'Presented');
+            data.append('date', date);
 
             for (const file of selectedFiles) {
-                data.append('files[]', file);
+              data.append('files[]', file);
             }
 
             const loadingOverlay = document.getElementById('loading-overlay');
@@ -512,7 +411,7 @@
             loadingMessage();
 
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch('/admin-tasks/researches/create-research', {
+            fetch('/admin-tasks/create/attendance', {
                     headers: {
                         "Accept": "application/json, text-plain, */*",
                         "X-Requested-With": "XMLHttpRequest",
@@ -525,13 +424,13 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    if (data.newlyAddedResearch) {
-                        showNotification('Research created successfully', '#32fe32bc');
+                    if (data.newlyAddedAttendance) {
+                        showNotification('Attendance created successfully', '#32fe32bc');
                         closeNewTask();
                         resetForm();
 
-                        let tasks = data.allPresentedResearches;
-                        let newlyAdded = data.newlyAddedResearch;
+                        let tasks = data.allAttendance;
+                        let newlyAdded = data.newlyAddedAttendance;
                         refreshTable(tasks, newlyAdded);
                     } 
                     else {
@@ -560,7 +459,7 @@
                 const row = document.createElement('div');
                 row.classList.add('row', 'task-row');
 
-                if (newlyAdded && task.title === newlyAdded.title) {
+                if (newlyAdded && task.name_of_activity === newlyAdded.name_of_activity) {
                     row.classList.add('newly-added'); // Add the newly-added class to the task row element
 
                     // Remove the newly-added class after 3 seconds
@@ -570,14 +469,11 @@
                 }
 
                 row.innerHTML = `
-                    <div class="col-4">
-                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">${task.title}</h5>
+                    <div class="col-6">
+                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">${task.name_of_activity}</h5>
                     </div>
-                    <div class="col-4">
-                        <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 43.5%">${task.authors}</h5>
-                    </div>
-                    <div class="col-4">
-                        <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 41%">
+                    <div class="col-6">
+                        <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 44.5%">
                             ${task.date_created_formatted}
                                 <br>
                             ${task.date_created_time}
@@ -589,7 +485,7 @@
 
                 // Add the event listener to the row
                 row.addEventListener('click', () => {
-                    getSelectedResearchRow(task);
+                    getSelectedItemRow(task);
                 });
             });
 
@@ -598,8 +494,8 @@
         }
 
         // On row click
-        function getSelectedResearchRow(research) {
-            window.location.href = `/admin-tasks/researches/view?category=Presented&id=${research.id}`;
+        function getSelectedItemRow(item) {
+            window.location.href = `/admin-tasks/attendance/view?id=${item.id}`;
         }
 
     </script>

@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Researches Presented')
+@section('title', 'PUPQC - Researches Completed')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_researches_presented.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_researches_completed.css') }}">
 @endsection
 
 @section('body')
@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-4">
-            <h1 class="my-4 title">Researches (Presented)</h1>
+            <h1 class="my-4 title">Researches (Completed)</h1>
         </div>
         <div class="col-2 pages">
             {{ $researches->links()  }}
@@ -32,7 +32,7 @@
         <div class="row">
           <div class="d-flex flex-col col-9">
             <h5 class="create-label">
-                Add Research (Presented)
+                Add Research (Completed)
             </h5>
           </div>
           <div class="col-3">
@@ -70,60 +70,16 @@
                     </div>
 
                     <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Conference Organizer / Host*</label>
-                        <input class="research-input" id="host-input" type="text" placeholder="Enter Conference Organizer / Host">
+                        <label for="" class="ms-3">Date Completed*</label>
+                        <input class="ms-2" type="date" id="date-picker" min="1997-01-01" max="2030-01-01">
                     </div>
 
                     <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Level*</label>
-                        <div class="drop-down create-dropdown-level">
-                            <div class="wrapper">
-                                <div class="selected">Select Level</div>
-                            </div>
-                            <i class="fa fa-caret-down caret-level"></i>
-                    
-                            <div class="list create-list-level">
-                                <div class="item2">
-                                    <input type="radio" name="level" id="local">
-                                    <div class="text">
-                                        Local
-                                    </div>
-                                </div>
-                                <div class="item2">
-                                    <input type="radio" name="level" id="national">
-                                    <div class="text">
-                                        National
-                                    </div>
-                                </div>
-                                <div class="item2">
-                                    <input type="radio" name="level" id="international">
-                                    <div class="text">
-                                        International
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      <label for="" class="ms-3">Abstract / IMRaD*</label>
+                      <textarea class="ms-2 task-description-content" id="abstract" name="description" rows="4" cols="50" placeholder="Enter Abstract / IMRaD here.."></textarea>
                     </div>                    
 
-                    <div class="d-flex flex-column mt-3 ms-2" style="margin-left: 2% !important">
-                        <label for="" style="margin-left: 1% !important">S.O and Certificates*</label>
-                        <div style="display: flex; flex-direction: row">
-                            <div style="margin-right: 20px">
-                                <label for="file-upload" class="custom-file-upload">
-                                    <i class="fa fa-cloud-upload px-1" style="color: #82ceff;"></i> Upload Files
-                                </label>
-                                <input id="file-upload" type="file" multiple accept=".docx,.pdf,.xls,.xlsx,.png,.jpeg,.jpg,.ppt,.pptx" />
-                                <div id="drop-zone">
-                                    <p>Drop your files here</p>
-                                </div>
-                            </div>
-                            <div id="preview" class="preview-no-items" style="text-align:center; z-index: 99;">
-                                <p class="preview-label">Uploaded files are displayed here</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-center items-center mt-3">
+                    <div class="d-flex justify-content-center items-center mt-2">
                         <button class="d-flex justify-content-center items-center create-research-btn" onclick="submitForm()">
                             Create
                         </button>
@@ -211,20 +167,13 @@
 
         function resetForm() {
             document.getElementById('research-title-input').value = '';
-            document.getElementById('host-input').value = '';
+            document.getElementById('date-picker').value = '';
+            document.getElementById('abstract').value = '';
 
             const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
-
-            const radioButtons = document.querySelectorAll('.create-list-level input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.checked = false;
-            });
-
-            selectedFiles = [];
-            updatePreview();
         }
 
         function loadingMessage() {
@@ -265,112 +214,6 @@
             });
         });
 
-        // Dropdown for level
-        const dropdownLevel = document.querySelector('.create-dropdown-level');
-        const listLevel = document.querySelector('.create-list-level');
-        const caretLevel = document.querySelector('.caret-level');
-
-        dropdownLevel.addEventListener('click', () => {
-            listLevel.classList.toggle('show');
-            caretLevel.classList.toggle('fa-rotate');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!dropdownLevel.contains(e.target)) {
-                listLevel.classList.remove('show');
-                caretLevel.classList.remove('fa-rotate');
-            }
-        });
-
-        let itemsLevel = document.querySelectorAll('.item2');
-        itemsLevel.forEach(item => {
-            item.addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-        });
-
-        /// File Upload ///
-
-         document.getElementById("file-upload").onchange = function() {
-            var files = document.getElementById("file-upload").files;
-            if (files.length === 0) {
-                // The user clicked the cancel button in the file upload dialog
-                console.log('Upload cancelled');
-            } 
-            else {
-                handleFiles(files);
-            }
-        };
-
-        var dropZone = document.getElementById("drop-zone");
-        dropZone.addEventListener("dragover", function(evt) {
-            evt.preventDefault();
-        }, false);
-        dropZone.addEventListener("drop", function(evt) {
-            evt.preventDefault();
-            var files = evt.dataTransfer.files;
-            handleFiles(files);
-        }, false);
-
-        function handleFiles(files) {
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                
-                selectedFiles.push(file);
-            }
-            updatePreview();
-        }
-
-        function updatePreview() {
-            var preview = document.getElementById("preview");
-            preview.innerHTML = "";
-            for (var i = 0; i < selectedFiles.length; i++) {
-                var file = selectedFiles[i];
-                var div = document.createElement("div");
-                div.className = "file-container";
-                if (file.type.startsWith("image/")) {
-                    var img = document.createElement("img");
-                    img.file = file;
-                    div.appendChild(img);
-                    var reader = new FileReader();
-                    reader.onload = (function(aImg) {
-                        return function(e) {
-                            aImg.src = e.target.result;
-                        };
-                    })(img);
-                    reader.readAsDataURL(file);
-                } else {
-                    var p = document.createElement("p");
-                    p.textContent = file.name;
-                    div.appendChild(p);
-                }
-                var removeButton = document.createElement("button");
-                removeButton.textContent = "x";
-                removeButton.className = "remove-file";
-                removeButton.dataset.index = i;
-                div.appendChild(removeButton);
-                preview.appendChild(div);
-            }
-
-            if (selectedFiles.length <= 0) {
-                preview.innerHTML = "Files uploaded are displayed here";
-                preview.classList.add('preview-no-items');
-            } else {
-                preview.classList.remove('preview-no-items');
-            }
-        }
-
-        document.getElementById("preview").addEventListener("click", function(evt) {
-            if (evt.target.classList.contains("remove-file")) {
-                var index = parseInt(evt.target.dataset.index);
-                selectedFiles.splice(index, 1);
-                updatePreview();
-
-                // Reset the value of the file input
-                document.getElementById("file-upload").value = null;
-            }
-        });
-
         // Search functionality
 
         const searchInput = document.querySelector('#search-input');
@@ -387,7 +230,7 @@
         const debouncedInputHandler = debounce(function(event) {
             document.getElementById('loading-overlay-search').style.display = 'flex';
 
-            const category = 'Presented'
+            const category = 'Completed'
             const query = encodeURIComponent(event.target.value);
             fetch(`/admin-tasks/researches/category/search?category=${category}&query=${query}`)
                 .then(response => response.json())
@@ -436,31 +279,26 @@
         function validateForm() {
             const title = document.getElementById('research-title-input').value;
             const authors = document.querySelectorAll('.item2 input[type="checkbox"]:checked');
-            const host = document.getElementById('host-input').value;
-            const level = document.querySelector('.create-list-level input[type="radio"]:checked');
+            const dateCompleted = document.getElementById('date-picker').value;
+            const abstract = document.getElementById('abstract').value;
 
-            if (title === '') {
-                showNotification('Title is required', '#fe3232bc');
+            if (title.trim() === '') {
+                showNotification('Please enter a title.', '#fe3232bc');
                 return false;
             }
 
-            if (authors.length <= 0) {
-                showNotification('Authors are required', '#fe3232bc');
+            if (authors.length === 0) {
+                showNotification('Please select at least one author.', '#fe3232bc');
                 return false;
             }
 
-            if (host === '') {
-                showNotification('Conference Organizer / Host is required', '#fe3232bc');
+            if (dateCompleted.trim() === '') {
+                showNotification('Please select a date completed.', '#fe3232bc');
                 return false;
             }
 
-            if (!level) {
-                showNotification('Level is required', '#fe3232bc');
-                return false;
-            }
-
-            if (selectedFiles.length <= 0) {
-                showNotification('Files are required', '#fe3232bc');
+            if (abstract.trim() === '') {
+                showNotification('Please enter an abstract.', '#fe3232bc');
                 return false;
             }
 
@@ -474,6 +312,8 @@
             
             const title = document.getElementById('research-title-input').value;
             let authors = [];
+            const dateCompleted = document.getElementById('date-picker').value;
+            const abstract = document.getElementById('abstract').value;
 
             const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
             checkboxes.forEach(checkbox => {
@@ -483,25 +323,12 @@
                 }
             });
 
-            const host = document.getElementById('host-input').value;
-
-            // Get the selected level
-            const selectedLevelElement = document.querySelector('.create-list-level input[type="radio"]:checked');
-            let level = '';
-            if (selectedLevelElement) {
-                level = selectedLevelElement.nextElementSibling.textContent.trim();
-            }
-
             const data = new FormData();
             data.append('title', title);
-            data.append('authors', authors.join(', '));
-            data.append('host', host);
-            data.append('level', level);
-            data.append('type', 'Presented');
-
-            for (const file of selectedFiles) {
-                data.append('files[]', file);
-            }
+            data.append('authors', authors);
+            data.append('date_completed', dateCompleted);
+            data.append('abstract', abstract);
+            data.append('type', 'Completed');
 
             const loadingOverlay = document.getElementById('loading-overlay');
             const loadingText = document.getElementById('loading-text');
@@ -530,7 +357,7 @@
                         closeNewTask();
                         resetForm();
 
-                        let tasks = data.allPresentedResearches;
+                        let tasks = data.allCompletedResearches;
                         let newlyAdded = data.newlyAddedResearch;
                         refreshTable(tasks, newlyAdded);
                     } 
@@ -599,7 +426,7 @@
 
         // On row click
         function getSelectedResearchRow(research) {
-            window.location.href = `/admin-tasks/researches/view?category=Presented&id=${research.id}`;
+            window.location.href = `/admin-tasks/researches/view?category=Completed&id=${research.id}`;
         }
 
     </script>

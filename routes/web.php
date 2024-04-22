@@ -145,26 +145,45 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-tasks/researches/getAttachments', [AdminController::class, 'showAdminTasksResearchGetAttachments'])->name("admin-tasks/researches/getAttachments");
     Route::get('/admin-tasks/researches/attachment/preview', [AdminController::class, 'showAdminTasksResearchPreviewFileSelected'])->name("admin-tasks/researches/attachment/preview");
     
+    Route::post('/admin-tasks/researches/create-research', [AdminController::class, 'adminCreateResearch'])->name("admin-tasks/researches/create-research");
     Route::post('/admin-tasks/researches/update', [AdminController::class, 'adminTasksResearchUpdate'])->name("admin-tasks/researches/update");
     Route::post('/admin-tasks/researches/delete', [AdminController::class, 'adminTasksResearchDelete'])->name("admin-tasks/researches/delete");
 
     Route::get('/admin-tasks/researches/presented', [AdminController::class, 'showAdminTasksResearchesPresented'])->name("admin-tasks/researches/presented");
     Route::get('/admin-tasks/researches/completed', [AdminController::class, 'showAdminTasksResearchesCompleted'])->name("admin-tasks/researches/completed");
     Route::get('/admin-tasks/researches/published', [AdminController::class, 'showAdminTasksResearchesPublished'])->name("admin-tasks/researches/published");
-
     Route::get('/admin-tasks/researches/category/search', [AdminController::class, 'showAdminTasksResearchesCategorySearch'])->name("admin-tasks/researches/category/search");
 
-    Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/extensions");
-    Route::get('/admin-tasks/attendance', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/attendance");
-    Route::get('/admin-tasks/seminars', [AdminController::class, 'showAdminTasks'])->name("admin-tasks/seminars");
+    Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasksExtensions'])->name("admin-tasks/extensions");
+    Route::get('/admin-tasks/extensions/view', [AdminController::class, 'showAdminTasksExtensionsView'])->name("admin-tasks/extensions/view");
+    Route::get('/admin-tasks/extensions/search', [AdminController::class, 'showAdminTasksExtensionsSearch'])->name("admin-tasks/extensions/search");
+    Route::post('/admin-tasks/extensions/create', [AdminController::class, 'adminTasksExtensionsCreate'])->name("admin-tasks/extensions/create");
+    Route::post('/admin-tasks/extensions/update', [AdminController::class, 'adminTasksExtensionsUpdate'])->name("admin-tasks/extensions/update");
+    Route::post('/admin-tasks/extensions/delete', [AdminController::class, 'adminTasksExtensionsDelete'])->name("admin-tasks/extensions/delete");
+
+    Route::get('/admin-tasks/attendance', [AdminController::class, 'showAdminTasksAttendance'])->name("admin-tasks/attendance");
+    Route::get('/admin-tasks/attendance/view', [AdminController::class, 'showAdminTasksAttendanceView'])->name("admin-tasks/attendance/view");
+    Route::get('/admin-tasks/attendance/search', [AdminController::class, 'showAdminTasksAttendanceSearch'])->name("admin-tasks/attendance/search");
+    Route::post('/admin-tasks/attendance/create', [AdminController::class, 'adminTasksAttendanceCreate'])->name("admin-tasks/attendance/create");
+    Route::post('/admin-tasks/attendance/update', [AdminController::class, 'adminTasksAttendanceUpdate'])->name("admin-tasks/attendance/update");
+    Route::post('/admin-tasks/attendance/delete', [AdminController::class, 'adminTasksAttendanceDelete'])->name("admin-tasks/attendance/delete");
+    Route::get('/admin-tasks/attendance/getAttachments', [AdminController::class, 'showAdminTasksAttendanceGetAttachments'])->name("admin-tasks/attendance/getAttachments");
+    Route::get('/admin-tasks/attendance/attachment/preview', [AdminController::class, 'showAdminTasksAttendancePreviewFileSelected'])->name("admin-tasks/attendance/attachment/preview");
+
+    Route::get('/admin-tasks/seminars', [AdminController::class, 'showAdminTasksSeminars'])->name("admin-tasks/seminars");
+    Route::get('/admin-tasks/seminars/view', [AdminController::class, 'showAdminTasksSeminarsView'])->name("admin-tasks/seminars/view");
+    Route::get('/admin-tasks/seminars/search', [AdminController::class, 'showAdminTasksSeminarsSearch'])->name("admin-tasks/seminars/search");
+    Route::post('/admin-tasks/seminars/create', [AdminController::class, 'adminTasksSeminarsCreate'])->name("admin-tasks/seminars/create");
+    Route::post('/admin-tasks/seminars/update', [AdminController::class, 'adminTasksSeminarsUpdate'])->name("admin-tasks/seminars/update");
+    Route::post('/admin-tasks/seminars/delete', [AdminController::class, 'adminTasksSeminarsDelete'])->name("admin-tasks/seminars/delete");
+    Route::get('/admin-tasks/seminars/getAttachments', [AdminController::class, 'showAdminTasksSeminarsGetAttachments'])->name("admin-tasks/seminars/getAttachments");
+    Route::get('/admin-tasks/seminars/attachment/preview', [AdminController::class, 'showAdminTasksSeminarsPreviewFileSelected'])->name("admin-tasks/seminars/attachment/preview");
 
     Route::post('/admin-tasks/get-department-members', [AdminController::class, 'adminGetDepartmentMembers'])->name("/admin-tasks/get-department-members");
     Route::post('/admin-tasks/create-task', [AdminController::class, 'adminCreateTask'])->name("admin-tasks/create-task");
     Route::post('/admin-tasks/update-task', [AdminController::class, 'adminUpdateTask'])->name("admin-tasks/update-task");
     Route::post('/admin-tasks/filter-department', [AdminController::class, 'adminFilterDepartment'])->name("admin-tasks/filter-department");
     Route::post('/admin-tasks/category/filter-department', [AdminController::class, 'adminCategoryFilterDepartment'])->name("admin-tasks/category/filter-department");
-
-    Route::post('/admin-tasks/researches/create-research', [AdminController::class, 'adminCreateResearch'])->name("admin-tasks/researches/create-research");
 
     Route::get('/admin-requests/account', [AdminController::class, 'showAdminRequestsAccount'])->name("admin-requests/account");
     Route::get('/admin-requests/account/search', [AdminController::class, 'showAdminRequestsAccountSearch'])->name("admin-requests/account/search");

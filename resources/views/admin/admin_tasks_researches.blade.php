@@ -106,7 +106,7 @@
 
                     researches.forEach(research => {
                         const row = `
-                            <div class="row task-row" onclick="getSelectedResearchRow(${JSON.stringify(research)})">
+                            <div class="row task-row">
                                 <div class="col-3">
                                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">${research.title}</h5>
                                 </div>
@@ -126,7 +126,17 @@
                             </div>
                         `;
 
-                        researchContainer.innerHTML += row;
+                        // Create a new div and set its innerHTML to the row string
+                        const rowElement = document.createElement('div');
+                        rowElement.innerHTML = row.trim(); // trim() is used to remove leading/trailing white space
+
+                        // Add event listener to the new div
+                        rowElement.firstChild.addEventListener('click', function() {
+                            getSelectedResearchRow(research);
+                        });
+
+                        // Append the new div to the researchContainer
+                        researchContainer.appendChild(rowElement.firstChild);
                     });
 
                     document.getElementById('loading-overlay-search').style.display = 'none';
