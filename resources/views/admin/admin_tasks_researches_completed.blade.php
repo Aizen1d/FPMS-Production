@@ -325,7 +325,7 @@
 
             const data = new FormData();
             data.append('title', title);
-            data.append('authors', authors);
+            data.append('authors', authors.join(', '));
             data.append('date_completed', dateCompleted);
             data.append('abstract', abstract);
             data.append('type', 'Completed');
