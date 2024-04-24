@@ -153,6 +153,8 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-tasks/researches/completed', [AdminController::class, 'showAdminTasksResearchesCompleted'])->name("admin-tasks/researches/completed");
     Route::get('/admin-tasks/researches/published', [AdminController::class, 'showAdminTasksResearchesPublished'])->name("admin-tasks/researches/published");
     Route::get('/admin-tasks/researches/category/search', [AdminController::class, 'showAdminTasksResearchesCategorySearch'])->name("admin-tasks/researches/category/search");
+    Route::get('/admin-dashboard/research', [AdminController::class, 'showAdminDashboardResearch'])->name("admin-dashboard/research");
+    Route::post('/admin-dashboard/research/get-analytics', [AdminController::class, 'showAdminDashboardResearchGetAnalytics'])->name("admin-dashboard/research/get-analytics");
 
     Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasksExtensions'])->name("admin-tasks/extensions");
     Route::get('/admin-tasks/extensions/view', [AdminController::class, 'showAdminTasksExtensionsView'])->name("admin-tasks/extensions/view");

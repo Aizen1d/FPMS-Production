@@ -1129,6 +1129,51 @@ class AdminController extends Controller
         }
     }
 
+    function showAdminDashboardResearch()
+    {
+        if (Auth::guard('admin')->check()) {
+            $faculties = Faculty::all();
+
+            return view('admin.admin_dashboard_researches', ['faculties' => $faculties]);
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardResearchGetAnalytics(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $member = $request->input('member');
+
+            $researchesPresented = AdminTasksResearchesPresented::where('authors', 'like', "%{$member}%")->get();
+            $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', "%{$member}%")->get();
+            $researchesPublished = AdminTasksResearchesPublished::where('authors', 'like', "%{$member}%")->get();
+            
+            $totalResearches = $researchesPresented->count() + $researchesCompleted->count() + $researchesPublished->count();
+
+            $data = [
+                $researchesPresented->count(),
+                $researchesCompleted->count(),
+                $researchesPublished->count(),
+            ];
+
+            return response()->json([
+                'data' => json_encode($data),
+                'totalResearches' => $totalResearches,
+                'researchesPresented' => $researchesPresented->count(),
+                'researchesCompleted' => $researchesCompleted->count(),
+                'researchesPublished' => $researchesPublished->count(),
+            ]);
+        } else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
     // Get attachments of a specific research
     function showAdminTasksResearchGetAttachments(Request $request)
     {

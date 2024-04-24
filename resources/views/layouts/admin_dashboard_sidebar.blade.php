@@ -15,6 +15,10 @@
                         {{ (request()->is('admin-dashboard/department-task/timeline')) ? 'active' : '' }}"  aria-expanded="true">
                     <span><b>Assigned Task Timeline</b></span>
                 </a>
+                <a href="{{ route('admin-dashboard/research') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                        {{ (request()->is('admin-dashboard/research')) ? 'active' : '' }}"  aria-expanded="true">
+                    <span><b>Researches</b></span>
+                </a>
             </div>
         </div>
     </nav>
