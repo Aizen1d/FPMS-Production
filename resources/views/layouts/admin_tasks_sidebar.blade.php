@@ -67,7 +67,7 @@
             <div class="list-group list-group-flush mx-3">
                 <a href="{{ route('admin-tasks/seminars') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-tasks/seminars')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Seminars Attended</b></span>
+                    <span><b>Seminars</b></span>
                 </a>
             </div>
         </div>

@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-4">
-            <h1 class="my-4 title">Seminar</h1>
+            <h1 class="my-4 title">Seminars</h1>
         </div>
         <div class="col-2 pages">
             {{ $items->links()  }}
