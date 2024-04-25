@@ -1662,7 +1662,7 @@ class AdminController extends Controller
         }
     }
 
-    function adminCreateAttendance(Request $request)
+    function adminTasksAttendanceCreate(Request $request)
     {
         if (Auth::guard('admin')->check()) {
             $name = $request->input('name');
@@ -2097,7 +2097,7 @@ class AdminController extends Controller
         }
     }
 
-    function adminCreateSeminars(Request $request)
+    function adminTasksSeminarsCreate(Request $request)
     {
         if (Auth::guard('admin')->check()) {
             $name = $request->input('name');
