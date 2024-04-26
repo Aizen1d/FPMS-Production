@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-6">
-            <h3 class="my-4 title">Seminar</h3>
+            <h3 class="my-4 title">Seminars</h3>
         </div>
         <div class="col-6 drop-down-container">
             <button class="my-4 create-btn delete-task-btn" onclick="deleteItem()">Delete</button>
