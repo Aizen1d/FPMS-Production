@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-12" style="display: flex;">
-            <h1 class="my-4 title">Statistics</h1>
+            <h1 class="my-4 title">Analytics</h1>
 
             <div class="drop-down create-dropdown1">
                 <div class="wrapper">
@@ -56,11 +56,11 @@
         <div class="row">
             <div class="col-5" style="position: relative;">
                 <div class="chart-info">
-                    <h3 class="chart-label assigned-label"><b>Assigned:</b> <span class="assigned-data" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Completed:</b> <span class="assigned-completed" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Late Completed:</b> <span class="assigned-late-completed" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Ongoing:</b> <span class="assigned-ongoing" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Missing:</b> <span class="assigned-missing" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label assigned-label"><b>Assigned Memo:</b> <span class="assigned-data" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label"><b>Completed Memo:</b> <span class="assigned-completed" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label"><b>Late Completed Memo:</b> <span class="assigned-late-completed" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label"><b>Ongoing Memo:</b> <span class="assigned-ongoing" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label"><b>Missing Memo:</b> <span class="assigned-missing" style="font-weight: normal; color: #363636"></span></h3>
                 </div>
             </div>
             <div class="col-7" style="display: flex; justify-content: center; align-items: center;">
@@ -94,7 +94,7 @@
         let myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Completed', 'Late Completed', 'Ongoing', 'Missing'],
+            labels: ['Completed Memo', 'Late Completed Memo', 'Ongoing Memo', 'Missing Memo'],
             datasets: [{
                 label: 'Total',
                 data: data,

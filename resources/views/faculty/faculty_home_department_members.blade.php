@@ -40,9 +40,8 @@
 
         @foreach ($items as $item)
         <div class="row item-row">
-            <div class="col-6 column-1 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('faculty/images/user-profile.png') }}" alt=" " class="mr-3">
-                <h5 class="item-row-content my-2 column-1-text">
+            <div class="col-6 column-1">
+                <h5 class="item-row-content my-2 column-1-text" style="text-align: left; margin-left: 45%">
                     {{ $item->first_name }} {{ $item->middle_name }} {{ $item->last_name }}
                 </h5>
             </div>

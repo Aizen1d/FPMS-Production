@@ -20,7 +20,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link content mx-5 {{ (request()->is('admin-tasks*')) ? 'navbar-active' : '' }}" 
-                    aria-current="page" href="{{ route('admin-tasks') }}">Tasks</a>
+                    aria-current="page" href="{{ route('admin-tasks') }}">Accomplishments</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link content mx-5 {{ (request()->is('admin-dashboard*')) ? 'navbar-active' : '' }}" 

@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Assigned Tasks')
+@section('title', 'PUPQC - Assigned Memo')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('faculty/css/faculty_home_department_assigned_tasks.css') }}">
@@ -15,13 +15,13 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-7">
-            <h1 class="my-4 title">{{ $department }} Program <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;">Note: Only completed tasks by all assigned members are listed here.</span></h1>
+            <h1 class="my-4 title">{{ $department }} Program <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;"></span></h1>
         </div>
         <div class="col-2 pages">
             {{ $tasks->links()  }}
         </div>
         <div class="col-3 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search task name...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search memo...">
             <div id="search-results"></div>
 
         </div>
@@ -30,7 +30,7 @@
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
             <div class="col-7">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Memo</h5>
             </div>
             <div class="col-2">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Date Created</h5>
@@ -43,16 +43,16 @@
         @foreach ($tasks as $task)
         <div class="row task-row">
             <div class="col-7">
-                <h5 class="task-row-content my-2 task-name-text">{{ $task->task_name }}</h5>
+                <h5 class="task-row-content my-2 task-name-text" style="text-align: left; margin-left: 47%">{{ $task->task_name }}</h5>
             </div>
             <div class="col-2">
-                <h5 class="task-row-content my-2 date-created">{{ date('F j, Y', strtotime($task->date_created)) }}<br>{{ date('g:i A', strtotime($task->date_created)) }}</h5>
+                <h5 class="task-row-content my-2 date-created" style="text-align: left; margin-left: 27.5%">{{ date('F j, Y', strtotime($task->date_created)) }}<br>{{ date('g:i A', strtotime($task->date_created)) }}</h5>
             </div>
             <div class="col-3">
                 @if (Carbon\Carbon::parse($task->due_date)->isPast())
-                <h5 class="task-row-content my-2 text-danger due-date">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
+                <h5 class="task-row-content my-2 text-danger due-date" style="text-align: left; margin-left: 40%">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
                 @else
-                <h5 class="task-row-content my-2 due-date">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
+                <h5 class="task-row-content my-2 due-date" style="text-align: left; margin-left: 40%">{{ date('F j, Y', strtotime($task->due_date)) }}<br>{{ date('g:i A', strtotime($task->due_date)) }}</h5>
                 @endif
             </div>
         </div>

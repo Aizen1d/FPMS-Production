@@ -26,11 +26,11 @@
         <div class="row">
             <div class="col-5" style="position: relative;">
                 <div class="chart-info">
-                    <h3 class="chart-label"><b>Assigned:</b> <span style="font-weight: normal; color: #363636">{{ $assigned }}</span></h3>
-                    <h3 class="chart-label"><b>Completed:</b> <span style="font-weight: normal; color: #363636">{{ $completed }}</span></h3>
-                    <h3 class="chart-label"><b>Late Completed:</b> <span style="font-weight: normal; color: #363636">{{ $late_completed }}</span></h3>
-                    <h3 class="chart-label"><b>Ongoing:</b> <span style="font-weight: normal; color: #363636">{{ $ongoing }}</span></h3>
-                    <h3 class="chart-label"><b>Missing:</b> <span style="font-weight: normal; color: #363636">{{ $missing }}</span></h3>
+                    <h3 class="chart-label"><b>Assigned Memo:</b> <span style="font-weight: normal; color: #363636">{{ $assigned }}</span></h3>
+                    <h3 class="chart-label"><b>Completed Memo:</b> <span style="font-weight: normal; color: #363636">{{ $completed }}</span></h3>
+                    <h3 class="chart-label"><b>Late Completed Memo:</b> <span style="font-weight: normal; color: #363636">{{ $late_completed }}</span></h3>
+                    <h3 class="chart-label"><b>Ongoing Memo:</b> <span style="font-weight: normal; color: #363636">{{ $ongoing }}</span></h3>
+                    <h3 class="chart-label"><b>Missing Memo:</b> <span style="font-weight: normal; color: #363636">{{ $missing }}</span></h3>
                 </div>
             </div>
             <div class="col-7" style="display: flex; justify-content: center; align-items: center;">
@@ -61,7 +61,7 @@
         new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Completed', 'Late Completed', 'Ongoing', 'Missing'],
+            labels: ['Completed Memo', 'Late Completed Memo', 'Ongoing Memo', 'Missing Memo'],
             datasets: [{
                 label: 'Total',
                 data: data,

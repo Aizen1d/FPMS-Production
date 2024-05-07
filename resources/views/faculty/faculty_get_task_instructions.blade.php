@@ -50,7 +50,7 @@
                 <div class="row">
                     <div class="" style="width: 45%">
                         <div class="description-container">
-                            <h3 class="description-label">Task Description:</h3>
+                            <h3 class="description-label">Description:</h3>
                             <textarea class="task-description-content" id="description" name="description" rows="4" cols="50" placeholder="Task description.." readonly>{{ $description }}</textarea>
 
                         </div>

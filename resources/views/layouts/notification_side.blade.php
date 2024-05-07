@@ -9,7 +9,7 @@
         bottom: 20px;
         right: 20px;
         width: 300px;
-        z-index: 9999;
+        z-index: 999999;
     }
 
     /* Style the notification */

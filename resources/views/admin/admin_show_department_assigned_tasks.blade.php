@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Department Tasks')
+@section('title', 'PUPQC - Department Memo')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_show_department_assigned_tasks.css') }}">
@@ -21,10 +21,9 @@
             {{ $tasks->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search task name...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search memo...">
             <div id="search-results"></div>
 
-            <button class="my-4 create-btn" onclick="createNewTask()">Create Task</button>
         </div>
     </div>
 
@@ -107,7 +106,7 @@
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
             <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Memo</h5>
             </div>
             <div class="col-4">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Date Created</h5>
@@ -120,7 +119,7 @@
         @foreach ($tasks as $task)
         <div class="row task-row">
             <div class="col-4">
-                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $task->task_name }}</h5>
+                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 44.5%">{{ $task->task_name }}</h5>
             </div>
             <div class="col-4">
                 <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>

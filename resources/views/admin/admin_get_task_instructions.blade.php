@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Task Instructions')
+@section('title', 'PUPQC - Memo Instructions')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_get_task_instructions.css') }}">
@@ -24,7 +24,7 @@
             <h1 class="my-4 title">{{ $departmentName }} Program</h1>
         </div>
         <div class="col-6 drop-down-container">
-            <button class="my-4 create-btn edit-task-btn" onclick="editTask()">Edit Task</button>
+            <button class="my-4 create-btn edit-task-btn" onclick="editTask()">Edit Memo</button>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
                 <div class="create-task-popup">
                     <div class="row">
                         <div class="col-9" style="display: flex; justify-content: space-between;">
-                            <h4 class="create-label">Click taskname to edit:</h4>
+                            <h4 class="create-label">Click memo name to edit:</h4>
 
                             <div class="task-name">
                                 <label for="task" id="taskLabel">{{ $taskName }}</label>
@@ -72,7 +72,7 @@
                             </div>
                         </div>
 
-                        <label class="task-description-label" for="description">Task Description:</label><br>
+                        <label class="task-description-label" for="description">Description:</label><br>
                         <textarea class="task-description-content" id="description" name="description" rows="4" cols="50" placeholder="Enter your description here..">{{ $description }}</textarea>
 
                         <div style="display: flex; flex-direction: row">
@@ -100,7 +100,7 @@
                             <div style="display: none;" id="fileNames" data-folder-path="{{ $folderPath }}"></div>
                         </div>
 
-                        <button class="create-btn create-task" onclick="createTask()">Save Task</button>
+                        <button class="create-btn create-task" onclick="createTask()">Save Memo</button>
                     </div>
 
                     <div id="loading-overlay" class="loading-create-task" style="display: none; justify-content: center; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
@@ -108,7 +108,7 @@
                             <div class="spinner-border text-dark" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
-                            <div id="loading-text" style="margin-top: 3px;">Creating task, this may take a few seconds.</div>
+                            <div id="loading-text" style="margin-top: 3px;">Creating memo, this may take a few seconds.</div>
                         </div>
                     </div>
                 </div>

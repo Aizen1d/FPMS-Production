@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Admin Tasks')
+@section('title', 'PUPQC - Admin Memo')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks.css') }}">
@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-2">
-            <h1 class="my-4 title">Tasks</h1>
+            <h1 class="my-4 title">Memo</h1>
         </div>
         <div class="col-2">
 
@@ -24,7 +24,7 @@
             {{ $tasks->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search task name...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search memo...">
             <div id="search-results"></div>
 
             <div class="drop-down">
@@ -47,17 +47,17 @@
                     @endforeach
                 </div>
             </div>
-            <button class="my-4 create-btn" onclick="createNewTask()">Create Task</button>
+            <button class="my-4 create-btn" onclick="createNewTask()">Create Memo</button>
         </div>
     </div>
 
     <div class="create-task-popup">
         <div class="row">
             <div class="col-9" style="display: flex; justify-content: space-between;">
-                <h4 class="create-label">Create Task</h4>
+                <h4 class="create-label">Create Memo</h4>
 
                 <div class="task-name">
-                    <label for="task" id="taskLabel">Click to set task name:</label>
+                    <label for="task" id="taskLabel">Click to set memo name:</label>
                     <input type="text" id="task" class="edit">
                 </div>
             </div>
@@ -108,7 +108,7 @@
                 </div>
             </div>
 
-            <label class="task-description-label" for="description">Task Description:</label><br>
+            <label class="task-description-label" for="description">Description:</label><br>
             <textarea class="task-description-content" id="description" name="description" rows="4" cols="50" placeholder="Enter your description here.."></textarea>
 
             <div style="display: flex; flex-direction: row">
@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            <button class="create-btn create-task" onclick="createTask()">Create Task</button>
+            <button class="create-btn create-task" onclick="createTask()">Create Memo</button>
         </div>
 
         <div id="loading-overlay" class="loading-create-task" style="display: none; justify-content: center; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
@@ -134,7 +134,7 @@
                 <div class="spinner-border text-dark" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div id="loading-text" style="margin-top: 3px;">Creating task, this may take a few seconds.</div>
+                <div id="loading-text" style="margin-top: 3px;">Creating memo, this may take a few seconds.</div>
             </div>
         </div>
 
@@ -143,7 +143,7 @@
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
             <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Memo</h5>
             </div>
             <div class="col-3">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Program Name</h5>
@@ -159,7 +159,7 @@
         @foreach ($tasks as $task)
         <div class="row task-row">
             <div class="col-4">
-                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $task->task_name }}</h5>
+                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">{{ $task->task_name }}</h5>
             </div>
             <div class="col-3">
                 <div style="text-align:left; margin-left: 31%; display: flex">
@@ -216,7 +216,7 @@
 
         function resetTaskInputs() {
             // Clear the value of the task name input
-            document.querySelector('#taskLabel').textContent = 'Click to set task name:';
+            document.querySelector('#taskLabel').textContent = 'Click to set memo name:';
             document.querySelector("#task").value = '';
 
             // Reset the selected option in the department dropdown
@@ -253,7 +253,7 @@
         taskLabel.addEventListener("click", function() {
             taskLabel.classList.add("edit");
             taskInput.classList.remove("edit");
-            if (taskLabel.textContent === "Click to set task name:") {
+            if (taskLabel.textContent === "Click to set memo name:") {
                 taskInput.value = "";
             } else {
                 taskInput.value = taskLabel.textContent;
@@ -265,7 +265,7 @@
             taskLabel.classList.remove("edit");
             taskInput.classList.add("edit");
             if (taskInput.value === "") {
-                taskLabel.textContent = "Click to set task name:";
+                taskLabel.textContent = "Click to set memo name:";
             } else {
                 taskLabel.textContent = taskInput.value;
             }
@@ -589,8 +589,8 @@
             const description = document.querySelector('.task-description-content').value;
 
             // Validations
-            if (taskLabel.textContent === "Click to set task name:") {
-                showNotification("Set task name first.", '#fe3232bc');
+            if (taskLabel.textContent === "Click to set memo name:") {
+                showNotification("Set memo name first.", '#fe3232bc');
                 return;
             }
             if (!selectFaculty || selectFaculty === 'Select Program') {
@@ -606,7 +606,7 @@
                 return;
             }
             if (!description) {
-                showNotification("Give atleast task description.", '#fe3232bc');
+                showNotification("Give atleast description.", '#fe3232bc');
                 return;
             }
 
@@ -649,7 +649,7 @@
                         requestAnimationFrame(renderTasks);
                         resetTaskInputs();
                         closeNewTask();
-                        showNotification("(" + data.get('taskname') + ") task is successfully created.", '#1dad3cbc');
+                        showNotification("(" + data.get('taskname') + ") memo is successfully created.", '#1dad3cbc');
                     }
                 })
                 .catch(error => {
@@ -660,9 +660,9 @@
 
         // Loading message while creating task
         let div = document.getElementById("loading-text");
-        let text = ["Creating task, this may take a few seconds.",
-            "Creating task, this may take a few seconds..",
-            "Creating task, this may take a few seconds..."
+        let text = ["Creating memo, this may take a few seconds.",
+            "Creating memo, this may take a few seconds..",
+            "Creating memo, this may take a few seconds..."
         ];
         let i = 0;
         setInterval(function() {

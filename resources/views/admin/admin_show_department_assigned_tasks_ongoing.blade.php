@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Department Tasks')
+@section('title', 'PUPQC - Department Memo')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks.css') }}">
@@ -15,13 +15,13 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-7">
-            <h1 class="my-4 title">{{ $department }} Program <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;">Note: One ongoing task by member and that task is listed here.</span></h1>
+            <h1 class="my-4 title">{{ $department }} Program <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;">Note: One ongoing memo by a member, that memo will be listed here.</span></h1>
         </div>
         <div class="col-2 pages">
             {{ $tasks->links()  }}
         </div>
         <div class="col-3 drop-down-container">
-            <input type="text" class="search-input mx-5 px-3" style="width: 200px;" id="search-input" placeholder="Search task name..">
+            <input type="text" class="search-input mx-5 px-3" style="width: 200px;" id="search-input" placeholder="Search memo..">
             <div id="search-results"></div>
         </div>
     </div>
@@ -118,7 +118,7 @@
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
             <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Memo</h5>
             </div>
             <div class="col-4">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Date Created</h5>
@@ -131,7 +131,7 @@
         @foreach ($tasks as $task)
         <div class="row task-row">
             <div class="col-4">
-                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $task->task_name }}</h5>
+                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">{{ $task->task_name }}</h5>
             </div>
             <div class="col-4">
                 <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">{{ date('F j, Y', strtotime($task->created_at)) }}<br>{{ date('g:i A', strtotime($task->created_at)) }}</h5>

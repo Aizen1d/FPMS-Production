@@ -10,4 +10,9 @@ class AdminTasksResearchesCompleted extends Model
     use HasFactory;
 
     protected $table = 'admin_tasks_researches_completed';
+
+    public function presentedResearch()
+    {
+        return $this->hasOne(AdminTasksResearchesPresented::class, 'research_completed_id');
+    }
 }

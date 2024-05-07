@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Task Overview')
+@section('title', 'PUPQC - Memo Overview')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_get_task_task_overview.css') }}">
@@ -30,16 +30,16 @@
 
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
-            <div class="col-4" style="position: relative;">
+            <div class="col-5" style="position: relative;">
                 <div class="chart-info">
-                    <h3 class="chart-label"><b>Assigned:</b> <span style="font-weight: normal; color: #363636">{{ $assigned }}</span></h3>
-                    <h3 class="chart-label"><b>Completed:</b> <span style="font-weight: normal; color: #363636">{{ $completed }}</span></h3>
-                    <h3 class="chart-label"><b>Late Completed:</b> <span style="font-weight: normal; color: #363636">{{ $late_completed }}</span></h3>
-                    <h3 class="chart-label"><b>Ongoing:</b> <span style="font-weight: normal; color: #363636">{{ $ongoing }}</span></h3>
-                    <h3 class="chart-label"><b>Missing:</b> <span style="font-weight: normal; color: #363636">{{ $missing }}</span></h3>
+                    <h3 class="chart-label"><b>Assigned Memo:</b> <span style="font-weight: normal; color: #363636">{{ $assigned }}</span></h3>
+                    <h3 class="chart-label"><b>Completed Memo:</b> <span style="font-weight: normal; color: #363636">{{ $completed }}</span></h3>
+                    <h3 class="chart-label"><b>Late Completed Memo:</b> <span style="font-weight: normal; color: #363636">{{ $late_completed }}</span></h3>
+                    <h3 class="chart-label"><b>Ongoing Memo:</b> <span style="font-weight: normal; color: #363636">{{ $ongoing }}</span></h3>
+                    <h3 class="chart-label"><b>Missing Memo:</b> <span style="font-weight: normal; color: #363636">{{ $missing }}</span></h3>
                 </div>
             </div>
-            <div class="col-8" style="display: flex; justify-content: center; align-items: center;">
+            <div class="col-7" style="display: flex; justify-content: center; align-items: center;">
                 <canvas id="myChart" class="pie-chart" width="700" height="555"></canvas>
             </div>
         </div>
@@ -57,7 +57,7 @@
         new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Completed', 'Late Completed', 'Ongoing', 'Missing'],
+            labels: ['Completed Memo', 'Late Completed Memo', 'Ongoing Memo', 'Missing Memo'],
             datasets: [{
                 label: 'Total',
                 data: data,

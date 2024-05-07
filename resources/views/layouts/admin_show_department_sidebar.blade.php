@@ -12,7 +12,7 @@
                 </a>
                 <a href="{{ route('admin-home/show-department/assigned-tasks') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-home/show-department/assigned-tasks')) ? 'active' : '' }}">
-                    <span><b>All Department Tasks</b></span>
+                    <span><b>All Department Memo</b></span>
                 </a>
                 <div id="sub-task">
                     <a href="{{ route('admin-home/show-department/assigned-tasks/completed') }}?category=completed" class="list-group-item list-group-item-action py-2 sub ripple bg

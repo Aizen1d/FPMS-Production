@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Admin Tasks')
+@section('title', 'PUPQC - Admin Memo')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks.css') }}">
@@ -15,13 +15,13 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-5">
-            <h1 class="my-4 title">Tasks <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;">Note: One missing task by member and that task is listed here</span></h1>
+            <h1 class="my-4 title">Memo <span style="font-size: 0.4em; color: #9c9a9a; font-weight: normal;">Note: One missing memo by member and that memo is listed here</span></h1>
         </div>
         <div class="col-2 pages">
             {{ $tasks->links()  }}
         </div>
         <div class="col-5 drop-down-container">
-            <input type="text" class="search-input mx-5" style="width: 200px;" id="search-input" placeholder="Search task name...">
+            <input type="text" class="search-input mx-5" style="width: 200px;" id="search-input" placeholder="Search memo...">
             <div id="search-results"></div>
 
             <div class="drop-down">
@@ -140,7 +140,7 @@
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
             <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Task Name</h5>
+                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Memo</h5>
             </div>
             <div class="col-3">
                 <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Program Name</h5>
@@ -156,7 +156,7 @@
         @foreach ($tasks as $task)
         <div class="row task-row">
             <div class="col-4">
-                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $task->task_name }}</h5>
+                <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 45%">{{ $task->task_name }}</h5>
             </div>
             <div class="col-3">
                 <div style="text-align:left; margin-left: 31%; display: flex">

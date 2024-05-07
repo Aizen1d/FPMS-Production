@@ -9,7 +9,7 @@
             <div class="list-group list-group-flush mx-3">
                 <a href="{{ route('admin-tasks') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-tasks')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>All Tasks</b></span>
+                    <span><b>All Memo</b></span>
                 </a>
                 <div id="sub-task">
                     <a href="{{ route('admin-tasks/completed') }}?category=completed" class="list-group-item list-group-item-action py-2 sub ripple bg

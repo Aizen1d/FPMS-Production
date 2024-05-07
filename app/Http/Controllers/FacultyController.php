@@ -22,6 +22,16 @@ use ZipArchive;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\AdminTasksResearchesPresented;
+use App\Models\AdminTasksResearchesCompleted;
+use App\Models\AdminTasksResearchesPublished;
+use App\Models\Extension;
+use App\Models\Attendance;
+use App\Models\Seminars;
+
+// Import LengthAwarePaginator
+use Illuminate\Pagination\LengthAwarePaginator;
+
 require_once(resource_path('views/validation_standards.php'));
 
 class FacultyController extends Controller
@@ -1659,6 +1669,1262 @@ class FacultyController extends Controller
         else if (Auth::guard('admin')->check()) {
             return redirect('admin-home');
         }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearches(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            // TODO: Implement pagination for researches (presented, completed, published) and sort by date created (desc)
+            $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+            // include type to researchesPresented
+            $researchesPresented->each(function ($item) {
+                $item->type = 'Presented';
+                $item->title = $item->completedResearch->title; // Access the title
+                $item->authors = $item->completedResearch->authors; // Access the authors
+            });
+
+            $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')->get()->each(function ($item) {
+                $item->type = 'Completed';
+            });
+
+            $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+            // include type to researchesPublished
+            $researchesPublished->each(function ($item) {
+                $item->type = 'Published';
+                $item->title = $item->completedResearch->title; // Access the title
+                $item->authors = $item->completedResearch->authors; // Access the authors
+            });
+            
+            $researches = $researchesPresented->concat($researchesCompleted)->concat($researchesPublished);
+            
+            $researches = $researches->sortByDesc('created_at');
+            
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $researches->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($researches), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+            
+            return view('faculty.faculty_tasks_researches', ['researches' => $paginator]);
+            
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesView(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $faculties = Faculty::all();
+
+            if (!$category || !$id) {
+                return back();
+            }
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::with('completedResearch')->find($id);
+                $date_presented = Carbon::parse($research->date_presented)->format('Y-m-d');
+                $date_completed = Carbon::parse($research->completedResearch->date_completed)->format('Y-m-d');
+
+                if ($research) {
+                    return view('faculty.faculty_tasks_researches_presented_view', 
+                    [
+                        'research' => $research,
+                        'date_presented' => $date_presented,
+                        'date_completed' => $date_completed,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+
+                if ($research) {
+                    // Format the date completed to "yyyy-MM-dd".
+                    $dateCompleted = Carbon::parse($research->date_completed)->format('Y-m-d');
+
+                    return view('faculty.faculty_tasks_researches_completed_view', 
+                    [
+                        'research' => $research,
+                        'date_completed' => $dateCompleted,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::with('completedResearch')->find($id);
+
+                if ($research) {
+                    // Format the date of Publication to "yyyy-MM-dd".
+                    $date_published = Carbon::parse($research->date_published)->format('Y-m-d');
+                    $date_completed = Carbon::parse($research->completedResearch->date_completed)->format('Y-m-d');
+
+                    return view('faculty.faculty_tasks_researches_published_view', 
+                    [
+                        'research' => $research,
+                        'date_published' => $date_published,
+                        'date_completed' => $date_completed,
+                        'category' => $category,
+                        'id' => $id,
+                        'faculties' => $faculties
+                    ]);
+                } 
+                else {
+                    return back();
+                }
+            } 
+            else {
+                $research = null;
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesSearch(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+
+            $researchesCompleted = AdminTasksResearchesCompleted::where('title', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Completed';
+                });
+
+            $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+                ->whereHas('completedResearch', function ($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%");
+                })
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Presented';
+                    $item->title = $item->completedResearch->title; // Access the title
+                    $item->authors = $item->completedResearch->authors; // Access the authors
+                });
+
+            $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+                ->whereHas('completedResearch', function ($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%");
+                })
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Published';
+                    $item->title = $item->completedResearch->title; // Access the title
+                    $item->authors = $item->completedResearch->authors; // Access the authors
+                });
+
+            $researches = $researchesPresented->concat($researchesCompleted)->concat($researchesPublished);
+
+            $researches = $researches->sortByDesc('created_at')->values();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $researches->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($researches), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedResearches = $paginator->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'authors' => $item->authors,
+                    'type' => $item->type,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+            
+            return response()->json(['researches' => $formattedResearches]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchGetAttachments(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $folderPath = '';
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+                $folderPath = 'Researches/Presented/' . $research->title;
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+                $folderPath = 'Researches/Completed/' . $research->title;
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+                $folderPath = 'Researches/Published/' . $research->title;
+            } 
+            else {
+                $research = null;
+            }
+
+            if ($research) {
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            } 
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchPreviewFileSelected(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $fileName = $request->input('fileName');
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+                $folderPath = 'Researches/Presented/' . $research->title;
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+                $folderPath = 'Researches/Completed/' . $research->title;
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+                $folderPath = 'Researches/Published/' . $research->title;
+            } 
+            else {
+                $research = null;
+            }
+
+            // Set up the Google Drive API client
+            $client = new Google_Client();
+            $client->setClientId(env('GOOGLE_DRIVE_CLIENT_ID'));
+            $client->setClientSecret(env('GOOGLE_DRIVE_CLIENT_SECRET'));
+            $client->fetchAccessTokenWithRefreshToken(env('GOOGLE_DRIVE_REFRESH_TOKEN'));
+    
+            // Set up the Google Drive service
+            $service = new Google_Service_Drive($client);
+
+            // Find the file on Google Drive
+            $findFile = Storage::disk('google')->get($folderPath . '/' . $fileName);
+
+            if (!$findFile) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            
+            $results = $service->files->listFiles([
+                'q' => "name = '$fileName'",
+                'fields' => 'files(id, webViewLink)',
+            ]);
+
+            // Check if the file was found
+            if (count($results->getFiles()) === 0) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            else {
+                // Get the file's metadata
+                $file = $results->getFiles()[0];
+
+                // Get the webViewLink property
+                $url = $file->getWebViewLink();
+
+                return response()->json(['url' => $url]);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyCreateResearch(Request $request){   
+        if (Auth::guard('faculty')->check()) {
+            $type = $request->input('type');
+
+            if ($type == 'Presented') {
+                $title = $request->input('title');
+                $authors = $request->input('authors');
+                $host = $request->input('host');
+                $level = $request->input('level');
+                $files = $request->file('files');
+
+                // Check if the title is unique
+                if (AdminTasksResearchesPresented::where('title', $title)->exists()) {
+                    return response()->json(['error' => 'A research with this title already exists.']);
+                }
+
+                // Check if there are files to upload
+                if ($files) {
+                    // Create the 'Researches' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches')) {
+                        Storage::disk('google')->makeDirectory('Researches');
+                        Storage::disk('google')->setVisibility('Researches', 'public');
+                    }
+
+                    // Create the 'Presented' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented')) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented');
+                        Storage::disk('google')->setVisibility('Researches/Presented', 'public');
+                    }
+
+                    // Create the 'Presented' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented/' . $title)) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented/' . $title);
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $title, 'public');
+                    }
+
+                    // Store files in the 'Presented' folder
+                    foreach ($files as $file) {
+                        Storage::disk('google')->putFileAs(
+                            'Researches/Presented/' . $title,
+                            $file,
+                            $file->getClientOriginalName()
+                        );
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $title . '/' . $file->getClientOriginalName(), 'public');
+                    }
+                }
+                
+                // Create the research object
+                $research = new AdminTasksResearchesPresented;
+                $research->title = $title;
+                $research->authors = $authors;
+                $research->host = $host;
+                $research->level = $level;
+                $research->certificates = $files ? 'Researches/Presented/' . $title : null;
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Faculty',
+                    'action_made' => '(' . $facultyUsername . ') has created a research titled (' . $title . ').',
+                    'type_of_action' => 'Create Research',
+                ]);
+
+                // Newly added research object
+                $newlyAddedResearch = [
+                    'title' => $research->title,
+                    'authors' => $research->authors,
+                    'date_created_formatted' => Carbon::parse($research->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($research->created_at)->format('g:i A'),
+                ];
+
+                // Format all researches
+                $researchesPresented = AdminTasksResearchesPresented::orderBy('created_at', 'desc')
+                    ->paginate(9);
+
+                $researchesPresented->each(function ($item) {
+                    $item->type = 'Presented';
+                });
+
+                // Format 
+                $formattedResearches = $researchesPresented->map(function ($item) {
+                    return [
+                        'title' => $item->title,
+                        'authors' => $item->authors,
+                        'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                        'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    ];
+                });
+
+                return response()->json([
+                    'newlyAddedResearch' => $newlyAddedResearch,
+                    'allPresentedResearches' => $formattedResearches,
+                ]);
+
+            }
+            else if ($type == 'Completed') {
+                $title = $request->input('title');
+                $authors = $request->input('authors');
+                $type_funding = $request->input('type_funding');
+                $date_completed = $request->input('date_completed');
+                $abstract = $request->input('abstract');
+
+                // Check if the title is unique
+                if (AdminTasksResearchesCompleted::where('title', $title)->exists()) {
+                    return response()->json(['error' => 'A research with this title already exists.']);
+                }
+
+                // Create the research object
+                $research = new AdminTasksResearchesCompleted;
+                $research->title = $title;
+                $research->authors = $authors;
+                $research->kind_of_research = $type_funding;
+                $research->date_completed = $date_completed;
+                $research->abstract = $abstract;
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $facultyUsername . ') has created a research titled (' . $title . ').',
+                    'type_of_action' => 'Create Research',
+                ]);
+
+                // Newly added research object
+                $newlyAddedResearch = [
+                    'title' => $research->title,
+                    'authors' => $research->authors,
+                    'date_created_formatted' => Carbon::parse($research->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($research->created_at)->format('g:i A'),
+                ];
+
+                // Format all researches
+                $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
+                    ->paginate(9);
+
+                $researchesCompleted->each(function ($item) {
+                    $item->type = 'Completed';
+                });
+
+                // Format
+                $formattedResearches = $researchesCompleted->map(function ($item) {
+                    return [
+                        'title' => $item->title,
+                        'authors' => $item->authors,
+                        'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                        'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    ];
+                });
+
+                return response()->json([
+                    'newlyAddedResearch' => $newlyAddedResearch,
+                    'allCompletedResearches' => $formattedResearches,
+                ]);
+            }
+            else if ($type == 'Published') {
+                $title =  $request->input('title');
+                $authors = $request->input('authors');
+                $journal = $request->input('journal');
+                $date = $request->input('date');
+                $link = $request->input('link');
+
+                // Check if the title is unique
+                if (AdminTasksResearchesPublished::where('title', $title)->exists()) {
+                    return response()->json(['error' => 'A research with this title already exists.']);
+                }
+
+                // Create the research object
+                $research = new AdminTasksResearchesPublished;
+                $research->title = $title;
+                $research->authors = $authors;
+                $research->name_of_journal = $journal;
+                $research->date_published = $date;
+                $research->link = $link;
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $facultyUsername . ') has created a research titled (' . $title . ').',
+                    'type_of_action' => 'Create Research',
+                ]);
+
+                // Newly added research object
+                $newlyAddedResearch = [
+                    'title' => $research->title,
+                    'authors' => $research->authors,
+                    'date_created_formatted' => Carbon::parse($research->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($research->created_at)->format('g:i A'),
+                ];
+
+                // Format all researches
+                $researchesPublished = AdminTasksResearchesPublished::orderBy('created_at', 'desc')
+                    ->paginate(9);
+
+                $researchesPublished->each(function ($item) {
+                    $item->type = 'Published';
+                });
+
+                // Format
+                $formattedResearches = $researchesPublished->map(function ($item) {
+                    return [
+                        'title' => $item->title,
+                        'authors' => $item->authors,
+                        'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                        'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    ];
+                });
+
+                return response()->json([
+                    'newlyAddedResearch' => $newlyAddedResearch,
+                    'allPublishedResearches' => $formattedResearches,
+                ]);
+            }
+            else {
+                return back();
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksResearchUpdate(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+
+            // Update the research with corresponding category and id
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+
+                $host = $request->input('host');
+                $datePresented = $request->input('datePresented');
+                $level = $request->input('level');
+                $files = $request->file('files');
+                $filesCert = $request->file('filesCert');
+
+                $currentPath = $research->special_order;
+
+                $folderPath = $currentPath;
+                Storage::disk('google')->setVisibility($folderPath, 'public');
+                foreach ($files as $file) {
+                    $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                    if (!Storage::disk('google')->exists($filePath)) {
+                        // The file does not exist yet, upload it
+                        $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                    
+                        // Set the visibility of the file to "public"
+                        Storage::disk('google')->setVisibility($path, 'public');
+                    }
+                }
+
+                // Remove files from the new folder that wasn't found on $files array
+                $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                foreach ($filesInFolder as $fileInFolder) {
+                    $found = false;
+                    foreach ($files as $file) {
+                        if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        Storage::disk('google')->delete($fileInFolder);
+                    }
+                }
+
+                // File upload for certificates
+                $currentPathCert = $research->certificates;
+
+                $folderPathCert = $currentPathCert;
+                Storage::disk('google')->setVisibility($folderPathCert, 'public');
+                foreach ($filesCert as $fileCert) {
+                    $filePathCert = $folderPathCert . '/' . $fileCert->getClientOriginalName();
+
+                    if (!Storage::disk('google')->exists($filePathCert)) {
+                        // The file does not exist yet, upload it
+                        $pathCert = Storage::disk('google')->putFileAs($folderPathCert, $fileCert, $fileCert->getClientOriginalName());
+                    
+                        // Set the visibility of the file to "public"
+                        Storage::disk('google')->setVisibility($pathCert, 'public');
+                    }
+                }
+
+                // Remove files from the new folder that wasn't found on $files array
+                $filesInFolderCert = Storage::disk('google')->files($folderPathCert);
+
+                foreach ($filesInFolderCert as $fileInFolderCert) {
+                    $foundCert = false;
+                    foreach ($filesCert as $fileCert) {
+                        if ($fileCert->getClientOriginalName() == basename($fileInFolderCert)) {
+                            $foundCert = true;
+                            break;
+                        }
+                    }
+                    if (!$foundCert) {
+                        Storage::disk('google')->delete($fileInFolderCert);
+                    }
+                }
+
+                // Update the research
+                $research->host = $host;
+                $research->date_presented = $datePresented;
+                $research->level = $level;
+                $research->special_order = $folderPath;
+                $research->certificates = $folderPathCert;
+            
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $facultyUsername . ') has updated a research id (' . $id . ').',
+                    'type_of_action' => 'Update Research',
+                ]);
+
+                return response()->json(['success' => 'Research updated successfully.']);
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::find($id);
+
+                $title = $request->input('title');
+                $authors = $request->input('authors');
+                $date = $request->input('date');
+                $abstract = $request->input('abstract');
+
+                // Check if the title is unique
+                if (AdminTasksResearchesCompleted::where('title', $title)->where('id', '!=', $id)->exists()) {
+                    return response()->json(['error' => 'A research with this title already exists.']);
+                }
+
+                // Update the research
+                $research->title = $title;
+                $research->authors = $authors;
+                $research->date_completed = $date;
+                $research->abstract = $abstract;
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $facultyUsername . ') has updated a research named (' . $title . ').',
+                    'type_of_action' => 'Update Research',
+                ]);
+
+                return response()->json(['success' => 'Research updated successfully.']);
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+
+                $journal = $request->input('journal');
+                $publishedAt = $request->input('publishedAt');
+                $date_published = $request->input('date_published');
+                $link = $request->input('link');
+
+                // Update the research
+                $research->name_of_journal = $journal;
+                $research->published_at = $publishedAt;
+                $research->date_published = $date_published;
+                $research->link = $link;
+                $research->save();
+
+                $faculty = Auth::guard('faculty')->user();
+                $facultyUsername = $faculty->username;
+
+                Logs::create([
+                    'user_id' => $faculty->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $facultyUsername . ') has updated a research type (' . $category . ').',
+                    'type_of_action' => 'Update Research',
+                ]);
+
+                return response()->json(['success' => 'Research updated successfully.']);
+            } 
+            else {
+                $research = null;
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksResearchDelete(Request $request){  
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+
+            if ($category === 'Presented') {
+                $research = AdminTasksResearchesPresented::find($id);
+
+                if ($research) {
+                    $folderPath = 'Researches/Presented/' . $research->id;
+                    Storage::disk('google')->deleteDirectory($folderPath);
+                }
+            } 
+            else if ($category === 'Completed') {
+                $research = AdminTasksResearchesCompleted::with('presentedResearch')->find($id);
+
+                // Delete the folder and its contents of the research presented since presented depends on completed
+                if ($research) {
+                    $folderPath = 'Researches/Presented/' . $research->presentedResearch->id;
+                    Storage::disk('google')->deleteDirectory($folderPath);
+                }
+            } 
+            else if ($category === 'Published') {
+                $research = AdminTasksResearchesPublished::find($id);
+            } 
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+
+            // Delete the research
+            $research->delete();
+
+            $faculty = Auth::guard('faculty')->user();
+            $facultyUsername = $faculty->username;
+
+            Logs::create([
+                'user_id' => $faculty->id,
+                'user_role' => 'Admin',
+                'action_made' => '(' . $facultyUsername . ') has deleted a research named (' . $title . ').',
+                'type_of_action' => 'Delete Research',
+             ]);
+
+            return response()->json(['message' => 'Research deleted successfully.']);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesPresented(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+            // include type to researchesPresented
+            $researchesPresented->each(function ($item) {
+                $item->type = 'Presented';
+                $item->title = $item->completedResearch->title; // Access the title
+                $item->authors = $item->completedResearch->authors; // Access the authors
+            });
+            
+            $faculties = Faculty::all();
+            return view('faculty.faculty_tasks_researches_presented', 
+            [
+                'researches' => $researchesPresented,
+                'faculties' => $faculties
+            ]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesCompleted(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            // include type to researchesCompleted
+            $researchesCompleted->each(function ($item) {
+                $item->type = 'Completed';
+            });
+
+            $faculties = Faculty::all();
+            return view('faculty.faculty_tasks_researches_completed', 
+            [
+                'researches' => $researchesCompleted,
+                'faculties' => $faculties
+            ]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesPublished(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+                ->orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            // include type to researchesPublished
+            $researchesPublished->each(function ($item) {
+                $item->type = 'Published';
+                $item->title = $item->completedResearch->title; // Access the title
+                $item->authors = $item->completedResearch->authors; // Access the authors
+            });
+
+            $faculties = Faculty::all();
+            return view('faculty.faculty_tasks_researches_published', 
+            [
+                'researches' => $researchesPublished,
+                'faculties' => $faculties
+            ]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchesCategorySearch(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+            $category = $request->input('category');
+
+            if ($category === 'Presented') {
+                $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+                    ->orderBy('created_at', 'desc')
+                    ->whereHas('completedResearch', function ($q) use ($query) {
+                        $q->where('title', 'like', '%' . $query . '%');
+                    })
+                    ->get()
+                    ->each(function ($item) {
+                        $item->type = 'Presented';
+                        $item->title = $item->completedResearch->title; // Access the title
+                        $item->authors = $item->completedResearch->authors; // Access the authors
+                    });
+        
+                $researches = $researchesPresented;
+            } else if ($category === 'Completed') {
+                $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
+                    ->where('title', 'like', "%{$query}%")
+                    ->get()
+                    ->each(function ($item) {
+                        $item->type = 'Completed';
+                    });
+
+                $researches = $researchesCompleted;
+            } else if ($category === 'Published') {
+                $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+                    ->orderBy('created_at', 'desc')
+                    ->whereHas('completedResearch', function ($q) use ($query) {
+                        $q->where('title', 'like', '%' . $query . '%');
+                    })
+                    ->get()
+                    ->each(function ($item) {
+                        $item->type = 'Published';
+                        $item->title = $item->completedResearch->title; // Access the title
+                        $item->authors = $item->completedResearch->authors; // Access the authors
+                    });
+
+                $researches = $researchesPublished;
+            } else {
+                $researches = [];
+            }
+
+            $researches = $researches->sortByDesc('created_at')->values();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $researches->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($researches), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            if ($category === 'Presented') {
+                $formattedResearches = $paginator->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'title' => $item->title,
+                        'authors' => $item->authors,
+                        'host' => $item->host,
+                        'level' => $item->level,
+                        'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                        'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    ];
+                });
+               
+                return response()->json(['researches' => $formattedResearches]);
+            }
+            else if ($category === 'Published') {
+                $formattedResearches = $paginator->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'title' => $item->title,
+                        'authors' => $item->authors,
+                        'name_of_journal' => $item->name_of_journal,
+                        'published_at' => $item->published_at,
+                        'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                        'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    ];
+                });
+               
+                return response()->json(['researches' => $formattedResearches]);
+            }
+
+            $formattedResearches = $paginator->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'authors' => $item->authors,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+           
+            return response()->json(['researches' => $formattedResearches]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        }
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+    
+    function facultyTasksResearchIsMarkedAsPresented(Request $request) {
+        $id = $request->input('id');
+
+        // Check if marked as presented already
+        $presentedResearchExists = AdminTasksResearchesPresented::where('research_completed_id', $id)->first();
+        if ($presentedResearchExists) {
+            return response()->json(['response' => true]);
+        }
+
+        return response()->json(['response' => false]);
+    }
+
+    function facultyTasksResearchMarkAsPresented(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $completed_research_id = $request->input('completed_research_id');
+            $host = $request->input('host');
+            $date_presented = $request->input('date_presented');
+            $level = $request->input('level');
+            $special_order_files = $request->file('special_order_files');
+            $certifications_files = $request->file('certifications_files');
+
+            // Check if marked as presented already
+            $presentedResearchExists = AdminTasksResearchesPresented::where('research_completed_id', $completed_research_id)->first();
+            if ($presentedResearchExists) {
+                return response()->json(['error' => 'This research has already been marked as presented.'], 422);
+            }
+
+            $completedResearch = AdminTasksResearchesCompleted::find($completed_research_id);
+            if ($completedResearch) {
+                // create new presented research
+                $presentedResearch = new AdminTasksResearchesPresented;
+
+                $presentedResearch->host = $host;
+                $presentedResearch->date_presented = $date_presented;
+                $presentedResearch->level = $level;
+                $presentedResearch->research_completed_id = $completedResearch->id;
+                $presentedResearch->special_order = ''; // Initialize special order
+                $presentedResearch->certificates = ''; // Initialize certificates
+                $presentedResearch->save();
+
+                if ($special_order_files) {
+                    // Create the 'Researches' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches')) {
+                        Storage::disk('google')->makeDirectory('Researches');
+                        Storage::disk('google')->setVisibility('Researches', 'public');
+                    }
+
+                    // Create the 'Presented' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented')) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented');
+                        Storage::disk('google')->setVisibility('Researches/Presented', 'public');
+                    }
+
+                    // Create the 'Presented' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented/' . $presentedResearch->id)) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented/' . $presentedResearch->id);
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $presentedResearch->id, 'public');
+                    }
+
+                    // Create the 'Special Order' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented/' . $presentedResearch->id . '/Special Order')) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented/' . $presentedResearch->id . '/Special Order');
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $presentedResearch->id . '/Special Order', 'public');
+                    }
+
+                    // Store files in the 'Special Order' folder
+                    foreach ($special_order_files as $file) {
+                        Storage::disk('google')->putFileAs(
+                            'Researches/Presented/' . $presentedResearch->id . '/Special Order',
+                            $file,
+                            $file->getClientOriginalName()
+                        );
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $presentedResearch->id . '/Special Order/' . $file->getClientOriginalName(), 'public');
+                    }
+                    
+                    $presentedResearch->special_order = 'Researches/Presented/' . $presentedResearch->id . '/Special Order';
+                }
+                
+                if ($certifications_files) {
+                    // Create the 'Certifications' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Researches/Presented/' . $presentedResearch->id . '/Certifications')) {
+                        Storage::disk('google')->makeDirectory('Researches/Presented/' . $presentedResearch->id . '/Certifications');
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $presentedResearch->id . '/Certifications', 'public');
+                    }
+
+                    // Store files in the 'Certifications' folder
+                    foreach ($certifications_files as $file) {
+                        Storage::disk('google')->putFileAs(
+                            'Researches/Presented/' . $presentedResearch->id . '/Certifications',
+                            $file,
+                            $file->getClientOriginalName()
+                        );
+                        Storage::disk('google')->setVisibility('Researches/Presented/' . $presentedResearch->id . '/Certifications/' . $file->getClientOriginalName(), 'public');
+                    }
+
+                    $presentedResearch->certificates = 'Researches/Presented/' . $presentedResearch->id . '/Certifications';
+                }
+
+                // save presented research
+                $presentedResearch->save();
+
+                return response()->json(['success' => 'Research marked as presented successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+            
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksResearchIsMarkedAsPublished(Request $request) 
+    {
+        $id = $request->input('id');
+
+        // Check if marked as published already
+        $publishedResearchExists = AdminTasksResearchesPublished::where('research_completed_id', $id)->first();
+        if ($publishedResearchExists) {
+            return response()->json(['response' => true]);
+        }
+
+        return response()->json(['response' => false]);
+    }
+
+    function facultyTasksResearchMarkAsPublished(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $completed_research_id = $request->input('completed_research_id');
+            $journal = $request->input('journal');
+            $published_at = $request->input('published_at');
+            $date_published = $request->input('date_published');
+            $link = $request->input('link');
+
+            // Check if marked as published already
+            $publishedResearchExists = AdminTasksResearchesPublished::where('research_completed_id', $completed_research_id)->first();
+            if ($publishedResearchExists) {
+                return response()->json(['error' => 'This research has already been marked as published.'], 422);
+            }
+
+            $completedResearch = AdminTasksResearchesCompleted::find($completed_research_id);
+            if ($completedResearch) {
+                // create new published research
+                $publishedResearch = new AdminTasksResearchesPublished;
+
+                $publishedResearch->name_of_journal = $journal;
+                $publishedResearch->published_at = $published_at;
+                $publishedResearch->date_published = $date_published;
+                $publishedResearch->link = $link;
+                $publishedResearch->research_completed_id = $completedResearch->id;
+
+                // save published research
+                $publishedResearch->save();
+
+                return response()->json(['success' => 'Research marked as published successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+            
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchPresentedSpecialOrderAttachments(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $research = AdminTasksResearchesPresented::find($id);
+
+            if ($research) {
+                $folderPath = $research->special_order;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksResearchPresentedCertificatesAttachments(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $research = AdminTasksResearchesPresented::find($id);
+
+            if ($research) {
+                $folderPath = $research->certificates;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Research not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
         else {
             return redirect('login-faculty')->with('fail', 'You must be logged in');
         }

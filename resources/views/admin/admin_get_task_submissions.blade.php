@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Task Submissions')
+@section('title', 'PUPQC - Memo Submissions')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_get_task_submissions.css') }}">
@@ -33,7 +33,7 @@
             <div class="col-5 task-conents" style="position: relative; border-right: 1px solid #cccccc;">
                 <div class="row">
                     <div class="col-12">
-                        <h5 class="my-3 task-name-label" style="z-index: 100; position: relative;">Task name: <span style="font-weight: normal;">{{ $taskName }}</span></h5>
+                        <h5 class="my-3 task-name-label" style="z-index: 100; position: relative;">Memo name: <span style="font-weight: normal;">{{ $taskName }}</span></h5>
                     </div>
                 </div>
 

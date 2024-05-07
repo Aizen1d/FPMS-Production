@@ -1437,24 +1437,47 @@ class AdminController extends Controller
     function adminTasksExtensionsCreate(Request $request) 
     {
         if (Auth::guard('admin')->check()) {
-            $title = $request->input('title');
-            $date = $request->input('date');
-            $partner = $request->input('partner');
-            $beneficiaries = $request->input('beneficiaries');
-            $evaluation = $request->input('evaluation');
+            $titleProgram = $request->input('titleProgram');
+            $titleProject = $request->input('titleProject');
+            $titleActivity = $request->input('titleActivity');
+            $place = $request->input('place');
+            $level = $request->input('level');
+            $classification = $request->input('classification');
+            $type = $request->input('type');
+            $keywords = $request->input('keywords');
+            $typeFunding = $request->input('typeFunding');
+            $fundingAgency = $request->input('fundingAgency');
+            $amountFunding = $request->input('amountFunding');
+            $totalHours = $request->input('totalHours');
+            $numberOfTrainees = $request->input('numberOfTrainees');
+            $classificationOfTrainees = $request->input('classificationOfTrainees');
+            $nature = $request->input('nature');
+            $status = $request->input('status');
+            $dateFrom = $request->input('dateFrom');
+            $dateTo = $request->input('dateTo');
+            $extensionType = $request->input('extensionType');         
 
-            // Check if the title is unique
-            if (Extension::where('title', $title)->exists()) {
-                return response()->json(['error' => 'An extension with this title already exists.']);
-            }
-
-            // Create the extension object
+            // Create new extension object
             $extension = new Extension;
-            $extension->title = $title;
-            $extension->date_conducted = $date;
-            $extension->partner = $partner;
-            $extension->beneficiaries = $beneficiaries;
-            $extension->evaluation = $evaluation;
+            $extension->title_of_extension_program = $titleProgram;
+            $extension->title_of_extension_project = $titleProject;
+            $extension->title_of_extension_activity = $titleActivity;
+            $extension->place = $place;
+            $extension->level = $level;
+            $extension->classification = $classification;
+            $extension->type = $type;
+            $extension->keywords = $keywords;
+            $extension->type_of_funding = $typeFunding;
+            $extension->funding_agency = $fundingAgency;
+            $extension->amount_of_funding = $amountFunding;
+            $extension->total_no_of_hours = $totalHours;
+            $extension->no_of_trainees = $numberOfTrainees;
+            $extension->classification_of_trainees = $classificationOfTrainees;
+            $extension->nature_of_involvement = $nature;
+            $extension->status = $status;
+            $extension->from_date = $dateFrom;
+            $extension->to_date = $dateTo;
+            $extension->type_of_extension = $extensionType;
             $extension->save();
 
             $admin = Auth::guard('admin')->user();
@@ -1463,30 +1486,13 @@ class AdminController extends Controller
             Logs::create([
                 'user_id' => $admin->id,
                 'user_role' => 'Admin',
-                'action_made' => '(' . $adminUsername . ') has created an extension titled (' . $title . ').',
+                'action_made' => '(' . $adminUsername . ') has created a new extension type of (' . $extensionType . ').',
                 'type_of_action' => 'Create Extension',
             ]);
 
-            // Newly added extension object
-            $newlyAddedExtension = [
-                'title' => $extension->title,
-                'date_created_formatted' => Carbon::parse($extension->created_at)->format('F j, Y'),
-                'date_created_time' => Carbon::parse($extension->created_at)->format('g:i A'),
-            ];
-
-            // Format all extensions
-            $extensions = Extension::orderBy('created_at', 'desc')
-                ->paginate(9);
-
-            // Format
-            $extensions = $extensions->map(function ($item) {
-                return [
-                    'title' => $item->title,
-                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
-                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
-                ];
-            });
-
+            $newlyAddedExtension = Extension::where('title_of_extension_program', $titleProgram)->first();
+            $extensions = Extension::orderBy('created_at', 'desc')->get();
+        
             return response()->json([
                 'newlyAddedExtension' => $newlyAddedExtension,
                 'allExtensions' => $extensions,

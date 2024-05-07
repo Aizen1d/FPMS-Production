@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-12">
-            <h1 class="my-4 title">Monthly Statistics</h1>
+            <h1 class="my-4 title">Memo Timeline</h1>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-5" style="position: relative;">
                 <div class="chart-info">
-                    <h3 class="chart-label"><b>Total tasks in 6 months:</b> <span style="font-weight: normal; color: #363636">{{ $total }}</span></h3>
+                    <h3 class="chart-label"><b>Total memo in 6 months:</b> <span style="font-weight: normal; color: #363636">{{ $total }}</span></h3>
                 </div>
             </div>
             <div class="col-7" style="display: flex; justify-content: center; align-items: center;">

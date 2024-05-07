@@ -92,6 +92,55 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/faculty-dashboard/my-tasks', [FacultyController::class, 'showFacultyDashboardMyTasks'])->name("faculty-dashboard/my-tasks");
     Route::get('/faculty-dashboard/assigned-task/timeline', [FacultyController::class, 'showFacultyDashboardAssignedTaskTimeline'])->name("faculty-dashboard/assigned-task/timeline");
 
+    Route::get('/faculty-tasks/researches', [FacultyController::class, 'showFacultyTasksResearches'])->name("faculty-tasks/researches");
+    Route::get('/faculty-tasks/researches/view', [FacultyController::class, 'showFacultyTasksResearchesView'])->name("faculty-tasks/researches/view");
+    Route::get('/faculty-tasks/researches/search', [FacultyController::class, 'showFacultyTasksResearchesSearch'])->name("faculty-tasks/researches/search");
+    Route::get('/faculty-tasks/researches/getAttachments', [FacultyController::class, 'showFacultyTasksResearchGetAttachments'])->name("faculty-tasks/researches/getAttachments");
+    Route::get('/faculty-tasks/researches/attachment/preview', [FacultyController::class, 'showFacultyTasksResearchPreviewFileSelected'])->name("faculty-tasks/researches/attachment/preview");
+    Route::get('/faculty-tasks/researches/presented/special-order/attachments', [FacultyController::class, 'showFacultyTasksResearchPresentedSpecialOrderAttachments'])->name("faculty-tasks/researches/presented/special-order/attachments");
+    Route::get('/faculty-tasks/researches/presented/certificates/attachments', [FacultyController::class, 'showFacultyTasksResearchPresentedCertificatesAttachments'])->name("faculty-tasks/researches/presented/certificates/attachments");
+
+    Route::post('/faculty-tasks/researches/create-research', [FacultyController::class, 'facultyCreateResearch'])->name("faculty-tasks/researches/create-research");
+    Route::post('/faculty-tasks/researches/update', [FacultyController::class, 'facultyTasksResearchUpdate'])->name("faculty-tasks/researches/update");
+    Route::post('/faculty-tasks/researches/delete', [FacultyController::class, 'facultyTasksResearchDelete'])->name("faculty-tasks/researches/delete");
+
+    Route::get('/faculty-tasks/researches/presented', [FacultyController::class, 'showFacultyTasksResearchesPresented'])->name("faculty-tasks/researches/presented");
+    Route::get('/faculty-tasks/researches/completed', [FacultyController::class, 'showFacultyTasksResearchesCompleted'])->name("faculty-tasks/researches/completed");
+    Route::get('/faculty-tasks/researches/published', [FacultyController::class, 'showFacultyTasksResearchesPublished'])->name("faculty-tasks/researches/published");
+    Route::get('/faculty-tasks/researches/category/search', [FacultyController::class, 'showFacultyTasksResearchesCategorySearch'])->name("faculty-tasks/researches/category/search");
+
+    Route::get('/faculty-tasks/researches/is-marked-as-presented', [FacultyController::class, 'facultyTasksResearchIsMarkedAsPresented'])->name("faculty-tasks/researches/is-marked-as-presented");
+    Route::post('/faculty-tasks/researches/mark-as-presented', [FacultyController::class, 'facultyTasksResearchMarkAsPresented'])->name("faculty-tasks/researches/mark-as-presented");
+    
+    Route::get('/faculty-tasks/researches/is-marked-as-published', [FacultyController::class, 'facultyTasksResearchIsMarkedAsPublished'])->name("faculty-tasks/researches/is-marked-as-published");
+    Route::post('/faculty-tasks/researches/mark-as-published', [FacultyController::class, 'facultyTasksResearchMarkAsPublished'])->name("faculty-tasks/researches/mark-as-published");
+    //
+
+    Route::get('/faculty-tasks/extensions', [FacultyController::class, 'showFacultyTasksExtensions'])->name("faculty-tasks/extensions");
+    Route::get('/faculty-tasks/extensions/view', [FacultyController::class, 'showFacultyTasksExtensionsView'])->name("faculty-tasks/extensions/view");
+    Route::get('/faculty-tasks/extensions/search', [FacultyController::class, 'showFacultyTasksExtensionsSearch'])->name("faculty-tasks/extensions/search");
+    Route::post('/faculty-tasks/extensions/create', [FacultyController::class, 'facultyTasksExtensionsCreate'])->name("faculty-tasks/extensions/create");
+    Route::post('/faculty-tasks/extensions/update', [FacultyController::class, 'facultyTasksExtensionsUpdate'])->name("faculty-tasks/extensions/update");
+    Route::post('/faculty-tasks/extensions/delete', [FacultyController::class, 'facultyTasksExtensionsDelete'])->name("faculty-tasks/extensions/delete");
+
+    Route::get('/faculty-tasks/attendance', [FacultyController::class, 'showFacultyTasksAttendance'])->name("faculty-tasks/attendance");
+    Route::get('/faculty-tasks/attendance/view', [FacultyController::class, 'showFacultyTasksAttendanceView'])->name("faculty-tasks/attendance/view");
+    Route::get('/faculty-tasks/attendance/search', [FacultyController::class, 'showFacultyTasksAttendanceSearch'])->name("faculty-tasks/attendance/search");
+    Route::post('/faculty-tasks/attendance/create', [FacultyController::class, 'facultyTasksAttendanceCreate'])->name("faculty-tasks/attendance/create");
+    Route::post('/faculty-tasks/attendance/update', [FacultyController::class, 'facultyTasksAttendanceUpdate'])->name("faculty-tasks/attendance/update");
+    Route::post('/faculty-tasks/attendance/delete', [FacultyController::class, 'facultyTasksAttendanceDelete'])->name("faculty-tasks/attendance/delete");
+    Route::get('/faculty-tasks/attendance/getAttachments', [FacultyController::class, 'showFacultyTasksAttendanceGetAttachments'])->name("faculty-tasks/attendance/getAttachments");
+    Route::get('/faculty-tasks/attendance/attachment/preview', [FacultyController::class, 'showFacultyTasksAttendancePreviewFileSelected'])->name("faculty-tasks/attendance/attachment/preview");
+
+    Route::get('/faculty-tasks/seminars', [FacultyController::class, 'showFacultyTasksSeminars'])->name("faculty-tasks/seminars");
+    Route::get('/faculty-tasks/seminars/view', [FacultyController::class, 'showFacultyTasksSeminarsView'])->name("faculty-tasks/seminars/view");
+    Route::get('/faculty-tasks/seminars/search', [FacultyController::class, 'showFacultyTasksSeminarsSearch'])->name("faculty-tasks/seminars/search");
+    Route::post('/faculty-tasks/seminars/create', [FacultyController::class, 'facultyTasksSeminarsCreate'])->name("faculty-tasks/seminars/create");
+    Route::post('/faculty-tasks/seminars/update', [FacultyController::class, 'facultyTasksSeminarsUpdate'])->name("faculty-tasks/seminars/update");
+    Route::post('/faculty-tasks/seminars/delete', [FacultyController::class, 'facultyTasksSeminarsDelete'])->name("faculty-tasks/seminars/delete");
+    Route::get('/faculty-tasks/seminars/getAttachments', [FacultyController::class, 'showFacultyTasksSeminarsGetAttachments'])->name("faculty-tasks/seminars/getAttachments");
+    Route::get('/faculty-tasks/seminars/attachment/preview', [FacultyController::class, 'showFacultyTasksSeminarsPreviewFileSelected'])->name("faculty-tasks/seminars/attachment/preview");
+
     // Admin Side (Admin cannot logout then back to any admin routes)
     Route::get('/login-admin', [AuthController::class, 'loginAdmin'])->name("login-admin");
     Route::get('/admin-home', [AdminController::class, 'showAdminHome'])->name("admin-home");

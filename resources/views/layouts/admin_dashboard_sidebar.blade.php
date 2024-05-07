@@ -9,11 +9,11 @@
             <div class="list-group list-group-flush mx-3">
                 <a href="{{ route('admin-dashboard/department-task/statistics') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-dashboard/department-task/statistics')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Program Tasks</b></span>
+                    <span><b>Program Memo</b></span>
                 </a>
                 <a href="{{ route('admin-dashboard/department-task/timeline') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-dashboard/department-task/timeline')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Assigned Task Timeline</b></span>
+                    <span><b>Assigned Memo Timeline</b></span>
                 </a>
                 <a href="{{ route('admin-dashboard/research') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-dashboard/research')) ? 'active' : '' }}"  aria-expanded="true">
