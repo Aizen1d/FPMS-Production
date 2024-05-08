@@ -10,4 +10,9 @@ class Seminars extends Model
     use HasFactory;
 
     protected $table = 'seminars';
+
+    public function getFaculty()
+    {
+        return $this->belongsTo(Faculty::class, 'faculty_id');
+    }
 }

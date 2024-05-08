@@ -3,23 +3,24 @@
 @section('title', 'PUPQC - View Attendance')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_attendance_view.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('faculty/css/faculty_tasks_attendance_view.css') }}">
 @endsection
 
 @section('body')
 <div class="overlay"></div>
-@include('layouts.admin_navbar')
-@include('layouts.admin_selected_attendance_sidebar') 
+@include('layouts.faculty_navbar')
+@include('layouts.faculty_selected_attendance_sidebar') 
 @include('layouts.notification_side')
 
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-6">
-            <h3 class="my-4 title attendance-title">Faculty Attendance ({{ $item->status }})</h3>
+            <h3 class="my-4 title">View Attendance ({{ $item->status }})</h3>
         </div>
         <div class="col-6 drop-down-container">
-            <button class="my-4 create-btn approve-task-btn" style="background-color: rgba(54, 187, 41, 0.823)" onclick="Approve()">Approve</button>
-            <button class="my-4 create-btn reject-task-btn" onclick="Reject()">Reject</button>
+            <button class="my-4 create-btn delete-task-btn" onclick="deleteResearch()">Delete</button>
+            <button class="my-4 create-btn edit-task-btn" onclick="editResearch()">Enable Edit</button>
+            <button class="my-4 create-btn save-task-btn" onclick="submitForm()">Save</button>
         </div>
     </div>
 
@@ -94,11 +95,17 @@
 
             <div class="attendance-proof-container" style="display: none">
               <div class="d-flex flex-column mt-4 ms-1" style="margin-left: 1.5% !important">
-                  <label for="" class="research-labels" style="margin-left: 0% !important">Proof of Attendance*</label>
+                  <label for="" class="research-labels" style="margin-left: 0% !important">Upload proof of Attendance*</label>
                   <label for="" class="mb-2" style="margin-left:0% !important; font-size: 13px; color:rgb(232, 79, 79);">Selfie photos are not allowed as supporting document.</label>
                   <div style="display: flex; flex-direction: row">
-                      <div style="height: 200px;">
-                          
+                      <div style="margin-right: 20px">
+                          <label for="file-upload" class="custom-file-upload">
+                              <i class="fa fa-cloud-upload px-1" style="color: #82ceff;"></i> Upload Files
+                          </label>
+                          <input id="file-upload" type="file" multiple accept=".docx,.pdf,.xls,.xlsx,.png,.jpeg,.jpg,.ppt,.pptx" />
+                          <div id="drop-zone">
+                              <p>Drop your files here</p>
+                          </div>
                       </div>
                       <div id="preview" class="preview-no-items" style="text-align:center; z-index: 99; position: relative;">
                           <p class="preview-label">Uploaded files are displayed here</p>
@@ -116,7 +123,7 @@
               </div>
             </div>
 
-            <div id="loading-overlay" class="loading-save-task" style="display: none; justify-content: center; height: 90vh; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
+            <div id="loading-overlay" class="loading-save-task" style="display: none; justify-content: center; align-items: center; height: 90vh; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
               <div style="display: flex; flex-direction: column; align-items: center;">
                   <div class="spinner-border text-dark" role="status">
                       <span class="sr-only">Loading...</span>
@@ -132,30 +139,28 @@
 
     <script>
       const itemId = "{{ $item->id }}";
-      const initialName = "{{ $item->name_of_activity }}";
 
-        const approveButton = document.querySelector('.approve-task-btn');
-        const rejectButton = document.querySelector('.reject-task-btn');
-      const loadingAttachment = document.querySelector('.loading-uploaded-files')
+      const deleteButton = document.querySelector('.delete-task-btn');
+      const editButton = document.querySelector('.edit-task-btn');
+      const saveButton = document.querySelector('.save-task-btn');
 
       var selectedFiles = [];
       var additionalFiles = [];
 
+      var selectedFilesCert = [];
+      var additionalFilesCert = [];
+
       function disableButtons() {
-        approveButton.disabled = true;
-        rejectButton.disabled = true;
+        deleteButton.disabled = true;
+        editButton.disabled = true;
+        saveButton.disabled = true;
       }
 
       function enableButtons() {
-        approveButton.disabled = false;
-        rejectButton.disabled = false;
+        deleteButton.disabled = false;
+        editButton.disabled = false;
+        saveButton.disabled = false;
       }
-
-      // Check if status of attendance is not on leave
-        if ("{{ $item->status_of_attendace }}" !== 'On Leave') {
-            // Disable the reason for absence input
-            disableButtons();
-        }
 
       document.querySelectorAll('.research-input').forEach(input => {
         input.disabled = true;
@@ -166,6 +171,7 @@
         let dateCompleted = document.querySelector('.date-picker-completed');
         let statusAttendance = document.querySelectorAll('input[name="status-attendance"]');
         let reasonForAbsence = document.getElementById('reason-for-absence-input');
+        let fileUpload = document.getElementById('file-upload');
 
         dateStarted.disabled = true;
         dateCompleted.disabled = true;
@@ -175,6 +181,8 @@
         });
 
         reasonForAbsence.disabled = true;
+
+        fileUpload.disabled = true;
 
         // Hide the x button
         let removeButtons = document.querySelectorAll('.remove-file');
@@ -190,6 +198,7 @@
         let dateCompleted = document.querySelector('.date-picker-completed');
         let statusAttendance = document.querySelectorAll('input[name="status-attendance"]');
         let reasonForAbsence = document.getElementById('reason-for-absence-input');
+        let fileUpload = document.getElementById('file-upload');
 
         dateStarted.disabled = false;
         dateCompleted.disabled = false;
@@ -200,6 +209,8 @@
 
         reasonForAbsence.disabled = false;
 
+        fileUpload.disabled = false;
+
         // Show the x button
         let removeButtons = document.querySelectorAll('.remove-file');
         removeButtons.forEach(button => {
@@ -207,7 +218,7 @@
         });
       }
 
-      function editItem() {
+      function editResearch() {
         if (editButton.innerHTML === 'Enable Edit') {
             editButton.innerHTML = 'Disable Edit';
             enableForm();
@@ -274,6 +285,7 @@
       const dropdownLevel = document.querySelector('.create-dropdown-level');
       const listLevel = document.querySelector('.create-list-level');
       const caretLevel = document.querySelector('.caret-level');
+      const selectedLevelDisplay = document.getElementById('selected-level-display');
 
       dropdownLevel.addEventListener('click', () => {
           listLevel.classList.toggle('show');
@@ -292,7 +304,14 @@
           item.addEventListener('click', (event) => {
               event.stopPropagation();
           });
-      });*/
+      });
+
+        let levelRadios = document.querySelectorAll('input[name="level"]');
+        levelRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedLevelDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            });
+        }); */
 
       // Dropdown for status of attendance
       const dropdownStatusAttendance = document.querySelector('.create-dropdown-status-attendance');
@@ -361,6 +380,48 @@
           attendanceProofContainer.style.display = 'block';
       }
 
+      /// File Upload ///
+
+      document.getElementById("file-upload").onchange = function() {
+            var files = document.getElementById("file-upload").files;
+            if (files.length === 0) {
+                // The user clicked the cancel button in the file upload dialog
+                console.log('Upload cancelled');
+            } else {
+                handleFiles(files);
+            }
+        };
+
+        var dropZone = document.getElementById("drop-zone");
+        dropZone.addEventListener("dragover", function(evt) {
+            if (editButton.innerHTML === 'Disable Edit') {
+              evt.preventDefault();
+            }
+        }, false);
+
+        dropZone.addEventListener("drop", function(evt) {
+            if (editButton.innerHTML === 'Disable Edit') {
+              evt.preventDefault();
+              var files = evt.dataTransfer.files;
+              handleFiles(files);
+            }
+        }, false);
+
+        function handleFiles(files) {
+          for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              var isDuplicate = selectedFiles.some(function(selectedFile) {
+                  return selectedFile.name === file.name;
+              });
+              if (isDuplicate) {
+                  continue;
+              }
+              selectedFiles.push(file);
+              additionalFiles.push(file);
+          }
+          updatePreview();
+        }
+
         function updatePreview() {
           var preview = document.getElementById("preview");
           preview.innerHTML = "";
@@ -406,16 +467,15 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/admin-tasks/attendance/attachment/preview?id=${itemId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/attendance/attachment/preview?id=${itemId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
-                        var newTab = window.open('/admin-tasks/get-task/preview-file-selected/loading');
+                        var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');
 
                         // Fetch the URL for the file
                         fetch(url)
                             .then(response => response.json())
                             .then(data => {
-                                console.log(data);
                                 // Wait for 1 second before updating the URL of the new tab
                                 setTimeout(() => {
                                     // Update the URL of the new tab
@@ -449,12 +509,22 @@
             }
         }
 
+        document.getElementById("preview").addEventListener("click", function(evt) {
+          if (editButton.innerHTML === 'Disable Edit') {
+            if (evt.target.classList.contains("remove-file")) {
+              var index = parseInt(evt.target.dataset.index);
+              selectedFiles.splice(index, 1);
+              updatePreview();
+
+              // Reset the value of the file input
+              document.getElementById("file-upload").value = null;                
+            }
+          }
+        })
+
       // Hydrate data
 
-      /* let authors = "{{ $item->authors }}".split(', ');
-      let level = "{{ $item->level }}";
-
-      // Get all the checkboxes
+      /* Get all the checkboxes
       let checkboxes = document.querySelectorAll('.select-checkbox');
       for (let i = 0; i < checkboxes.length; i++) {
           let checkbox = checkboxes[i];
@@ -463,10 +533,10 @@
           if (authors.includes(authorName)) {
               checkbox.checked = true;
           }
-      } */
+      }*/
 
-      /* Get all the radio buttons
-      let radioButtons = document.querySelectorAll('.select-radio');
+      // Get all the radio buttons
+      /*let radioButtons = document.querySelectorAll('.select-radio');
       for (let i = 0; i < radioButtons.length; i++) {
           let radioButton = radioButtons[i];
           let levelName = radioButton.nextElementSibling.textContent.trim();
@@ -478,6 +548,7 @@
 
       // Attachments variables
       if ("{{ $item->status_of_attendace }}" !== 'On Leave') {
+      
         const loadingAttachmentSpecial = document.getElementById('loading-special-overlay-files');
         //const loadingAttachmentCert = document.getElementById('loading-cert-overlay-files');
         let isBothAttachmentedSettled = 0;
@@ -486,68 +557,82 @@
         loadingAttachmentSpecial.style.display = 'flex';
         disableButtons();
         
-        fetch(`/admin-tasks/attendance/getAttachments?id=${itemId}`)
-            .then(response => response.json())
-            .then(files => {
+        fetch(`/faculty-tasks/attendance/getAttachments?id=${itemId}`)
+          .then(response => response.json())
+          .then(files => {
             // Get the files
             for (const file of files) {
-                let f = new File([], file);
-                selectedFiles.push(f);
+              let f = new File([], file);
+              selectedFiles.push(f);
             }
 
             updatePreview();
-            })
-            .catch(error => {
+          })
+          .catch(error => {
             console.error('Error:', error);
             showNotification('An error occurred while retrieving the uploaded files.', '#fe3232bc');
-            })
-            .finally(() => {
-                let removeButtons = document.querySelectorAll('.remove-file');
-                removeButtons.forEach(button => {
-                    button.style.display = 'none';
-                });
+          })
+          .finally(() => {
+              let removeButtons = document.querySelectorAll('.remove-file');
+              removeButtons.forEach(button => {
+                  button.style.display = 'none';
+              });
 
-                loadingAttachmentSpecial.style.display = 'none';
-                isBothAttachmentedSettled++;
+              loadingAttachmentSpecial.style.display = 'none';
+              isBothAttachmentedSettled++;
 
+              enableButtons();
+          });
+       }
+
+        /* Watch for isBothAttachmentedSettled to be 2
+        let interval = setInterval(() => {
+            if (isBothAttachmentedSettled === 2) {
+                clearInterval(interval);
                 enableButtons();
-            });
-        }
+            }
+        }, 1000);*/
 
         // Form Handling
 
         function validateForm() {
-          let name = document.getElementById('name-input').value;
-          let venue = document.getElementById('venue-input').value;
-          let host = document.getElementById('host-input').value;
-          let date = document.getElementById('date-picker').value;
+            let dateStarted = document.querySelector('.date-picker-started').value;
+            let dateCompleted = document.querySelector('.date-picker-completed').value;
+            const statusAttendanceRadios = document.querySelectorAll('input[name="status-attendance"]');
+            let reasonForAbsence = document.getElementById('reason-for-absence-input').value;
 
-          if (name.trim() === '') {
-              showNotification('Please enter the name of the activity.', '#fe3232bc');
-              return false;
-          }
+            if (dateStarted === '') {
+                showNotification('Please enter the date started.', '#fe3232bc');
+                return false;
+            }
 
-          if (venue.trim() === '') {
-              showNotification('Please enter the venue.', '#fe3232bc');
-              return false;
-          }
+            if (dateCompleted === '') {
+                showNotification('Please enter the date completed.', '#fe3232bc');
+                return false;
+            }
 
-          if (host.trim() === '') {
-              showNotification('Please enter the host.', '#fe3232bc');
-              return false;
-          }
+            let selectedStatusAttendance = '';
+            statusAttendanceRadios.forEach(radio => {
+                if (radio.checked) {
+                    selectedStatusAttendance = radio.id;
+                }
+            });
 
-          if (date.trim() === '') {
-              showNotification('Please enter the date conducted.', '#fe3232bc');
-              return false;
-          }
+            if (selectedStatusAttendance === '') {
+                showNotification('Please select the status of attendance.', '#fe3232bc');
+                return false;
+            }
 
-          if (selectedFiles.length <= 0) {
-              showNotification('Please upload the S.O and certificates.', '#fe3232bc');
-              return false;
-          }
+            if (selectedStatusAttendance === 'On Leave' && reasonForAbsence === '') {
+                showNotification('Please enter the reason for absence.', '#fe3232bc');
+                return false;
+            }
+            else if (selectedStatusAttendance !== 'On Leave' && selectedFiles.length === 0) {
+                showNotification('Please upload proof of attendance.', '#fe3232bc');
+                return false;
+            }
 
-          return true;
+            return true;
         }
 
         function submitForm() {
@@ -555,21 +640,26 @@
                 return;
             }
 
-            let name = document.getElementById('name-input').value;
-            let venue = document.getElementById('venue-input').value;
-            let host = document.getElementById('host-input').value;
-            let date = document.getElementById('date-picker').value;
+            const dateStarted = document.querySelector('.date-picker-started').value;
+            const dateCompleted = document.querySelector('.date-picker-completed').value;
+            const statusAttendanceRadios = document.querySelectorAll('input[name="status-attendance"]');
+            let selectedStatusAttendance = '';
+            statusAttendanceRadios.forEach(radio => {
+                if (radio.checked) {
+                    selectedStatusAttendance = radio.id;
+                }
+            });
+
+            const reasonForAbsence = document.getElementById('reason-for-absence-input').value;
 
             let formData = new FormData();
             formData.append('id', itemId);
+            formData.append('date_started', dateStarted);
+            formData.append('date_completed', dateCompleted);
+            formData.append('status_attendance', selectedStatusAttendance.trim());
+            formData.append('reason_absence', reasonForAbsence);
 
-            formData.append('name', name);
-            formData.append('initialName', initialName);
-
-            formData.append('venue', venue);
-            formData.append('host', host);
-            formData.append('date', date);
-
+            // Append the files
             for (const file of selectedFiles) {
                 formData.append('files[]', file);
             }
@@ -579,7 +669,7 @@
             disableButtons();
 
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch(`/admin-tasks/attendance/update`, {
+            fetch(`/faculty-tasks/attendance/update`, {
                 headers: {
                     "Accept": "application/json, text-plain, */*",
                     "X-Requested-With": "XMLHttpRequest",
@@ -607,7 +697,7 @@
             });
         }
 
-        function deleteItem() {
+        function deleteResearch() {
             if (!confirm('Are you sure you want to delete this attendance?')) {
                 return;
             }
@@ -620,7 +710,7 @@
             disableButtons();
 
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch(`/admin-tasks/attendance/delete`, {
+            fetch(`/faculty-tasks/attendance/delete`, {
                 headers: {
                     "Accept": "application/json, text-plain, */*",
                     "X-Requested-With": "XMLHttpRequest",
@@ -633,101 +723,15 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
-                    window.location.href = '/admin-tasks/attendance';
+                    window.location.href = '/faculty-tasks/attendance';
                 } 
                 else {
                     showNotification('An error occurred while deleting the attendance.', '#fe3232bc');
-                }
+                }attendance
             })
             .catch(error => {
                 console.error('Error:', error);
                 showNotification('An error occurred while deleting the attendance.', '#fe3232bc');
-            })
-            .finally(() => {
-                document.getElementById('loading-overlay').style.display = 'none';
-                enableButtons();
-            });
-        }
-
-        function Approve() {
-            if (!confirm('Are you sure you want to approve this attendance?')) {
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append('id', itemId);
-
-            document.getElementById('loading-overlay').style.display = 'flex';
-            loadingMessage();
-            disableButtons();
-
-            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch(`/admin-tasks/attendance/approve`, {
-                headers: {
-                    "Accept": "application/json, text-plain, */*",
-                    "X-Requested-With": "XMLXMLHttpRequest",
-                    "X-CSRF-TOKEN": token
-                },
-                method: 'POST',
-                credentials: "same-origin",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    showNotification('Attendance approved successfully.', '#28a745');
-                    document.querySelector('.attendance-title').textContent = 'Faculty Attendance (Approved)';
-                } 
-                else {
-                    showNotification('An error occurred while approving the attendance.', '#fe3232bc');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('An error occurred while approving the attendance.', '#fe3232bc');
-            })
-            .finally(() => {
-                document.getElementById('loading-overlay').style.display = 'none';
-                enableButtons();
-            });
-        }
-
-        function Reject() {
-            if (!confirm('Are you sure you want to reject this attendance?')) {
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append('id', itemId);
-
-            document.getElementById('loading-overlay').style.display = 'flex';
-            loadingMessage();
-            disableButtons();
-
-            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch(`/admin-tasks/attendance/reject`, {
-                headers: {
-                    "Accept": "application/json, text-plain, */*",
-                    "X-Requested-With": "XMLXMLHttpRequest",
-                    "X-CSRF-TOKEN": token
-                },
-                method: 'POST',
-                credentials: "same-origin",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    showNotification('Attendance rejected successfully.', '#28a745');
-                    document.querySelector('.attendance-title').textContent = 'Faculty Attendance (Rejected)';
-                } 
-                else {
-                    showNotification('An error occurred while rejecting the attendance.', '#fe3232bc');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('An error occurred while rejecting the attendance.', '#fe3232bc');
             })
             .finally(() => {
                 document.getElementById('loading-overlay').style.display = 'none';

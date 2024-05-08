@@ -28,6 +28,7 @@ use App\Models\AdminTasksResearchesPublished;
 use App\Models\Extension;
 use App\Models\Attendance;
 use App\Models\Seminars;
+use App\Models\Functions;
 
 // Import LengthAwarePaginator
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -1677,7 +1678,11 @@ class FacultyController extends Controller
     function showFacultyTasksResearches(Request $request){
         if (Auth::guard('faculty')->check()) {
             // TODO: Implement pagination for researches (presented, completed, published) and sort by date created (desc)
+
+            $faculty_id = Auth::guard('faculty')->user()->id;
+            
             $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+            ->where('faculty_id', $faculty_id)
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
@@ -1688,11 +1693,15 @@ class FacultyController extends Controller
                 $item->authors = $item->completedResearch->authors; // Access the authors
             });
 
-            $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')->get()->each(function ($item) {
-                $item->type = 'Completed';
-            });
+            $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
+                ->where('faculty_id', $faculty_id)
+                ->get()
+                ->each(function ($item) {
+                    $item->type = 'Completed';
+                });
 
             $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+            ->where('faculty_id', $faculty_id)
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
@@ -1810,8 +1819,10 @@ class FacultyController extends Controller
     function showFacultyTasksResearchesSearch(Request $request){
         if (Auth::guard('faculty')->check()) {
             $query = $request->input('query');
+            $faculty_id = Auth::guard('faculty')->user()->id;
 
             $researchesCompleted = AdminTasksResearchesCompleted::where('title', 'like', "%{$query}%")
+                ->where('faculty_id', $faculty_id)
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->each(function ($item) {
@@ -1821,6 +1832,7 @@ class FacultyController extends Controller
             $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
                 ->whereHas('completedResearch', function ($q) use ($query) {
                     $q->where('title', 'like', "%{$query}%");
+                    $q->where('faculty_id', Auth::guard('faculty')->user()->id);
                 })
                 ->orderBy('created_at', 'desc')
                 ->get()
@@ -1833,6 +1845,7 @@ class FacultyController extends Controller
             $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
                 ->whereHas('completedResearch', function ($q) use ($query) {
                     $q->where('title', 'like', "%{$query}%");
+                    $q->where('faculty_id', Auth::guard('faculty')->user()->id);
                 })
                 ->orderBy('created_at', 'desc')
                 ->get()
@@ -2060,6 +2073,7 @@ class FacultyController extends Controller
                 $research->host = $host;
                 $research->level = $level;
                 $research->certificates = $files ? 'Researches/Presented/' . $title : null;
+                $research->faculty_id = Auth::guard('faculty')->user()->id;
                 $research->save();
 
                 $faculty = Auth::guard('faculty')->user();
@@ -2123,6 +2137,7 @@ class FacultyController extends Controller
                 $research->kind_of_research = $type_funding;
                 $research->date_completed = $date_completed;
                 $research->abstract = $abstract;
+                $research->faculty_id = Auth::guard('faculty')->user()->id;
                 $research->save();
 
                 $faculty = Auth::guard('faculty')->user();
@@ -2185,6 +2200,7 @@ class FacultyController extends Controller
                 $research->name_of_journal = $journal;
                 $research->date_published = $date;
                 $research->link = $link;
+                $research->faculty_id = Auth::guard('faculty')->user()->id;
                 $research->save();
 
                 $faculty = Auth::guard('faculty')->user();
@@ -2466,7 +2482,9 @@ class FacultyController extends Controller
 
     function showFacultyTasksResearchesPresented(Request $request){
         if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
             $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')
+            ->where('faculty_id', $faculty_id)
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
@@ -2494,8 +2512,12 @@ class FacultyController extends Controller
 
     function showFacultyTasksResearchesCompleted(Request $request){
         if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
+
             $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
-                ->paginate(9);
+            ->where('faculty_id', $faculty_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
 
             // include type to researchesCompleted
             $researchesCompleted->each(function ($item) {
@@ -2519,7 +2541,9 @@ class FacultyController extends Controller
 
     function showFacultyTasksResearchesPublished(Request $request){
         if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
             $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')
+                ->where('faculty_id', $faculty_id)
                 ->orderBy('created_at', 'desc')
                 ->paginate(9);
 
@@ -2555,6 +2579,7 @@ class FacultyController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->whereHas('completedResearch', function ($q) use ($query) {
                         $q->where('title', 'like', '%' . $query . '%');
+                        $q->where('faculty_id', Auth::guard('faculty')->user()->id);
                     })
                     ->get()
                     ->each(function ($item) {
@@ -2567,6 +2592,7 @@ class FacultyController extends Controller
             } else if ($category === 'Completed') {
                 $researchesCompleted = AdminTasksResearchesCompleted::orderBy('created_at', 'desc')
                     ->where('title', 'like', "%{$query}%")
+                    ->where('faculty_id', Auth::guard('faculty')->user()->id)
                     ->get()
                     ->each(function ($item) {
                         $item->type = 'Completed';
@@ -2578,6 +2604,7 @@ class FacultyController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->whereHas('completedResearch', function ($q) use ($query) {
                         $q->where('title', 'like', '%' . $query . '%');
+                        $q->where('faculty_id', Auth::guard('faculty')->user()->id);
                     })
                     ->get()
                     ->each(function ($item) {
@@ -2652,9 +2679,13 @@ class FacultyController extends Controller
     
     function facultyTasksResearchIsMarkedAsPresented(Request $request) {
         $id = $request->input('id');
+        $faculty_id = Auth::guard('faculty')->user()->id;
 
         // Check if marked as presented already
-        $presentedResearchExists = AdminTasksResearchesPresented::where('research_completed_id', $id)->first();
+        $presentedResearchExists = AdminTasksResearchesPresented::where('research_completed_id', $id)
+            ->where('faculty_id', $faculty_id)
+            ->first();
+
         if ($presentedResearchExists) {
             return response()->json(['response' => true]);
         }
@@ -2689,6 +2720,7 @@ class FacultyController extends Controller
                 $presentedResearch->research_completed_id = $completedResearch->id;
                 $presentedResearch->special_order = ''; // Initialize special order
                 $presentedResearch->certificates = ''; // Initialize certificates
+                $presentedResearch->faculty_id = Auth::guard('faculty')->user()->id;
                 $presentedResearch->save();
 
                 if ($special_order_files) {
@@ -2770,9 +2802,13 @@ class FacultyController extends Controller
     function facultyTasksResearchIsMarkedAsPublished(Request $request) 
     {
         $id = $request->input('id');
+        $faculty_id = Auth::guard('faculty')->user()->id;
 
         // Check if marked as published already
-        $publishedResearchExists = AdminTasksResearchesPublished::where('research_completed_id', $id)->first();
+        $publishedResearchExists = AdminTasksResearchesPublished::where('research_completed_id', $id)
+            ->where('faculty_id', $faculty_id)
+            ->first();
+
         if ($publishedResearchExists) {
             return response()->json(['response' => true]);
         }
@@ -2805,6 +2841,7 @@ class FacultyController extends Controller
                 $publishedResearch->date_published = $date_published;
                 $publishedResearch->link = $link;
                 $publishedResearch->research_completed_id = $completedResearch->id;
+                $publishedResearch->faculty_id = Auth::guard('faculty')->user()->id;
 
                 // save published research
                 $publishedResearch->save();
@@ -2928,5 +2965,628 @@ class FacultyController extends Controller
         else {
             return redirect('login-faculty')->with('fail', 'You must be logged in');
         }
+    }
+
+    function showFacultyTasksAttendance(){
+        if (Auth::guard('faculty')->check()) {
+            // Return only the attendance that associated with this faculty
+            $faculty = Auth::guard('faculty')->user();
+            $attendances = Attendance::with('getFunction')
+                ->where('faculty_id', $faculty->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            $attendances->each(function ($item) {
+                $item->brief_description = $item->getFunction->brief_description;
+                $item->remarks = $item->getFunction->remarks;
+            });
+
+            return view('faculty.faculty_tasks_attendance', ['items' => $attendances]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksAttendanceView(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $attendance = Attendance::with('getFunction')
+                ->where('id', $id)
+                ->first();
+
+            if ($attendance) {
+               return view('faculty.faculty_tasks_attendance_view', 
+               ['item' => $attendance]);
+            }
+            else {
+                return back();
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksAttendanceGetAttachments(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $attendance = Attendance::find($id);
+
+            if ($attendance) {
+                $folderPath = $attendance->proof_of_attendance;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Attendance not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksAttendanceSearch(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+
+            // Return only the attendance that associated with this faculty
+            $faculty = Auth::guard('faculty')->user();
+            $attendances = Attendance::with('getFunction')
+                ->where('faculty_id', $faculty->id)
+                ->whereHas('getFunction', function ($q) use ($query) {
+                    $q->where('brief_description', 'like', '%' . $query . '%');
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $attendances->each(function ($item) {
+                $item->brief_description = $item->getFunction->brief_description;
+                $item->remarks = $item->getFunction->remarks;
+            });
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $attendances->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($attendances), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedAttendances = $paginator->map(function ($item) {
+                return [
+                    'function_id' => $item->function_id,
+                    'brief_description' => $item->brief_description,
+                    'remarks' => $item->remarks,
+                    'status' => $item->status,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json(['items' => $formattedAttendances]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksAttendanceCreate(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $function_id = $request->input('function_id');
+            $faculty_id = Auth::guard('faculty')->user()->id;
+            $date_started = $request->input('date_started');
+            $date_completed = $request->input('date_completed');
+            $status_attendance = $request->input('status_attendance');
+            $reason_absence = $request->input('reason_absence');
+            $files = $request->file('files');
+
+            // Check if attendance is added already to the function with the same faculty
+            $attendanceExists = Attendance::where('function_id', $function_id)
+                ->where('faculty_id', $faculty_id)
+                ->first();
+
+            if ($attendanceExists) {
+                return response()->json(['error' => 'You have already added attendance to this function.']);
+            }
+
+            // Create the Attendance first
+            $attendance = new Attendance;
+            $attendance->date_started = $date_started;
+            $attendance->date_completed = $date_completed;
+            $attendance->status_of_attendace = $status_attendance;
+            $attendance->reason_for_absence = '';
+            $attendance->proof_of_attendance = '';
+            $attendance->status = 'Pending';
+            $attendance->faculty_id = $faculty_id;
+            $attendance->function_id = $function_id;
+            $attendance->save();
+
+            if ($status_attendance === 'On Leave') {
+                $attendance->reason_for_absence = $reason_absence;
+                $attendance->save();
+            }
+            else {
+                if ($files) {
+                    // Create the 'Attendance' folder if it doesn't exist
+                    if (!Storage::disk('google')->exists('Attendance')) {
+                        Storage::disk('google')->makeDirectory('Attendance');
+                        Storage::disk('google')->setVisibility('Attendance', 'public');
+                    }
+
+                    if (!Storage::disk('google')->exists('Attendance/' . $attendance->id)) {
+                        Storage::disk('google')->makeDirectory('Attendance/' . $attendance->id);
+                        Storage::disk('google')->setVisibility('Attendance/' . $attendance->id, 'public');
+                    }
+
+                    // Store files in the 'Attendance' folder
+                    foreach ($files as $file) {
+                        Storage::disk('google')->putFileAs(
+                            'Attendance/' . $attendance->id,
+                            $file,
+                            $file->getClientOriginalName()
+                        );
+                        Storage::disk('google')->setVisibility('Attendance/' . $attendance->id . '/' . $file->getClientOriginalName(), 'public');
+                    }
+
+                    $attendance->proof_of_attendance = 'Attendance/' . $attendance->id;
+                    $attendance->save();
+                }
+            }
+
+            return response()->json(['success' => 'Attendance added successfully.']);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksAttendanceUpdate(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $date_started = $request->input('date_started');
+            $date_completed = $request->input('date_completed');
+            $status_attendance = $request->input('status_attendance');
+            $reason_absence = $request->input('reason_absence');
+            $files = $request->file('files');
+
+            $attendance = Attendance::find($id);
+
+            if ($attendance) {
+                $attendance->date_started = $date_started;
+                $attendance->date_completed = $date_completed;
+                $attendance->status_of_attendace = $status_attendance;
+                $attendance->save();
+
+                if ($status_attendance === 'On Leave') {
+                    // Check if previous was not 'On Leave' and there are files
+
+                    if ($attendance->proof_of_attendance !== null) {
+                        // Delete the folder and its contents
+                        $folderPath = $attendance->proof_of_attendance;
+                        Storage::disk('google')->deleteDirectory($folderPath);
+                    }
+
+                    $attendance->reason_for_absence = $reason_absence;
+                    $attendance->proof_of_attendance = '';
+                    $attendance->save();
+                }
+                else {
+                    // Check if previous was 'On Leave' then delete the reason for absence and create the folder then store the files
+                    if ($attendance->reason_for_absence !== '') {
+
+                        // Check if there are files
+                        if ($files) {
+                            // Create the 'Attendance' folder if it doesn't exist
+                            if (!Storage::disk('google')->exists('Attendance')) {
+                                Storage::disk('google')->makeDirectory('Attendance');
+                                Storage::disk('google')->setVisibility('Attendance', 'public');
+                            }
+
+                            if (!Storage::disk('google')->exists('Attendance/' . $attendance->id)) {
+                                Storage::disk('google')->makeDirectory('Attendance/' . $attendance->id);
+                                Storage::disk('google')->setVisibility('Attendance/' . $attendance->id, 'public');
+                            }
+
+                            // Store files in the 'Attendance' folder
+                            foreach ($files as $file) {
+                                Storage::disk('google')->putFileAs(
+                                    'Attendance/' . $attendance->id,
+                                    $file,
+                                    $file->getClientOriginalName()
+                                );
+                                Storage::disk('google')->setVisibility('Attendance/' . $attendance->id . '/' . $file->getClientOriginalName(), 'public');
+                            }
+
+                            $attendance->reason_for_absence = '';
+                            $attendance->proof_of_attendance = 'Attendance/' . $attendance->id;
+                            $attendance->save();
+                        }
+                    }
+                    else { // Meaning the previous status was not 'On Leave'
+
+                        // Update the folder and its contents
+                        $folderPath = $attendance->proof_of_attendance;
+                        Storage::disk('google')->setVisibility($folderPath, 'public');
+                        foreach ($files as $file) {
+                            $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                            if (!Storage::disk('google')->exists($filePath)) {
+                                // The file does not exist yet, upload it
+                                $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                            
+                                // Set the visibility of the file to "public"
+                                Storage::disk('google')->setVisibility($path, 'public');
+                            }
+                        }
+
+                        // Remove files from the new folder that wasn't found on $files array
+                        $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                        foreach ($filesInFolder as $fileInFolder) {
+                            $found = false;
+                            foreach ($files as $file) {
+                                if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                    $found = true;
+                                    break;
+                                }
+                            }
+                            if (!$found) {
+                                Storage::disk('google')->delete($fileInFolder);
+                            }
+                        }
+
+                        $attendance->reason_for_absence = '';
+                        $attendance->proof_of_attendance = 'Attendance/' . $attendance->id;
+                        $attendance->save();
+                    }
+                }
+
+                return response()->json(['success' => 'Attendance updated successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Attendance not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksAttendanceIsAdded(Request $request)
+    {
+        $id = $request->input('id');
+        $faculty = Auth::guard('faculty')->user();
+
+        // Check if attendance is added already to the function
+        $attendanceExists = Attendance::where('function_id', $id)->where('faculty_id', $faculty->id)->first();
+        if ($attendanceExists) {
+            return response()->json(['exists' => true]);
+        }
+
+        return response()->json(['exists' => false]);
+    }
+
+    function showFacultyTasksFunctions(){
+        if (Auth::guard('faculty')->check()) {
+            $functions = Functions::orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            return view('faculty.faculty_tasks_functions', ['items' => $functions]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksFunctionsSearch(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+
+            $functions = Functions::where('brief_description', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $functions->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($functions), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedFunctions = $paginator->map(function ($item) {
+                return [
+                    'brief_description' => $item->brief_description,
+                    'remarks' => $item->remarks,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json(['items' => $formattedFunctions]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksSeminars(){
+        if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id; 
+            $seminars = Seminars::orderBy('created_at', 'desc')
+                ->where('faculty_id', $faculty_id)
+                ->paginate(9);
+
+            return view('faculty.faculty_tasks_seminars', ['items' => $seminars]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksSeminarsView(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                return view('faculty.faculty_tasks_seminars_view', 
+                ['item' => $seminar]);
+            }
+            else {
+                return back();
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksSeminarsSearch(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+
+            $faculty_id = Auth::guard('faculty')->user()->id;
+            $seminars = Seminars::where('title', 'like', "%{$query}%")
+                ->where('faculty_id', $faculty_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $seminars->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($seminars), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedSeminars = $paginator->map(function ($item) {
+                return [
+                    'title' => $item->title,
+                    'from_date' => Carbon::parse($item->from_date)->format('F j, Y'),
+                    'to_date' => Carbon::parse($item->to_date)->format('F j, Y'),
+                    'total_no_hours' => $item->total_no_hours,
+                    'notes' => $item->notes,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json(['items' => $formattedSeminars]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+
+    }
+
+    function facultyTasksSeminarsCreate(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
+            $title = $request->input('title');
+            $classification = $request->input('classification');
+            $nature = $request->input('nature');
+            $type = $request->input('type');
+            $source_of_fund = $request->input('source_of_fund');
+            $budget = $request->input('budget');
+            $organizer = $request->input('organizer');
+            $level = $request->input('level');
+            $venue = $request->input('venue');
+            $from_date = $request->input('from_date');
+            $to_date = $request->input('to_date');
+            $total_no_hours = $request->input('total_no_hours');
+            $special_order_files = $request->file('special_order_files');
+            $certifications_files = $request->file('certifications_files');
+            $compiled_files = $request->file('compiled_files');
+            $notes = $request->input('notes');
+
+            // Create the Seminar first
+            $seminar = new Seminars;
+            $seminar->title = $title;
+            $seminar->classification = $classification;
+            $seminar->nature = $nature;
+            $seminar->type = $type;
+            $seminar->source_of_fund = $source_of_fund;
+            $seminar->budget = $budget;
+            $seminar->organizer = $organizer;
+            $seminar->level = $level;
+            $seminar->venue = $venue;
+            $seminar->from_date = $from_date;
+            $seminar->to_date = $to_date;
+            $seminar->total_no_hours = $total_no_hours;
+            $seminar->special_order = ''; // Initialize special order
+            $seminar->certificate = ''; // Initialize certificates
+            $seminar->compiled_photos = ''; // Initialize compiled files
+            $seminar->faculty_id = $faculty_id;
+            $seminar->notes = $notes;
+            $seminar->save();
+
+            if ($special_order_files) {
+                // Create the 'Seminars' folder if it doesn't exist
+                if (!Storage::disk('google')->exists('Seminars')) {
+                    Storage::disk('google')->makeDirectory('Seminars');
+                    Storage::disk('google')->setVisibility('Seminars', 'public');
+                }
+
+                // Create the 'Special Order' folder if it doesn't exist
+                if (!Storage::disk('google')->exists('Seminars/' . $seminar->id)) {
+                    Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id);
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id, 'public');
+                }
+
+                // Create the 'Special Order' folder if it doesn't exist
+                if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Special Order')) {
+                    Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Special Order');
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Special Order', 'public');
+                }
+
+                // Store files in the 'Special Order' folder
+                foreach ($special_order_files as $file) {
+                    Storage::disk('google')->putFileAs(
+                        'Seminars/' . $seminar->id . '/Special Order',
+                        $file,
+                        $file->getClientOriginalName()
+                    );
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Special Order/' . $file->getClientOriginalName(), 'public');
+                }
+
+                $seminar->special_order = 'Seminars/' . $seminar->id . '/Special Order';
+            }
+
+            if ($certifications_files) {
+                // Create the 'Certifications' folder if it doesn't exist
+                if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Certifications')) {
+                    Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Certifications');
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Certifications', 'public');
+                }
+
+                // Store files in the 'Certifications' folder
+                foreach ($certifications_files as $file) {
+                    Storage::disk('google')->putFileAs(
+                        'Seminars/' . $seminar->id . '/Certifications',
+                        $file,
+                        $file->getClientOriginalName()
+                    );
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Certifications/' . $file->getClientOriginalName(), 'public');
+                }
+
+                $seminar->certificate = 'Seminars/' . $seminar->id . '/Certifications';
+            }
+
+            if ($compiled_files) {
+                // Create the 'Compiled Photos' folder if it doesn't exist
+                if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Compiled Photos')) {
+                    Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Compiled Photos');
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Compiled Photos', 'public');
+                }
+
+                // Store files in the 'Compiled Photos' folder
+                foreach ($compiled_files as $file) {
+                    Storage::disk('google')->putFileAs(
+                        'Seminars/' . $seminar->id . '/Compiled Photos',
+                        $file,
+                        $file->getClientOriginalName()
+                    );
+                    Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Compiled Photos/' . $file->getClientOriginalName(), 'public');
+                }
+
+                $seminar->compiled_photos = 'Seminars/' . $seminar->id . '/Compiled Photos';
+            }
+
+            // save seminar
+            $seminar->save();
+
+            return response()->json(['success' => 'Seminar added successfully.']);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksSeminarsUpdate(Request $request){
+
+    }
+
+    function facultyTasksSeminarsDelete(Request $request){
+
+    }
+
+    function showFacultyTasksSeminarsGetAttachments(Request $request){
+
+    }
+
+    function showFacultyTasksSeminarsPreviewFileSelected(Request $request){
+
     }
 }

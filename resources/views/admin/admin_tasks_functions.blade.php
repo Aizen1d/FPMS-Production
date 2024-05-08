@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Attendance')
+@section('title', 'PUPQC - Functions')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_attendance.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_tasks_functions.css') }}">
 @endsection
 
 @section('body')
@@ -15,15 +15,16 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-4">
-            <h1 class="my-4 title">Faculties Attendance</h1>
+            <h1 class="my-4 title">College/Office Functions</h1>
         </div>
         <div class="col-2 pages">
             {{ $items->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search attendance...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search function...">
             <div id="search-results"></div>
 
+            <button class="my-4 create-btn" onclick="createNewTask()">Add Function</button>
         </div>
     </div>
 
@@ -31,7 +32,7 @@
         <div class="row">
           <div class="d-flex flex-col col-9">
             <h5 class="create-label">
-                Add Attendance
+                Add Function
             </h5>
           </div>
           <div class="col-3">
@@ -43,44 +44,16 @@
             <div class="col-12">
                 <div class="ms-3">
                     <div class="d-flex flex-column">
-                        <label for="" class="ms-3">Name of Activity*</label>
-                        <input class="research-input" id="name-input" type="text" placeholder="Enter name of activity">
-                    </div>
-                    
-                    <div class="d-flex flex-column mt-3">
-                      <label for="" class="ms-3">Venue*</label>
-                      <input class="research-input" id="venue-input" type="text" placeholder="Enter venue">
+                        <label for="" class="ms-3">Brief description of Activity*</label>
+                        <input class="research-input" id="brief-description-input" type="text" placeholder="Enter brief description of Activity">
                     </div>
 
                     <div class="d-flex flex-column mt-3">
-                      <label for="" class="ms-3">Host*</label>
-                      <input class="research-input" id="host-input" type="text" placeholder="Enter host">
+                      <label for="" class="ms-3">Remarks*</label>
+                      <input class="research-input" id="remarks-input" type="text" placeholder="Enter remarks">
                     </div>
 
-                    <div class="d-flex flex-column mt-3">
-                        <label for="" class="ms-3">Date Conducted*</label>
-                        <input class="ms-2" type="date" id="date-picker" min="1997-01-01" max="2030-01-01">
-                    </div>  
-
-                    <div class="d-flex flex-column mt-3 ms-2" style="margin-left: 2% !important">
-                      <label for="" style="margin-left: 1% !important">S.O and Certificates*</label>
-                      <div style="display: flex; flex-direction: row">
-                          <div style="margin-right: 20px">
-                              <label for="file-upload" class="custom-file-upload">
-                                  <i class="fa fa-cloud-upload px-1" style="color: #82ceff;"></i> Upload Files
-                              </label>
-                              <input id="file-upload" type="file" multiple accept=".docx,.pdf,.xls,.xlsx,.png,.jpeg,.jpg,.ppt,.pptx" />
-                              <div id="drop-zone">
-                                  <p>Drop your files here</p>
-                              </div>
-                          </div>
-                          <div id="preview" class="preview-no-items" style="text-align:center; z-index: 99;">
-                              <p class="preview-label">Uploaded files are displayed here</p>
-                          </div>
-                      </div>
-                    </div>
-
-                    <div class="d-flex justify-content-center items-center mt-3">
+                    <div class="d-flex justify-content-center items-center mt-4">
                         <button class="d-flex justify-content-center items-center create-research-btn" onclick="submitForm()">
                             Create
                         </button>
@@ -94,41 +67,39 @@
                 <div class="spinner-border text-dark" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div id="loading-text" style="margin-top: 3px;">Creating attendance, this may take a few seconds.</div>
+                <div id="loading-text" style="margin-top: 3px;">Creating function, this may take a few seconds.</div>
             </div>
         </div>
     </div>
 
     <div class="container-fluid task-list" style="position: relative;">
         <div class="row">
-            <div class="col-4">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Brief Description of Activity</h5>
-            </div>
-            <div class="col-3">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Remarks</h5>
-            </div>
-            <div class="col-3">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Faculty</h5>
-            </div>
-            <div class="col-2">
-                <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Status</h5>
-            </div>
+          <div class="col-5">
+              <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Brief description of Activity</h5>
+          </div>
+          <div class="col-4">
+              <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Remarks</h5>
+          </div>
+          <div class="col-3">
+            <h5 class="my-3 column-name" style="z-index: 100; position: relative;">Created At</h5>
+          </div>
         </div>
 
         <div class="task-container">
             @foreach ($items as $item)
             <div class="row task-row" onclick="getSelectedItemRow({{ $item }})">
+                <div class="col-5">
+                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 32%">{{ $item->brief_description }}</h5>
+                </div>
                 <div class="col-4">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 27%">{{ $item->getFunction?->brief_description }}</h5>
-                </div>
+                  <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 42.8%">{{ $item->remarks }}</h5>
+              </div>
                 <div class="col-3">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $item->getFunction?->remarks }}</h5>
-                </div>
-                <div class="col-3">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 42%">{{ $item->faculty_full_name }}</h5>
-                </div>
-                <div class="col-2">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 39%">{{ $item->status }}</h5>
+                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">
+                        {{ date('F j, Y', strtotime($item->created_at)) }}
+                        <br>
+                        {{ date('g:i A', strtotime($item->created_at)) }}
+                    </h5>
                 </div>
             </div>
             @endforeach
@@ -179,9 +150,9 @@
 
         function loadingMessage() {
             let div = document.getElementById("loading-text");
-            let text = ["Creating attendance, this may take a few seconds.",
-                "Creating attendance, this may take a few seconds..",
-                "Creating attendance, this may take a few seconds..."
+            let text = ["Creating function, this may take a few seconds.",
+                "Creating function, this may take a few seconds..",
+                "Creating function, this may take a few seconds..."
             ];
 
             let i = 0;
@@ -217,7 +188,7 @@
 
         /// File Upload ///
 
-        document.getElementById("file-upload").onchange = function() {
+        /*document.getElementById("file-upload").onchange = function() {
             var files = document.getElementById("file-upload").files;
             if (files.length === 0) {
                 // The user clicked the cancel button in the file upload dialog
@@ -295,7 +266,7 @@
                 // Reset the value of the file input
                 document.getElementById("file-upload").value = null;
             }
-        });
+        });*/
 
         // Search functionality
 
@@ -314,38 +285,33 @@
             document.getElementById('loading-overlay-search').style.display = 'flex';
 
             const query = encodeURIComponent(event.target.value);
-            fetch(`/admin-tasks/attendance/search?query=${query}`)
+            fetch(`/admin-tasks/functions/search?query=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const items = Object.values(data.items)
                     const taskContainer = document.querySelector('.task-container');
                     taskContainer.innerHTML = '';
 
                     items.forEach(item => {
                         const row = `
-                            <div class="row task-row">
+                            <div class="row task-row" onclick="getSelectedItemRow(${JSON.stringify(item)})">
+                                <div class="col-5">
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 32%">${item.brief_description}</h5>
+                                </div>
                                 <div class="col-4">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 27%">${item.brief_description }</h5>
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 42.8%">${item.remarks}</h5>
                                 </div>
                                 <div class="col-3">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">${item.remarks}</h5>
-                                </div>
-                                <div class="col-3">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 42%">${item.faculty_full_name }</h5>
-                                </div>
-                                <div class="col-2">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 39%">${item.status}</h5>
+                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 39%">
+                                        ${item.date_created_formatted}
+                                        <br>
+                                        ${item.date_created_time}
+                                    </h5>
                                 </div>
                             </div>
                         `;
 
                         taskContainer.innerHTML += row;
-
-                        // Add the event listener to the row
-                        taskContainer.lastElementChild.addEventListener('click', () => {
-                            getSelectedItemRow(item);
-                        });
                     });
 
                     document.getElementById('loading-overlay-search').style.display = 'none';
@@ -364,33 +330,16 @@
         // Form handling
 
         function validateForm() {
-          const name = document.getElementById('name-input').value;
-          const venue = document.getElementById('venue-input').value;
-          const host = document.getElementById('host-input').value;
-          const date = document.getElementById('date-picker').value;
+          const brief_description = document.getElementById('brief-description-input').value;
+          const remarks = document.getElementById('remarks-input').value;
 
-          if (name.trim() === '') {
-            showNotification('Please enter the name of the activity.', '#fe3232bc');
+          if (brief_description.trim() === '') {
+            showNotification('Please enter a brief description of the activity.', '#fe3232bc');
             return false;
           }
 
-          if (venue.trim() === '') {
-            showNotification('Please enter the venue.', '#fe3232bc');
-            return false;
-          }
-
-          if (host.trim() === '') {
-            showNotification('Please enter the host.', '#fe3232bc');
-            return false;
-          }
-
-            if (date.trim() === '') {
-                showNotification('Please enter the date conducted.', '#fe3232bc');
-                return false;
-            }
-
-          if (selectedFiles.length <= 0) {
-            showNotification('Please upload the S.O and Certificates.', '#fe3232bc');
+          if (remarks.trim() === '') {
+            showNotification('Please enter remarks.', '#fe3232bc');
             return false;
           }
 
@@ -402,20 +351,12 @@
                 return;
             }
             
-            const name = document.getElementById('name-input').value;
-            const venue = document.getElementById('venue-input').value;
-            const host = document.getElementById('host-input').value;
-            const date = document.getElementById('date-picker').value;
+            const brief_description = document.getElementById('brief-description-input').value;
+            const remarks = document.getElementById('remarks-input').value;
 
             const data = new FormData();
-            data.append('name', name);
-            data.append('venue', venue);
-            data.append('host', host);
-            data.append('date', date);
-
-            for (const file of selectedFiles) {
-              data.append('files[]', file);
-            }
+            data.append('brief_description', brief_description);
+            data.append('remarks', remarks);
 
             const loadingOverlay = document.getElementById('loading-overlay');
             const loadingText = document.getElementById('loading-text');
@@ -426,7 +367,7 @@
             loadingMessage();
 
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch('/admin-tasks/attendance/create', {
+            fetch('/admin-tasks/functions/create', {
                     headers: {
                         "Accept": "application/json, text-plain, */*",
                         "X-Requested-With": "XMLHttpRequest",
@@ -439,7 +380,9 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    if (data.newlyAddedAttendance) {
+                    window.location.reload();
+
+                    /*if (data.newlyAddedAttendance) {
                         showNotification('Attendance created successfully', '#32fe32bc');
                         closeNewTask();
                         resetForm();
@@ -450,7 +393,7 @@
                     } 
                     else {
                         showNotification('An error occurred, please try again.', '#fe3232bc');
-                    }
+                    }*/
                 })
                 .catch((error) => {
                     console.error('Error:', error);
@@ -510,7 +453,7 @@
 
         // On row click
         function getSelectedItemRow(item) {
-            window.location.href = `/admin-tasks/attendance/view?id=${item.id}`;
+            window.location.href = `/admin-tasks/functions/view?id=${item.id}`;
         }
 
     </script>

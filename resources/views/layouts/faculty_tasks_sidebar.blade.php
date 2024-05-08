@@ -49,14 +49,20 @@
                 </a>
             </div>
 
-            <a href="{{ route('faculty-tasks/extensions') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
-                    {{ (request()->is('faculty-tasks/extensions')) ? 'active' : '' }}"  aria-expanded="true">
-                <span><b>Extensions</b></span>
-            </a>
-            <a href="{{ route('faculty-tasks/attendance') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
-                    {{ (request()->is('faculty-tasks/attendance')) ? 'active' : '' }}"  aria-expanded="true">
+            <label class="main mx-3 py-2 ripple bg" aria-expanded="true">
                 <span><b>Attendance to Functions</b></span>
-            </a>
+            </label>
+            <div id="sub-task">
+                <a href="{{ route('faculty-tasks/attendance') }}" class="list-group-item list-group-item-action py-2 sub ripple bg
+                {{ (request()->is('faculty-tasks/attendance')) ? 'active' : '' }}">
+                    <span>My Attendance</span>
+                </a>
+                <a href="{{ route('faculty-tasks/functions') }}" class="list-group-item list-group-item-action py-2 sub ripple bg
+                {{ (request()->is('faculty-tasks/functions')) ? 'active' : '' }}">
+                    <span>Functions</span>
+                </a>
+            </div>
+            
             <a href="{{ route('faculty-tasks/seminars') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                     {{ (request()->is('faculty-tasks/seminars')) ? 'active' : '' }}"  aria-expanded="true">
                 <span><b>Seminars</b></span>

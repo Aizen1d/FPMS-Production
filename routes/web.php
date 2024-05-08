@@ -131,6 +131,10 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::post('/faculty-tasks/attendance/delete', [FacultyController::class, 'facultyTasksAttendanceDelete'])->name("faculty-tasks/attendance/delete");
     Route::get('/faculty-tasks/attendance/getAttachments', [FacultyController::class, 'showFacultyTasksAttendanceGetAttachments'])->name("faculty-tasks/attendance/getAttachments");
     Route::get('/faculty-tasks/attendance/attachment/preview', [FacultyController::class, 'showFacultyTasksAttendancePreviewFileSelected'])->name("faculty-tasks/attendance/attachment/preview");
+    Route::get('/faculty-tasks/attendance/is-added', [FacultyController::class, 'facultyTasksAttendanceIsAdded'])->name("faculty-tasks/attendance/is-added");
+
+    Route::get('/faculty-tasks/functions', [FacultyController::class, 'showFacultyTasksFunctions'])->name("faculty-tasks/functions");
+    Route::get('/faculty-tasks/functions/search', [FacultyController::class, 'showFacultyTasksFunctionsSearch'])->name("faculty-tasks/functions/search");
 
     Route::get('/faculty-tasks/seminars', [FacultyController::class, 'showFacultyTasksSeminars'])->name("faculty-tasks/seminars");
     Route::get('/faculty-tasks/seminars/view', [FacultyController::class, 'showFacultyTasksSeminarsView'])->name("faculty-tasks/seminars/view");
@@ -218,8 +222,17 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::post('/admin-tasks/attendance/create', [AdminController::class, 'adminTasksAttendanceCreate'])->name("admin-tasks/attendance/create");
     Route::post('/admin-tasks/attendance/update', [AdminController::class, 'adminTasksAttendanceUpdate'])->name("admin-tasks/attendance/update");
     Route::post('/admin-tasks/attendance/delete', [AdminController::class, 'adminTasksAttendanceDelete'])->name("admin-tasks/attendance/delete");
+    Route::post('/admin-tasks/attendance/approve', [AdminController::class, 'adminTasksAttendanceApprove'])->name("admin-tasks/attendance/approve");
+    Route::post('/admin-tasks/attendance/reject', [AdminController::class, 'adminTasksAttendanceReject'])->name("admin-tasks/attendance/reject");
     Route::get('/admin-tasks/attendance/getAttachments', [AdminController::class, 'showAdminTasksAttendanceGetAttachments'])->name("admin-tasks/attendance/getAttachments");
     Route::get('/admin-tasks/attendance/attachment/preview', [AdminController::class, 'showAdminTasksAttendancePreviewFileSelected'])->name("admin-tasks/attendance/attachment/preview");
+
+    Route::get('/admin-tasks/functions', [AdminController::class, 'showAdminTasksFunctions'])->name("admin-tasks/functions");
+    Route::get('/admin-tasks/functions/view', [AdminController::class, 'showAdminTasksFunctionsView'])->name("admin-tasks/functions/view");
+    Route::get('/admin-tasks/functions/search', [AdminController::class, 'showAdminTasksFunctionsSearch'])->name("admin-tasks/functions/search");
+    Route::post('/admin-tasks/functions/create', [AdminController::class, 'adminTasksFunctionsCreate'])->name("admin-tasks/functions/create");
+    Route::post('/admin-tasks/functions/update', [AdminController::class, 'adminTasksFunctionsUpdate'])->name("admin-tasks/functions/update");
+    Route::post('/admin-tasks/functions/delete', [AdminController::class, 'adminTasksFunctionsDelete'])->name("admin-tasks/functions/delete");
 
     Route::get('/admin-tasks/seminars', [AdminController::class, 'showAdminTasksSeminars'])->name("admin-tasks/seminars");
     Route::get('/admin-tasks/seminars/view', [AdminController::class, 'showAdminTasksSeminarsView'])->name("admin-tasks/seminars/view");

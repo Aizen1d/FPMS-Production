@@ -14,6 +14,7 @@ use App\Models\AdminTasksResearchesCompleted;
 use App\Models\AdminTasksResearchesPublished;
 use App\Models\Extension;
 use App\Models\Attendance;
+use App\Models\Functions;
 use App\Models\Seminars;
 use App\Models\Faculty;
 use App\Models\FacultyPendingAccounts;
@@ -1619,8 +1620,15 @@ class AdminController extends Controller
     function showAdminTasksAttendance()
     {
         if (Auth::guard('admin')->check()) {
-            $attendances = Attendance::orderBy('created_at', 'desc')
+            $attendances = Attendance::with(['getFaculty', 'getFunction'])
+                ->orderBy('created_at', 'desc')
                 ->paginate(9);
+
+            // Get the faculty full name per attendance
+            $attendances->each(function ($item) {
+                // use ternary operator to check for middle name
+                $item->faculty_full_name = $item->getFaculty->first_name . ' ' . ($item->getFaculty->middle_name ? $item->getFaculty->middle_name . ' ' : '') . $item->getFaculty->last_name;
+            });            
 
             return view('admin.admin_tasks_attendance', 
             [
@@ -1640,9 +1648,22 @@ class AdminController extends Controller
         if (Auth::guard('admin')->check()) {
             $query = $request->input('query');
 
-            $attendances = Attendance::where('name_of_activity', 'like', "%{$query}%")
+            // Query for brief_description in function table
+            $attendances = Attendance::with(['getFaculty', 'getFunction'])
+                ->whereHas('getFunction', function ($q) use ($query) {
+                    $q->where('brief_description', 'like', "%{$query}%");
+                })
                 ->orderBy('created_at', 'desc')
                 ->get();
+
+            // Get the faculty full name per attendance
+            $attendances->each(function ($item) {
+                $item->brief_description = $item->getFunction->brief_description;
+                $item->remarks = $item->getFunction->remarks;
+
+                // use ternary operator to check for middle name
+                $item->faculty_full_name = $item->getFaculty->first_name . ' ' . ($item->getFaculty->middle_name ? $item->getFaculty->middle_name . ' ' : '') . $item->getFaculty->last_name;
+            });
 
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $perPage = 9;
@@ -1652,9 +1673,13 @@ class AdminController extends Controller
             // Format created_at date
             $formattedAttendances = $paginator->map(function ($item) {
                 return [
-                    'name_of_activity' => $item->name_of_activity,
+                    'id' => $item->id,
                     'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
                     'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                    'brief_description' => $item->brief_description,
+                    'remarks' => $item->remarks,
+                    'status' => $item->status,
+                    'faculty_full_name' => $item->faculty_full_name,
                 ];
             });
 
@@ -1944,40 +1969,112 @@ class AdminController extends Controller
             return redirect('login-admin')->with('fail', 'You must be logged in');
         }
     }
-    
-    function showAdminTasksAttendanceGetAttachments(Request $request)
+
+    function adminTasksAttendanceApprove(Request $request)
     {
         if (Auth::guard('admin')->check()) {
             $id = $request->input('id');
             $attendance = Attendance::find($id);
 
             if ($attendance) {
+                $attendance->status = 'Approved';
+                $attendance->save();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has approved an attendance id (' . $attendance->id . ').',
+                    'type_of_action' => 'Approve Attendance',
+                ]);
+
+                return response()->json(['message' => 'Attendance approved successfully.']);
+            } 
+            else {
+                return response()->json(['error' => 'Attendance not found.']);
+            }
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function adminTasksAttendanceReject(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+            $attendance = Attendance::find($id);
+
+            if ($attendance) {
+                $attendance->status = 'Rejected';
+                $attendance->save();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has rejected an attendance id (' . $attendance->id . ').',
+                    'type_of_action' => 'Reject Attendance',
+                ]);
+
+                return response()->json(['message' => 'Attendance rejected successfully.']);
+            } 
+            else {
+                return response()->json(['error' => 'Attendance not found.']);
+            }
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+    
+    function showAdminTasksAttendanceGetAttachments(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+
+            $attendance = Attendance::find($id);
+
+            if ($attendance) {
+                $folderPath = $attendance->proof_of_attendance;
                 $fileNames = [];
 
                 // Get all the contents in the specified directory
-                $files = Storage::disk('google')->listContents($attendance->certificates);
-                
-                if (!empty($files)) {
-                    foreach ($files as $file) {
-                        // Get the file name
-                        $fileName = basename($file['path']);
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
 
-                        // Check if this is a folder with the name 'Submissions'
-                        if ($file['type'] === 'dir' && $fileName === 'Submissions') {
-                            // Skip this folder
-                            continue;
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
                         }
-
-                        // Get the mime type
-                        $mimeType = $file['mimeType'];
-
-                        // Check if this is a zip file
-                        if ($mimeType === 'application/zip') {
-                            continue;
-                        }
-
-                        // Add the file name to the array
-                        $fileNames[] = $fileName;
                     }
                 }
 
@@ -2014,7 +2111,7 @@ class AdminController extends Controller
                 $service = new Google_Service_Drive($client);
 
                 // Find the file on Google Drive
-                $findFile = Storage::disk('google')->get($attendance->certificates . '/' . $fileName);
+                $findFile = Storage::disk('google')->get($attendance->proof_of_attendance . '/' . $fileName);
 
                 if (!$findFile) {
                     return response()->json(['error' => 'File not found.']);
@@ -2049,6 +2146,201 @@ class AdminController extends Controller
         else {
             return redirect('login-admin')->with('fail', 'You must be logged in');
         }
+    }
+
+    function showAdminTasksFunctions()
+    {
+        if (Auth::guard('admin')->check()) {
+            $functions = Functions::orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            return view('admin.admin_tasks_functions', 
+            [
+                'items' => $functions,
+            ]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksFunctionsView(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+            $function = Functions::find($id);
+
+            if ($function) {
+                return view('admin.admin_tasks_functions_view', 
+                [
+                    'item' => $function,
+                    'id' => $id,
+                ]);
+            } 
+            else {
+                return back();
+            }
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksFunctionsSearch(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $query = $request->input('query');
+
+            $functions = Functions::where('brief_description', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $functions->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($functions), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedFunctions = $paginator->map(function ($item) {
+                return [
+                    'brief_description' => $item->brief_description,
+                    'remarks' => $item->remarks,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json(['items' => $formattedFunctions]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function adminTasksFunctionsCreate(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $briefDescription = $request->input('brief_description');
+            $remarks = $request->input('remarks');
+
+            // Check if the brief description is unique
+            if (Functions::where('brief_description', $briefDescription)->exists()) {
+                return response()->json(['error' => 'A function with this brief description already exists.']);
+            }
+
+            // Create the function object
+            $function = new Functions;
+            $function->brief_description = $briefDescription;
+            $function->remarks = $remarks;
+            $function->save();
+
+            $admin = Auth::guard('admin')->user();
+            $adminUsername = $admin->username;
+
+            Logs::create([
+                'user_id' => $admin->id,
+                'user_role' => 'Admin',
+                'action_made' => '(' . $adminUsername . ') has created a function with a brief description of (' . $briefDescription . ').',
+                'type_of_action' => 'Create Function',
+            ]);
+
+            // Newly added function object
+            $newlyAddedFunction = [
+                'brief_description' => $function->brief_description,
+                'date_created_formatted' => Carbon::parse($function->created_at)->format('F j, Y'),
+                'date_created_time' => Carbon::parse($function->created_at)->format('g:i A'),
+            ];
+
+            // Format all functions
+            $functions = Functions::orderBy('created_at', 'desc')
+                ->paginate(9);
+
+            // Format
+            $functions = $functions->map(function ($item) {
+                return [
+                    'brief_description' => $item->brief_description,
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json([
+                'newlyAddedFunction' => $newlyAddedFunction,
+                'allFunctions' => $functions,
+            ]);
+        }   
+    }
+
+    function adminTasksFunctionsUpdate(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+            $function = Functions::find($id);
+
+            $briefDescription = $request->input('brief_description');
+            $remarks = $request->input('remarks');
+
+            // Check if the brief description is unique
+            if (Functions::where('brief_description', $briefDescription)->where('id', '!=', $id)->exists()) {
+                return response()->json(['error' => 'A function with this brief description already exists.']);
+            }
+
+            // Update the function
+            $function->brief_description = $briefDescription;
+            $function->remarks = $remarks;
+            $function->save();
+
+            $admin = Auth::guard('admin')->user();
+            $adminUsername = $admin->username;
+
+            Logs::create([
+                'user_id' => $admin->id,
+                'user_role' => 'Admin',
+                'action_made' => '(' . $adminUsername . ') has updated a function with a brief description of (' . $briefDescription . ').',
+                'type_of_action' => 'Update Function',
+            ]);
+
+            return response()->json(['success' => 'Function updated successfully.']);
+        } 
+    }
+
+    function adminTasksFunctionsDelete(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+            $function = Functions::find($id);
+
+            if ($function) {
+                $briefDescription = $function->brief_description;
+
+                // Delete the function
+                $function->delete();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has deleted a function with a brief description of (' . $briefDescription . ').',
+                    'type_of_action' => 'Delete Function',
+                ]);
+
+                return response()->json(['message' => 'Function deleted successfully.']);
+            } 
+            else {
+                return response()->json(['error' => 'Function not found.']);
+            }
+        } 
     }
 
     function showAdminTasksSeminars()
