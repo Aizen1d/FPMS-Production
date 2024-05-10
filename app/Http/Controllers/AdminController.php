@@ -2209,6 +2209,7 @@ class AdminController extends Controller
             // Format created_at date
             $formattedFunctions = $paginator->map(function ($item) {
                 return [
+                    'id' => $item->id,
                     'brief_description' => $item->brief_description,
                     'remarks' => $item->remarks,
                     'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),

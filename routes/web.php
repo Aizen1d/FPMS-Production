@@ -142,7 +142,9 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::post('/faculty-tasks/seminars/create', [FacultyController::class, 'facultyTasksSeminarsCreate'])->name("faculty-tasks/seminars/create");
     Route::post('/faculty-tasks/seminars/update', [FacultyController::class, 'facultyTasksSeminarsUpdate'])->name("faculty-tasks/seminars/update");
     Route::post('/faculty-tasks/seminars/delete', [FacultyController::class, 'facultyTasksSeminarsDelete'])->name("faculty-tasks/seminars/delete");
-    Route::get('/faculty-tasks/seminars/getAttachments', [FacultyController::class, 'showFacultyTasksSeminarsGetAttachments'])->name("faculty-tasks/seminars/getAttachments");
+    Route::get('/faculty-tasks/seminars/special-order/getAttachments', [FacultyController::class, 'showFacultyTasksSeminarsSpecialOrderGetAttachments'])->name("faculty-tasks/seminars/special-order/getAttachments");
+    Route::get('/faculty-tasks/seminars/certificates/getAttachments', [FacultyController::class, 'showFacultyTasksSeminarsCertificatesGetAttachments'])->name("faculty-tasks/seminars/certificates/getAttachments");
+    Route::get('/faculty-tasks/seminars/compiled/getAttachments', [FacultyController::class, 'showFacultyTasksSeminarsCompiledGetAttachments'])->name("faculty-tasks/seminars/compiled/getAttachments");
     Route::get('/faculty-tasks/seminars/attachment/preview', [FacultyController::class, 'showFacultyTasksSeminarsPreviewFileSelected'])->name("faculty-tasks/seminars/attachment/preview");
 
     // Admin Side (Admin cannot logout then back to any admin routes)

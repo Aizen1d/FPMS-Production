@@ -312,6 +312,13 @@
                         `;
 
                         taskContainer.innerHTML += row;
+
+                        // Add event listeners to search results
+                        taskContainer.querySelectorAll('.task-row').forEach(row => {
+                            row.addEventListener('click', () => {
+                                getSelectedItemRow(item);
+                            });
+                        });
                     });
 
                     document.getElementById('loading-overlay-search').style.display = 'none';

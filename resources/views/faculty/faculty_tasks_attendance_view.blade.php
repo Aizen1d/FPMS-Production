@@ -727,7 +727,7 @@
                 } 
                 else {
                     showNotification('An error occurred while deleting the attendance.', '#fe3232bc');
-                }attendance
+                }
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -3098,6 +3098,7 @@ class FacultyController extends Controller
             // Format created_at date
             $formattedAttendances = $paginator->map(function ($item) {
                 return [
+                    'id' => $item->id,
                     'function_id' => $item->function_id,
                     'brief_description' => $item->brief_description,
                     'remarks' => $item->remarks,
@@ -3427,6 +3428,7 @@ class FacultyController extends Controller
             // Format created_at date
             $formattedSeminars = $paginator->map(function ($item) {
                 return [
+                    'id' => $item->id,
                     'title' => $item->title,
                     'from_date' => Carbon::parse($item->from_date)->format('F j, Y'),
                     'to_date' => Carbon::parse($item->to_date)->format('F j, Y'),
@@ -3575,15 +3577,392 @@ class FacultyController extends Controller
     }
 
     function facultyTasksSeminarsUpdate(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $title = $request->input('title');
+            $classification = $request->input('classification');
+            $nature = $request->input('nature');
+            $type = $request->input('type');
+            $source_of_fund = $request->input('source_of_fund');
+            $budget = $request->input('budget');
+            $organizer = $request->input('organizer');
+            $level = $request->input('level');
+            $venue = $request->input('venue');
+            $from_date = $request->input('from_date');
+            $to_date = $request->input('to_date');
+            $total_no_hours = $request->input('total_no_hours');
+            $special_order_files = $request->file('special_order_files');
+            $certifications_files = $request->file('certifications_files');
+            $compiled_files = $request->file('compiled_files');
+            $notes = $request->input('notes');
 
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                $seminar->title = $title;
+                $seminar->classification = $classification;
+                $seminar->nature = $nature;
+                $seminar->type = $type;
+                $seminar->source_of_fund = $source_of_fund;
+                $seminar->budget = $budget;
+                $seminar->organizer = $organizer;
+                $seminar->level = $level;
+                $seminar->venue = $venue;
+                $seminar->from_date = $from_date;
+                $seminar->to_date = $to_date;
+                $seminar->total_no_hours = $total_no_hours;
+                $seminar->notes = $notes;
+                $seminar->save();
+
+                if ($special_order_files) {
+                    // Check if special order is not null or empty, if then create the folder
+                    if ($seminar->special_order === null || $seminar->special_order === '') {
+                        // Create the 'Special Order' folder if it doesn't exist
+                        if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Special Order')) {
+                            Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Special Order');
+                            Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Special Order', 'public');
+                        }
+
+                        $seminar->special_order = 'Seminars/' . $seminar->id . '/Special Order';
+                    }
+
+                    // Update the folder and its contents
+                    $folderPath = $seminar->special_order;
+                    Storage::disk('google')->setVisibility($folderPath, 'public');
+
+                    foreach ($special_order_files as $file) {
+                        $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                        if (!Storage::disk('google')->exists($filePath)) {
+                            // The file does not exist yet, upload it
+                            $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                        
+                            // Set the visibility of the file to "public"
+                            Storage::disk('google')->setVisibility($path, 'public');
+                        }
+                    }
+
+                    // Remove files from the new folder that wasn't found on $files array
+                    $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                    foreach ($filesInFolder as $fileInFolder) {
+                        $found = false;
+                        foreach ($special_order_files as $file) {
+                            if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            Storage::disk('google')->delete($fileInFolder);
+                        }
+                    }
+
+                    $seminar->special_order = 'Seminars/' . $seminar->id . '/Special Order';
+                }
+
+                if ($certifications_files) {
+                    // Check if certifications is not null or empty, if then create the folder
+                    if ($seminar->certificate === null || $seminar->certificate === '') {
+                        // Create the 'Certifications' folder if it doesn't exist
+                        if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Certifications')) {
+                            Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Certifications');
+                            Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Certifications', 'public');
+                        }
+
+                        $seminar->certificate = 'Seminars/' . $seminar->id . '/Certifications';
+                    }
+
+                    // Update the folder and its contents
+                    $folderPath = $seminar->certificate;
+                    Storage::disk('google')->setVisibility($folderPath, 'public');
+
+                    foreach ($certifications_files as $file) {
+                        $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                        if (!Storage::disk('google')->exists($filePath)) {
+                            // The file does not exist yet, upload it
+                            $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                        
+                            // Set the visibility of the file to "public"
+                            Storage::disk('google')->setVisibility($path, 'public');
+                        }
+                    }
+
+                    // Remove files from the new folder that wasn't found on $files array
+                    $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                    foreach ($filesInFolder as $fileInFolder) {
+                        $found = false;
+                        foreach ($certifications_files as $file) {
+                            if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            Storage::disk('google')->delete($fileInFolder);
+                        }
+                    }
+
+                    $seminar->certificate = 'Seminars/' . $seminar->id . '/Certifications';
+                }
+
+                if ($compiled_files) {
+                    // Check if compiled photos is not null or empty, if then create the folder
+                    if ($seminar->compiled_photos === null || $seminar->compiled_photos === '') {
+                        // Create the 'Compiled Photos' folder if it doesn't exist
+                        if (!Storage::disk('google')->exists('Seminars/' . $seminar->id . '/Compiled Photos')) {
+                            Storage::disk('google')->makeDirectory('Seminars/' . $seminar->id . '/Compiled Photos');
+                            Storage::disk('google')->setVisibility('Seminars/' . $seminar->id . '/Compiled Photos', 'public');
+                        }
+
+                        $seminar->compiled_photos = 'Seminars/' . $seminar->id . '/Compiled Photos';
+                    }
+
+                    // Update the folder and its contents
+                    $folderPath = $seminar->compiled_photos;
+                    Storage::disk('google')->setVisibility($folderPath, 'public');
+
+                    foreach ($compiled_files as $file) {
+                        $filePath = $folderPath . '/' . $file->getClientOriginalName();
+
+                        if (!Storage::disk('google')->exists($filePath)) {
+                            // The file does not exist yet, upload it
+                            $path = Storage::disk('google')->putFileAs($folderPath, $file, $file->getClientOriginalName());
+                        
+                            // Set the visibility of the file to "public"
+                            Storage::disk('google')->setVisibility($path, 'public');
+                        }
+                    }
+
+                    // Remove files from the new folder that wasn't found on $files array
+                    $filesInFolder = Storage::disk('google')->files($folderPath);
+
+                    foreach ($filesInFolder as $fileInFolder) {
+                        $found = false;
+                        foreach ($compiled_files as $file) {
+                            if ($file->getClientOriginalName() == basename($fileInFolder)) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            Storage::disk('google')->delete($fileInFolder);
+                        }
+                    }
+
+                    $seminar->compiled_photos = 'Seminars/' . $seminar->id . '/Compiled Photos';
+                }
+
+                $seminar->save();
+
+                return response()->json(['success' => 'Seminar updated successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Seminar not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return response()->json(['error' => 'You must be logged in.']);
+        }
     }
 
     function facultyTasksSeminarsDelete(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
 
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                // Delete the folder and its contents
+                $folderPath = $seminar->special_order;
+                Storage::disk('google')->deleteDirectory($folderPath);
+
+                $folderPath = $seminar->certificate;
+                Storage::disk('google')->deleteDirectory($folderPath);
+
+                $folderPath = $seminar->compiled_photos;
+                Storage::disk('google')->deleteDirectory($folderPath);
+
+                // Delete the seminar
+                $seminar->delete();
+
+                return response()->json(['success' => 'Seminar deleted successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Seminar not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return response()->json(['error' => 'You must be logged in.']);
+        }
     }
 
-    function showFacultyTasksSeminarsGetAttachments(Request $request){
+    function showFacultyTasksSeminarsSpecialOrderGetAttachments(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
 
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                $folderPath = $seminar->special_order;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Seminar not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksSeminarsCertificatesGetAttachments(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                $folderPath = $seminar->certificate;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Seminar not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksSeminarsCompiledGetAttachments(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $seminar = Seminars::find($id);
+
+            if ($seminar) {
+                $folderPath = $seminar->compiled_photos;
+                $fileNames = [];
+
+                // Get all the contents in the specified directory
+                if ($folderPath !== null) {
+                    $files = Storage::disk('google')->listContents($folderPath);
+                    
+                    if (!empty($files)) {
+                        foreach ($files as $file) {
+                            // Get the file name
+                            $fileName = basename($file['path']);
+
+                            // Check if this is a folder with the name 'Submissions'
+                            if ($file['type'] === 'dir' && $fileName === 'Submissions') {
+                                // Skip this folder
+                                continue;
+                            }
+
+                            // Get the mime type
+                            $mimeType = $file['mimeType'];
+
+                            // Check if this is a zip file
+                            if ($mimeType === 'application/zip') {
+                                continue;
+                            }
+
+                            // Add the file name to the array
+                            $fileNames[] = $fileName;
+                        }
+                    }
+                }
+
+                return response()->json($fileNames);
+            }
+            else {
+                return response()->json(['error' => 'Seminar not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
     }
 
     function showFacultyTasksSeminarsPreviewFileSelected(Request $request){

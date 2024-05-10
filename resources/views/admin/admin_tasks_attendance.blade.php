@@ -342,9 +342,11 @@
 
                         taskContainer.innerHTML += row;
 
-                        // Add the event listener to the row
-                        taskContainer.lastElementChild.addEventListener('click', () => {
-                            getSelectedItemRow(item);
+                        // Add event listeners to search results
+                        taskContainer.querySelectorAll('.task-row').forEach(row => {
+                            row.addEventListener('click', () => {
+                                getSelectedItemRow(item);
+                            });
                         });
                     });
 
