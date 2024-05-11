@@ -107,6 +107,9 @@
                     <input type="datetime-local" id="date-time-picker" min="1997-01-01" max="2030-01-01">
                 </div>
             </div>
+            <div class="">
+                <span for="" class="ms-2" id="selected-authors-label" style="font-size: 10px"></span>
+            </div>
 
             <label class="task-description-label" for="description">Description:</label><br>
             <textarea class="task-description-content" id="description" name="description" rows="4" cols="50" placeholder="Enter your description here.."></textarea>
@@ -373,6 +376,11 @@
             });
         });
 
+        // Dont close the dropdown when clicking in the list
+        list2.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
         // Assign to checkbox scripts
         let checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
 
@@ -404,6 +412,10 @@
                 selectedImg3.src = img.src;
                 selected3.innerHTML = text.innerHTML;
 
+                // Reset the selected members
+                selectedMembers.length = 0;
+                document.getElementById('selected-authors-label').textContent = '';
+
                 let selectedDepartment = selected3.innerHTML;
                 let list = document.querySelector('.list.create-list');
                 list.innerHTML = ''; // Clear the list of department members for faster rendering
@@ -427,11 +439,39 @@
                         if (result.members.length !== 0) {
                             let list = document.querySelector('.list.create-list');
                             list.innerHTML = '';
+
+                            // Add search input inside the list
+                            let searchInput = document.createElement('input');
+                            searchInput.classList.add('search-input');
+                            searchInput.setAttribute('placeholder', 'Search members...');
+
+                            // Add design for search input
+                            searchInput.style.width = '100%';
+                            searchInput.style.padding = '5px';
+                            searchInput.style.marginBottom = '5px';
+                            searchInput.style.border = '1px solid #ccc';
+                            searchInput.style.borderRadius = '5px';
+                            
+                            searchInput.style.fontSize = '12px';
+                            searchInput.style.paddingLeft = '15px';
+
+                            list.appendChild(searchInput);
+
+                            // Add select all checkbox
+                            let selectAll = document.createElement('div');
+                            selectAll.classList.add('item2');
+                            selectAll.innerHTML = `
+                            <input type="checkbox" id="all">
+                            <img src="{{ asset('admin/images/home.svg') }}" alt="">
+                            <div class="text">All</div>
+                            `;
+                            list.appendChild(selectAll);
+
                             result.members.forEach((member, index) => {
                                 let item = document.createElement('div');
                                 item.classList.add('item2');
                                 item.innerHTML = `
-                                <input type="checkbox" id="checkbox-${index}">
+                                <input type="checkbox" id="checkbox-${index}" class="select-member-input">
                                 <img src="{{ asset('admin/images/user.png') }}" alt="">
                                 <div class="text">
                                 ${member.first_name} ${member.middle_name ? member.middle_name + ' ' : ''}${member.last_name}
@@ -443,16 +483,21 @@
                                 let checkbox = item.querySelector('input[type="checkbox"]');
                                 checkbox.setAttribute('id', `checkbox-${index}`);
 
+                                const selectedMembersLabel = document.getElementById('selected-authors-label');
+
                                 // Add event listener to each checkbox
                                 checkbox.addEventListener('change', () => {
                                     let itemText = checkbox.nextElementSibling.nextElementSibling.textContent;
                                     if (checkbox.checked) {
                                         selectedMembers.push(itemText.trim());
-                                    } else {
+                                        selectedMembersLabel.textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
+                                    } 
+                                    else {
                                         let index = selectedMembers.indexOf(itemText.trim());
                                         if (index !== -1) {
                                             selectedMembers.splice(index, 1);
                                         }
+                                        selectedMembersLabel.textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
                                     }
                                 });
 
@@ -462,6 +507,42 @@
                                     checkbox.checked = !checkbox.checked;
                                 });*/
                             });
+
+                            // Event listener for the select all checkbox
+                            let selectAllCheckbox = document.getElementById('all');
+                            selectAllCheckbox.addEventListener('change', () => {
+                                let checkboxes = document.querySelectorAll('.select-member-input');
+                                if (selectAllCheckbox.checked) {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = true;
+                                    });
+                                    selectedMembers = result.members.map(member => {
+                                        return `${member.first_name} ${member.middle_name ? member.middle_name + ' ' : ''}${member.last_name}`;
+                                    });
+                                    document.getElementById('selected-authors-label').textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
+                                } else {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = false;
+                                    });
+                                    selectedMembers.length = 0;
+                                    document.getElementById('selected-authors-label').textContent = '';
+                                }
+                            });
+
+                            // Add event listener to search input
+                            searchInput.addEventListener('input', (event) => {
+                                let query = event.target.value.toLowerCase();
+                                let items = document.querySelectorAll('.item2');
+                                items.forEach(item => {
+                                    let text = item.querySelector('.text').textContent.toLowerCase();
+                                    if (text.includes(query)) {
+                                        item.style.display = '';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                            });
+                            
                         } else {
                             let list = document.querySelector('.list.create-list');
                             list.innerHTML = '';

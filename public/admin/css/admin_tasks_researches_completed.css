@@ -1003,3 +1003,24 @@ input[type="file"] {
 .status-attendance .text {
   white-space: nowrap;
 }
+
+.search-input-faculties{
+  height: 3vh;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-radius: 10px;
+  padding-left: 4%;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
+  transition: border-color 0.5s ease;
+}
+
+.authors-truncate{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

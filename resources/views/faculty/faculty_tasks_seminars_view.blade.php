@@ -907,7 +907,7 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/faculty-tasks/attendance/attachment/preview?id=${itemId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/seminars/attachment/preview?category=special_order&id=${itemId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
                         var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');
@@ -1048,7 +1048,7 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/faculty-tasks/attendance/attachment/preview?id=${itemId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/seminars/attachment/preview?category=certificate&id=${itemId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
                         var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');
@@ -1192,7 +1192,7 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/faculty-tasks/attendance/attachment/preview?id=${itemId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/seminars/attachment/preview?category=compiled&id=${itemId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
                         var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');

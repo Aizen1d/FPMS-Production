@@ -466,7 +466,7 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/faculty-tasks/researches/attachment/preview?category=${category}&id=${researchId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/researches/attachment/preview?category=special_order&id=${researchId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
                         var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');
@@ -608,7 +608,7 @@
                         window.open(url, '_blank');
                     } 
                     else { // File uploaded previously
-                        let url = `/faculty-tasks/researches/attachment/preview?category=${category}&id=${researchId}&fileName=${f.name}`;
+                        let url = `/faculty-tasks/researches/attachment/preview?category=certificate&id=${researchId}&fileName=${f.name}`;
 
                         // Open a new tab with the loading page
                         var newTab = window.open('/faculty-tasks/get-task/preview-file-selected/loading');

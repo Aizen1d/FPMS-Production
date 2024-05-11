@@ -50,6 +50,7 @@
 
                     <div class="d-flex flex-column mt-3">
                         <label for="" class="ms-3">Authors*</label>
+                        <label for="" class="ms-3" style="font-size: 11px" id="selected-authors-label"></label>
                         <div class="drop-down create-dropdown-faculties">
                             <div class="wrapper">
                                 <div class="selected">Select authors</div>
@@ -57,6 +58,13 @@
                             <i class="fa fa-caret-down caret2"></i>
     
                             <div class="list create-list-faculties">
+                                <input type="text" class="search-input-faculties" placeholder="Search faculty...">
+                                <div class="item2">
+                                    <input type="checkbox" id="all-checkbox">
+                                    <div class="text select-all-checkbox">
+                                        Select all
+                                    </div>
+                                </div>
                                 @foreach ($faculties as $faculty)
                                 <div class="item2">
                                     <input type="checkbox" id="all">
@@ -113,7 +121,7 @@
             </div>
         </div>
 
-        <div id="loading-overlay" class="loading-create-task" style="display: none; justify-content: center; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
+        <div id="loading-overlay" class="loading-create-task" style="display: none; justify-content: center; height: 70vh; align-items: center; border-radius: 25px; z-index: 9999; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <div class="spinner-border text-dark" role="status">
                     <span class="sr-only">Loading...</span>
@@ -309,7 +317,7 @@
                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">{{ $research->title }}</h5>
                 </div>
                 <div class="col-3">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 40.5%">{{ $research->authors }}</h5>
+                    <h5 class="task-row-content my-2 task-name-text authors-truncate" style="text-align:left; margin-left: 40.5%">{{ $research->authors }}</h5>
                 </div>
                 <div class="col-2">
                     <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 32%">
@@ -528,6 +536,12 @@
             });
         });
 
+        // Don't close the dropdown when typing in the search input
+        let searchInputFaculties2 = document.querySelector('.search-input-faculties');
+        searchInputFaculties2.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
         // Dropdown for level
         const dropdownLevel = document.querySelector('.create-dropdown-level');
         const listLevel = document.querySelector('.create-list-level');
@@ -624,10 +638,10 @@
                                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">${research.title}</h5>
                                 </div>
                                 <div class="col-3">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 43.5%">${research.authors}</h5>
+                                    <h5 class="task-row-content my-2 task-name-text authors-truncate" style="text-align:left; margin-left: 40.5%">${research.authors}</h5>
                                 </div>
                                 <div class="col-2">
-                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 41%">
+                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 32%">
                                         ${research.date_created_formatted}
                                         <br>
                                         ${research.date_created_time}
@@ -676,6 +690,68 @@
         }, 50);
 
         searchInput.addEventListener('input', debouncedInputHandler);
+
+        // Set selected authors label
+        const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                let selectedAuthors = [];
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const authorName = checkbox.parentElement.querySelector('.text').textContent.trim();
+                        selectedAuthors.push(authorName);
+                    }
+                });
+
+                const selectedAuthorsLabel = document.getElementById('selected-authors-label');
+                selectedAuthorsLabel.textContent = `Selected authors: (${selectedAuthors.join(', ')})`
+
+                if (selectedAuthors.length === 0) {
+                    selectedAuthorsLabel.textContent = '';
+                }
+            });
+        });
+
+        // Add functionality to select all checkbox
+        const selectAllCheckbox = document.getElementById('all-checkbox');
+        selectAllCheckbox.addEventListener('change', () => {
+            const checkboxes = document.querySelectorAll('.item2 input[id="all"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+
+            let selectedAuthors = [];
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const authorName = checkbox.parentElement.querySelector('.text').textContent.trim();
+                    selectedAuthors.push(authorName);
+                }
+            });
+
+            const selectedAuthorsLabel = document.getElementById('selected-authors-label');
+            selectedAuthorsLabel.textContent = `Selected authors: (${selectedAuthors.join(', ')}`
+
+            if (selectedAuthors.length === 0) {
+                selectedAuthorsLabel.textContent = '';
+            }
+        });
+
+        // Search functionality for faculties
+        const searchInputFaculties = document.querySelector('.search-input-faculties');
+        const faculties = document.querySelectorAll('.item2');
+
+        searchInputFaculties.addEventListener('input', (event) => {
+            const query = event.target.value.toLowerCase();
+
+            faculties.forEach(faculty => {
+                const text = faculty.querySelector('.text').textContent.toLowerCase();
+                if (text.includes(query)) {
+                    faculty.style.display = 'flex';
+                } else {
+                    faculty.style.display = 'none';
+                }
+            });
+        });
 
         /// Special Order: File Upload ///
 
@@ -845,7 +921,7 @@
 
         function validateForm() {
             const title = document.getElementById('research-title-input').value;
-            const authors = document.querySelectorAll('.item2 input[type="checkbox"]:checked');
+            const authors = document.querySelectorAll('.item2 input[id="all"]:checked');
             const typeFunding = document.querySelectorAll('input[name="typefunding"]:checked');
             const dateCompleted = document.getElementById('date-picker').value;
             const abstract = document.getElementById('abstract').value;
@@ -890,7 +966,7 @@
 
             const typeFunding = document.getElementById('selected-typefunding-display').textContent;
 
-            const checkboxes = document.querySelectorAll('.item2 input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('.item2 input[id="all"]');
             checkboxes.forEach(checkbox => {
                 if (checkbox.checked) {
                     const authorName = checkbox.parentElement.querySelector('.text').textContent.trim();

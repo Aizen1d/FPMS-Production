@@ -54,10 +54,20 @@
                                     <i class="fa fa-caret-down caret2"></i>
 
                                     <div class="list create-list">
+                                        <!-- add search input for members -->
+                                        <input type="text" class="search" id="search-input-member" placeholder="Search..">
+                                        <!-- add select all checkbox -->
+                                        <div class="item2">
+                                            <input type="checkbox" id="select-all" class="member-checkbox">
+                                            <img src="{{ asset('admin/images/PUPLogo.png') }}" alt="">
+                                            <div class="member-all">
+                                                Select All
+                                            </div>
+                                        </div>
                                         @foreach ($members as $member)
                                         <div class="item2">
                                             <input type="checkbox" id="all" class="member-checkbox">
-                                            <img src="{{ asset('admin/images/PUPLogo.png') }}" alt="">
+                                            <img src="{{ asset('admin/images/user.png') }}" alt="">
                                             <div class="member-text">
                                                 {{ $member->first_name }} {{ $member->middle_name ? $member->middle_name . ' ' : '' }}{{ $member->last_name }}
                                             </div>
@@ -70,6 +80,9 @@
                                 <label class="set-deadline-label">Set Deadline</label>
                                 <input type="datetime-local" id="date-time-picker" min="1997-01-01" max="2030-01-01" value="{{ date('Y-m-d\TH:i', strtotime($due_date)) }}">
                             </div>
+                        </div>
+                        <div class="">
+                            <label for="" id="selected-members-label"></label>
                         </div>
 
                         <label class="task-description-label" for="description">Description:</label><br>
@@ -255,6 +268,8 @@
                 checkboxElement.checked = true;
                 selectedMembers.push(memberElement.textContent.trim());
             }
+
+            document.querySelector('#selected-members-label').textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
         }
 
         // Get a reference to all the checkboxes
@@ -272,12 +287,18 @@
                     // If the checkbox is checked, add the person to the selectedMembers array
                     selectedMembers.push(personName);
                     console.log(selectedMembers);
+
+                    // Update the selected members label
+                    document.querySelector('#selected-members-label').textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
                 } else {
                     // If the checkbox is not checked, remove the person from the selectedMembers array
                     let index = selectedMembers.indexOf(personName);
                     if (index !== -1) {
                         selectedMembers.splice(index, 1);
                         console.log(selectedMembers);
+
+                        // Update the selected members label
+                        document.querySelector('#selected-members-label').textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
                     }
                 }
             });
@@ -423,6 +444,49 @@
             item.addEventListener('click', (event) => {
                 event.stopPropagation();
             });
+        });
+
+        // don't close dropdown when clicking on search input
+        let searchInput = document.querySelector('.search');
+        searchInput.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
+        // search members
+        let search = document.querySelector('.search');
+        search.addEventListener('keyup', function() {
+            let input = search.value.toLowerCase();
+            let items = document.querySelectorAll('.item2');
+            items.forEach(item => {
+                if (item.textContent.toLowerCase().indexOf(input) > -1) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // select all members and tick all checkboxes
+        let selectAll = document.querySelector('.item2 input[type="checkbox"]');
+        selectAll.addEventListener('change', function() {
+            let checkboxes = document.querySelectorAll('.member-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+
+            if (this.checked) {
+                selectedMembers.length = 0;
+
+                let members = document.querySelectorAll('.member-text');
+                members.forEach(member => {
+                    selectedMembers.push(member.textContent.trim());
+                });
+                document.querySelector('#selected-members-label').textContent = 'Selected members: (' + selectedMembers.join(', ') + ')';
+            } 
+            else {
+                selectedMembers.length = 0;
+                document.querySelector('#selected-members-label').textContent = '';
+            }
         });
 
         // Create task date time picker

@@ -704,3 +704,11 @@ input[type="file"] {
   color: white;
   box-shadow: rgba(0, 0, 0, 0.3) 4.7px 4.7px 13px;
 }
+
+.authors-truncate{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

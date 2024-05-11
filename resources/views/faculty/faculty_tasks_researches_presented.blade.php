@@ -167,7 +167,7 @@
                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">{{ $research->title }}</h5>
                 </div>
                 <div class="col-3">
-                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">{{ $research->authors }}</h5>
+                    <h5 class="task-row-content my-2 task-name-text authors-truncate" style="text-align:left; margin-left: 41%">{{ $research->authors }}</h5>
                 </div>
                 <div class="col-2">
                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 40.5%">{{ $research->host }}</h5>
@@ -414,7 +414,7 @@
                                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">${research.title}</h5>
                                 </div>
                                 <div class="col-3">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%">${research.authors}</h5>
+                                    <h5 class="task-row-content my-2 task-name-text authors-truncate" style="text-align:left; margin-left: 41%">${research.authors}</h5>
                                 </div>
                                 <div class="col-2">
                                     <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 40.5%">${research.host}</h5>

@@ -29,7 +29,7 @@ use App\Models\Extension;
 use App\Models\Attendance;
 use App\Models\Seminars;
 use App\Models\Functions;
-
+use Google\Service\MyBusinessAccountManagement\Admin;
 // Import LengthAwarePaginator
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -1960,20 +1960,12 @@ class FacultyController extends Controller
             $id = $request->input('id');
             $fileName = $request->input('fileName');
 
-            if ($category === 'Presented') {
-                $research = AdminTasksResearchesPresented::find($id);
-                $folderPath = 'Researches/Presented/' . $research->title;
-            } 
-            else if ($category === 'Completed') {
-                $research = AdminTasksResearchesCompleted::find($id);
-                $folderPath = 'Researches/Completed/' . $research->title;
-            } 
-            else if ($category === 'Published') {
-                $research = AdminTasksResearchesPublished::find($id);
-                $folderPath = 'Researches/Published/' . $research->title;
-            } 
-            else {
-                $research = null;
+            $research = AdminTasksResearchesPresented::find($id);
+            if ($category === 'special_order') {
+                $folderPath = $research->special_order;
+            }
+            else if ($category === 'certificate') {
+                $folderPath = $research->certificates;
             }
 
             // Set up the Google Drive API client
@@ -2445,7 +2437,7 @@ class FacultyController extends Controller
                 $research = AdminTasksResearchesCompleted::with('presentedResearch')->find($id);
 
                 // Delete the folder and its contents of the research presented since presented depends on completed
-                if ($research) {
+                if ($research->presentedResearch) {
                     $folderPath = 'Researches/Presented/' . $research->presentedResearch->id;
                     Storage::disk('google')->deleteDirectory($folderPath);
                 }
@@ -3070,6 +3062,58 @@ class FacultyController extends Controller
         }
     }
 
+    function showFacultyTasksAttendancePreviewFileSelected(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $fileName = $request->input('fileName');
+
+            $attendance = Attendance::find($id);
+            $folderPath = $attendance->proof_of_attendance;
+
+            // Set up the Google Drive API client
+            $client = new Google_Client();
+            $client->setClientId(env('GOOGLE_DRIVE_CLIENT_ID'));
+            $client->setClientSecret(env('GOOGLE_DRIVE_CLIENT_SECRET'));
+            $client->fetchAccessTokenWithRefreshToken(env('GOOGLE_DRIVE_REFRESH_TOKEN'));
+    
+            // Set up the Google Drive service
+            $service = new Google_Service_Drive($client);
+
+            // Find the file on Google Drive
+            $findFile = Storage::disk('google')->get($folderPath . '/' . $fileName);
+
+            if (!$findFile) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            
+            $results = $service->files->listFiles([
+                'q' => "name = '$fileName'",
+                'fields' => 'files(id, webViewLink)',
+            ]);
+
+            // Check if the file was found
+            if (count($results->getFiles()) === 0) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            else {
+                // Get the file's metadata
+                $file = $results->getFiles()[0];
+
+                // Get the webViewLink property
+                $url = $file->getWebViewLink();
+
+                return response()->json(['url' => $url]);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
     function showFacultyTasksAttendanceSearch(Request $request)
     {
         if (Auth::guard('faculty')->check()) {
@@ -3354,6 +3398,7 @@ class FacultyController extends Controller
             // Format created_at date
             $formattedFunctions = $paginator->map(function ($item) {
                 return [
+                    'id' => $item->id,
                     'brief_description' => $item->brief_description,
                     'remarks' => $item->remarks,
                     'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
@@ -3966,6 +4011,62 @@ class FacultyController extends Controller
     }
 
     function showFacultyTasksSeminarsPreviewFileSelected(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $category = $request->input('category');
+            $id = $request->input('id');
+            $fileName = $request->input('fileName');
 
+            $seminar = Seminars::find($id);
+            if ($category === 'special_order') {
+                $folderPath = $seminar->special_order;
+            }
+            else if ($category === 'certificate') {
+                $folderPath = $seminar->certificate;
+            }
+            else if ($category === 'compiled') {
+                $folderPath = $seminar->compiled_photos;
+            }
+
+            // Set up the Google Drive API client
+            $client = new Google_Client();
+            $client->setClientId(env('GOOGLE_DRIVE_CLIENT_ID'));
+            $client->setClientSecret(env('GOOGLE_DRIVE_CLIENT_SECRET'));
+            $client->fetchAccessTokenWithRefreshToken(env('GOOGLE_DRIVE_REFRESH_TOKEN'));
+    
+            // Set up the Google Drive service
+            $service = new Google_Service_Drive($client);
+
+            // Find the file on Google Drive
+            $findFile = Storage::disk('google')->get($folderPath . '/' . $fileName);
+
+            if (!$findFile) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            
+            $results = $service->files->listFiles([
+                'q' => "name = '$fileName'",
+                'fields' => 'files(id, webViewLink)',
+            ]);
+
+            // Check if the file was found
+            if (count($results->getFiles()) === 0) {
+                return response()->json(['error' => 'File not found.']);
+            }
+            else {
+                // Get the file's metadata
+                $file = $results->getFiles()[0];
+
+                // Get the webViewLink property
+                $url = $file->getWebViewLink();
+
+                return response()->json(['url' => $url]);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
     }
 }

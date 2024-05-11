@@ -456,10 +456,12 @@
 
                         researchContainer.innerHTML += row;
 
-                        // Add event listener to the button
-                        const addAttendanceBtn = researchContainer.querySelector('.add-attendance-btn');
-                        addAttendanceBtn.addEventListener('click', (event) => {
-                            addAttendance(event, research);
+                        // Add event listener to all row buttons
+                        const addAttendanceBtns = document.querySelectorAll('.add-attendance-btn');
+                        addAttendanceBtns.forEach(btn => {
+                            btn.addEventListener('click', (event) => {
+                                addAttendance(event, research);
+                            });
                         });
                     });
 

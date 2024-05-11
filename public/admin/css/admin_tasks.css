@@ -399,7 +399,7 @@ body{
 .body-frame{
     border-radius: 10px;
     width: 37vw;
-    height: 45vh;
+    height: 46vh;
     margin-left: 4%;
     padding-left: 2%;
     margin-top: 1%;
@@ -461,7 +461,6 @@ body{
 }
 
 .task-description-label{
-    margin-top: 3%;
     margin-left: .2%;
     font-size: 1.5vh;
 }

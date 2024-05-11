@@ -549,7 +549,7 @@ input[type="file"] {
     margin-top: 5%;
     border-radius: 7px;
     width: 15vw; 
-    height: 19vh; 
+    height: 16vh; 
     border: 2px dashed #a4a4a4; 
     background-color: #fff;
     text-align:center
@@ -557,13 +557,13 @@ input[type="file"] {
 
 #drop-zone p {
     font-size: 2vh;
-    line-height: 18.5vh;
+    line-height: 15.5vh;
     color: rgba(84, 84, 84, 0.72);
 }
 
 #preview {
     font-size: 2vh;
-    max-height: 25vh;
+    max-height: 22vh;
     overflow-y: auto;
     margin-left: 1%;
     padding-left: .75%;
@@ -633,7 +633,7 @@ input[type="file"] {
     font-size: 1.8vh;
     width: 11vw;
     height: 4.3vh;
-    margin-top: -21.5% !important;
+    margin-top: -18.5% !important;
     margin-right: 2% !important;
 }
 
@@ -674,4 +674,16 @@ input[type="file"] {
         background-color: rgb(231, 231, 231);
     }
 }
-   
+
+#search-input-member{
+    height: 35px;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    border-radius: 10px;
+    padding-left: 6.5%;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
+    transition: border-color 0.5s ease;
+}
