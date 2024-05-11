@@ -29,31 +29,212 @@
         <div class="col-12">
           <div class="ms-3 mt-4">
             <div class="d-flex flex-column">
-                <label class="research-labels ms-3" for="">Title*</label>
-                <input class="research-input" id="title-input" type="text" placeholder="Enter title" value="{{ $item->title }}">
+                <label class="research-labels ms-3" for="">Title of Extension Program*</label>
+                <input class="research-input" id="title-program-input" type="text" placeholder="Enter title of extension program" value="{{ $item->title_of_extension_program }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
-              <label for="" class="research-labels ms-3">Date Conducted*</label>
-              <input class="ms-3" type="date" id="date-picker" min="1997-01-01" max="2030-01-01" value="{{ $date_conducted }}">
+                <label class="research-labels ms-3" for="">Title of Extension Project*</label>
+                <input class="research-input" id="title-project-input" type="text" placeholder="Enter title of extension project" value="{{ $item->title_of_extension_project }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
-                <label class="research-labels ms-3" for="">Partner / Linkage*</label>
-                <input class="research-input" id="partner-input" type="text" placeholder="Enter partner / linkage" value="{{ $item->partner }}">
+                <label class="research-labels ms-3" for="">Title of Extension Activity*</label>
+                <input class="research-input" id="title-activity-input" type="text" placeholder="Enter title of extension activity" value="{{ $item->title_of_extension_activity }}">
+            </div>
+            
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Place/Venue</label>
+                <input class="research-input" id="place-input" type="text" value="{{ $item->place }}">
+            </div>
+            
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Level*</label>
+                <div class="drop-down create-dropdown-level">
+                    <div class="wrapper">
+                        <div class="selected" id="selected-level-display">Select Level</div>
+                    </div>
+                    <i class="fa fa-caret-down caret-level"></i>
+            
+                    <div class="list create-list-level">
+                        <div class="item2">
+                            <input type="radio" name="level" id="International">
+                            <div class="text">
+                                International
+                            </div>
+                        </div>
+                        <div class="item2">
+                            <input type="radio" name="level" id="National">
+                            <div class="text">
+                                National
+                            </div>
+                        </div>
+                        <div class="item2">
+                            <input type="radio" name="level" id="Regional">
+                            <div class="text">
+                                Regional
+                            </div>
+                        </div>
+                        <div class="item2">
+                            <input type="radio" name="level" id="Provincial/City/Municipal">
+                            <div class="text">
+                                Provincial/City/Municipal
+                            </div>
+                        </div>
+                        <div class="item2">
+                            <input type="radio" name="level" id="Local-PUP">
+                            <div class="text">
+                                Local-PUP
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="d-flex flex-column mt-4">
-              <label class="research-labels ms-3" for="">Beneficiaries*</label>
-              <input class="research-input" id="beneficiaries-input" type="text" placeholder="Enter beneficiaries" value="{{ $item->beneficiaries }}">
+                <label for="" class="research-labels ms-3">Classification*</label>
+                <label for="" class="ms-3" style="font-size: 12px; margin-top: -2px">
+                    Livelihood Development; Health; Educational and Cultural Exchange; Technology Transfer; Knowledge Transfer; Local Governance; if others, please specify
+                </label>
+                <input class="research-input" id="classification-input" type="text" value="{{ $item->classification }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
-              <label class="research-labels ms-3" for="">Evaluation*</label>
-              <input class="research-input" id="evaluation-input" type="text" placeholder="Enter evaluation" value="{{ $item->evaluation }}">
+                <label for="" class="research-labels ms-3">Type*</label>
+                <div class="drop-down-type create-dropdown-type">
+                    <div class="wrapper">
+                        <div class="selected" id="selected-type-display">Select Type</div>
+                    </div>
+                    <i class="fa fa-caret-down caret-type"></i>
+            
+                    <div class="type create-list-type">
+                        <div class="item-type">
+                            <input type="radio" name="type" id="Training">
+                            <div class="text">
+                                Training
+                            </div>
+                        </div>
+                        <div class="item-type">
+                            <input type="radio" name="type" id="Technical/Advisory Services">
+                            <div class="text">
+                                Technical/Advisory Services
+                            </div>
+                        </div>
+                        <div class="item-type">
+                            <input type="radio" name="type" id="Outreach">
+                            <div class="text">
+                                Outreach
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="loading-overlay" class="loading-save-task" style="display: none; justify-content: center; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Keywords (at least five (5) keywords)</label>
+                <input class="research-input" id="keywords-input" type="text" value="{{ $item->keywords }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Type of Funding*</label>
+                <div class="drop-down-type create-dropdown-typefunding">
+                    <div class="wrapper">
+                        <div class="selected" id="selected-typefunding-display">Select Type of Funding</div>
+                    </div>
+                    <i class="fa fa-caret-down caret-typefunding"></i>
+            
+                    <div class="type create-list-typefunding">
+                        <div class="item-typefunding">
+                            <input type="radio" name="typefunding" id="University Funded">
+                            <div class="text">
+                                University Funded
+                            </div>
+                        </div>
+                        <div class="item-typefunding">
+                            <input type="radio" name="typefunding" id="Self Funded">
+                            <div class="text">
+                                Self Funded
+                            </div>
+                        </div>
+                        <div class="item-typefunding">
+                            <input type="radio" name="typefunding" id="Externally Funded">
+                            <div class="text">
+                                Externally Funded
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Funding Agency</label>
+                <input class="research-input" id="funding-agency-input" type="text" value="{{ $item->funding_agency }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Amount of Funding (PHP)</label>
+                <input class="research-input" id="amount-funding-input" type="number" value="{{ $item->amount_of_funding }}">
+            </div>
+            
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Total No. of Hours</label>
+                <input class="research-input" id="total-hours-input" type="number" value="{{ $item->total_no_of_hours }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">No. of Trainees/Beneficiaries</label>
+                <input class="research-input" id="number-of-trainees-input" type="number" value="{{ $item->no_of_trainees }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Classification of Trainees/Beneficaries*</label>
+                <label for="" class="ms-3" style="font-size: 12px; margin-top: -2px">
+                    Faculty; Administrative Employee; Students; Community; If others, please specify.
+                </label>
+                <input class="research-input" id="classification-of-trainees-input" type="text" value="{{ $item->classification_of_trainees }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Nature of Involvement*</label>
+                <input class="research-input" id="nature-input" type="text" value="{{ $item->nature_of_involvement }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">Status*</label>
+                <div class="drop-down-type create-dropdown-status">
+                    <div class="wrapper">
+                        <div class="selected" id="selected-status-display">Select Status</div>
+                    </div>
+                    <i class="fa fa-caret-down caret-status"></i>
+            
+                    <div class="type create-list-status">
+                        <div class="item-status">
+                            <input type="radio" name="status" id="Ongoing">
+                            <div class="text">
+                                Ongoing
+                            </div>
+                        </div>
+                        <div class="item-status">
+                            <input type="radio" name="status" id="Completed">
+                            <div class="text">
+                                Completed
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">From</label>
+                <input class="ms-2" type="date" id="date-picker-from" min="1997-01-01" max="2030-01-01" value="{{ $from_date }}">
+            </div>
+
+            <div class="d-flex flex-column mt-4">
+                <label for="" class="research-labels ms-3">To</label>
+                <input class="ms-2" type="date" id="date-picker-to" min="1997-01-01" max="2030-01-01" value="{{ $to_date }}">
+            </div>
+           
+            <div id="loading-overlay" class="loading-save-task" style="display: none; justify-content: center; height: 210vh; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
               <div style="display: flex; flex-direction: column; align-items: center;">
                   <div class="spinner-border text-dark" role="status">
                       <span class="sr-only">Loading...</span>
@@ -93,33 +274,125 @@
       }
 
       function disableForm() {
-        let title = document.getElementById('title-input');
-        let date = document.getElementById('date-picker');
-        let partner = document.getElementById('partner-input');
-        let beneficiaries = document.getElementById('beneficiaries-input');
-        let evaluation = document.getElementById('evaluation-input');
+        let titleProgramInput = document.getElementById('title-program-input');
+        let titleProjectInput = document.getElementById('title-project-input');
+        let titleActivityInput = document.getElementById('title-activity-input');
+        let placeInput = document.getElementById('place-input');
+        let classificationInput = document.getElementById('classification-input');
+        let keywordsInput = document.getElementById('keywords-input');
+        let fundingAgencyInput = document.getElementById('funding-agency-input');
+        let amountFundingInput = document.getElementById('amount-funding-input');
+        let totalHoursInput = document.getElementById('total-hours-input');
+        let numberOfTraineesInput = document.getElementById('number-of-trainees-input');
+        let classificationOfTraineesInput = document.getElementById('classification-of-trainees-input');
+        let natureInput = document.getElementById('nature-input');
 
-        title.disabled = true;
-        date.disabled = true;
-        partner.disabled = true;
-        beneficiaries.disabled = true;
-        evaluation.disabled = true; 
+        titleProgramInput.disabled = true;
+        titleProjectInput.disabled = true;
+        titleActivityInput.disabled = true;
+        placeInput.disabled = true;
+        classificationInput.disabled = true;
+        keywordsInput.disabled = true;
+        fundingAgencyInput.disabled = true;
+        amountFundingInput.disabled = true;
+        totalHoursInput.disabled = true;
+        numberOfTraineesInput.disabled = true;
+        classificationOfTraineesInput.disabled = true;
+        natureInput.disabled = true;
+
+        let levelRadios = document.querySelectorAll('input[name="level"]');
+        levelRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+
+        let typeRadios = document.querySelectorAll('input[name="type"]');
+        typeRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+
+        let typeFundingRadios = document.querySelectorAll('input[name="typefunding"]');
+        typeFundingRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+
+        let statusRadios = document.querySelectorAll('input[name="status"]');
+        statusRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+
+        let datePickerFrom = document.getElementById('date-picker-from');
+        datePickerFrom.disabled = true;
+
+        let datePickerTo = document.getElementById('date-picker-to');
+        datePickerTo.disabled = true;
       }
 
       disableForm();
 
       function enableForm() {
-        let title = document.getElementById('title-input');
-        let date = document.getElementById('date-picker');
-        let partner = document.getElementById('partner-input');
-        let beneficiaries = document.getElementById('beneficiaries-input');
-        let evaluation = document.getElementById('evaluation-input');
+        let titleProgramInput = document.getElementById('title-program-input');
+        let titleProjectInput = document.getElementById('title-project-input');
+        let titleActivityInput = document.getElementById('title-activity-input');
+        let placeInput = document.getElementById('place-input');
+        let classificationInput = document.getElementById('classification-input');
+        let keywordsInput = document.getElementById('keywords-input');
+        let fundingAgencyInput = document.getElementById('funding-agency-input');
+        let amountFundingInput = document.getElementById('amount-funding-input');
+        let totalHoursInput = document.getElementById('total-hours-input');
+        let numberOfTraineesInput = document.getElementById('number-of-trainees-input');
+        let classificationOfTraineesInput = document.getElementById('classification-of-trainees-input');
+        let natureInput = document.getElementById('nature-input');
 
-        title.disabled = false;
-        date.disabled = false;
-        partner.disabled = false;
-        beneficiaries.disabled = false;
-        evaluation.disabled = false;
+        titleProgramInput.disabled = false;
+        titleProjectInput.disabled = false;
+        titleActivityInput.disabled = false;
+        placeInput.disabled = false;
+        classificationInput.disabled = false;
+        keywordsInput.disabled = false;
+        fundingAgencyInput.disabled = false;
+        amountFundingInput.disabled = false;
+        totalHoursInput.disabled = false;
+        numberOfTraineesInput.disabled = false;
+        classificationOfTraineesInput.disabled = false;
+        natureInput.disabled = false;
+
+        let levelRadios = document.querySelectorAll('input[name="level"]');
+        levelRadios.forEach(radio => {
+            radio.disabled = false;
+        });
+
+        let typeRadios = document.querySelectorAll('input[name="type"]');
+        typeRadios.forEach(radio => {
+            radio.disabled = false;
+        });
+
+        let typeFundingRadios = document.querySelectorAll('input[name="typefunding"]');
+        typeFundingRadios.forEach(radio => {
+            radio.disabled = false;
+        });
+
+        let statusRadios = document.querySelectorAll('input[name="status"]');
+        statusRadios.forEach(radio => {
+            radio.disabled = false;
+        });
+
+        let datePickerFrom = document.getElementById('date-picker-from');
+        datePickerFrom.disabled = false;
+
+        let datePickerTo = document.getElementById('date-picker-to');
+        datePickerTo.disabled = false;
+
+        if (titleProgramInput.value === '') {
+            titleProgramInput.disabled = true;
+        }
+
+        if (titleProjectInput.value === '') {
+            titleProjectInput.disabled = true;
+        }
+
+        if (titleActivityInput.value === '') {
+            titleActivityInput.disabled = true;
+        }
       }
 
       function editItem() {
@@ -185,10 +458,44 @@
           });
       });*/
 
-      /* Dropdown for level
+      // Add event listener to titleProgram, Project and Activity
+      const titleProgramInput = document.getElementById('title-program-input');
+        const titleProjectInput = document.getElementById('title-project-input');
+        const titleActivityInput = document.getElementById('title-activity-input');
+
+        // Function to disable other inputs
+        function disableOtherInputs(changedInput, input1, input2) {
+            if (changedInput.value !== '') {
+                input1.disabled = true;
+                input2.disabled = true;
+            } else {
+                input1.disabled = false;
+                input2.disabled = false;
+            }
+        }
+
+        // Initial disable the other inputs who is empty
+        if (titleProgramInput.value !== '') {
+            titleProjectInput.disabled = true;
+            titleActivityInput.disabled = true;
+        } else if (titleProjectInput.value !== '') {
+            titleProgramInput.disabled = true;
+            titleActivityInput.disabled = true;
+        } else if (titleActivityInput.value !== '') {
+            titleProgramInput.disabled = true;
+            titleProjectInput.disabled = true;
+        }
+
+        // Add event listeners
+        titleProgramInput.addEventListener('input', () => disableOtherInputs(titleProgramInput, titleProjectInput, titleActivityInput));
+        titleProjectInput.addEventListener('input', () => disableOtherInputs(titleProjectInput, titleProgramInput, titleActivityInput));
+        titleActivityInput.addEventListener('input', () => disableOtherInputs(titleActivityInput, titleProgramInput, titleProjectInput));
+
+      // Dropdown for level
       const dropdownLevel = document.querySelector('.create-dropdown-level');
       const listLevel = document.querySelector('.create-list-level');
       const caretLevel = document.querySelector('.caret-level');
+        const selectedLevelDisplay = document.getElementById('selected-level-display');
 
       dropdownLevel.addEventListener('click', () => {
           listLevel.classList.toggle('show');
@@ -207,7 +514,110 @@
           item.addEventListener('click', (event) => {
               event.stopPropagation();
           });
-      });*/
+      });
+
+        let levelRadios = document.querySelectorAll('input[name="level"]');
+        levelRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedLevelDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            });
+        });
+
+          // Dropdown for type
+          const dropdownType = document.querySelector('.create-dropdown-type');
+        const listType = document.querySelector('.create-list-type');
+        const caretType = document.querySelector('.caret-type');
+        const selectedTypeDisplay = document.getElementById('selected-type-display');
+
+        dropdownType.addEventListener('click', () => {
+            listType.classList.toggle('show-type');
+            caretType.classList.toggle('fa-rotate');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownType.contains(e.target)) {
+                listType.classList.remove('show-type');
+                caretType.classList.remove('fa-rotate');
+            }
+        });
+
+        let itemsType = document.querySelectorAll('.item-type');
+        itemsType.forEach(item => {
+            item.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+
+        let typeRadios = document.querySelectorAll('input[name="type"]');
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedTypeDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            });
+        });
+        
+        // Dropdown for type of funding
+        const dropdownTypeFunding = document.querySelector('.create-dropdown-typefunding');
+        const listTypeFunding = document.querySelector('.create-list-typefunding');
+        const caretTypeFunding = document.querySelector('.caret-typefunding');
+        const selectedTypeFundingDisplay = document.getElementById('selected-typefunding-display');
+
+        dropdownTypeFunding.addEventListener('click', () => {
+            listTypeFunding.classList.toggle('show-typefunding');
+            caretTypeFunding.classList.toggle('fa-rotate');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownTypeFunding.contains(e.target)) {
+                listTypeFunding.classList.remove('show-typefunding');
+                caretTypeFunding.classList.remove('fa-rotate');
+            }
+        });
+
+        let itemsTypeFunding = document.querySelectorAll('.item-typefunding');
+        itemsTypeFunding.forEach(item => {
+            item.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+
+        let typeFundingRadios = document.querySelectorAll('input[name="typefunding"]');
+        typeFundingRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedTypeFundingDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            });
+        });
+
+        // Dropdown for status
+        const dropdownStatus = document.querySelector('.create-dropdown-status');
+        const listStatus = document.querySelector('.create-list-status');
+        const caretStatus = document.querySelector('.caret-status');
+        const selectedStatusDisplay = document.getElementById('selected-status-display');
+
+        dropdownStatus.addEventListener('click', () => {
+            listStatus.classList.toggle('show-status');
+            caretStatus.classList.toggle('fa-rotate');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownStatus.contains(e.target)) {
+                listStatus.classList.remove('show-status');
+                caretStatus.classList.remove('fa-rotate');
+            }
+        });
+
+        let itemsStatus = document.querySelectorAll('.item-status');
+        itemsStatus.forEach(item => {
+            item.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+
+        let statusRadios = document.querySelectorAll('input[name="status"]');
+        statusRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedStatusDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            });
+        });
 
       /// File Upload ///
 
@@ -407,41 +817,168 @@
             enableButtons();
         });*/
 
+        // Set initial value of level
+        let setLevelRadios = document.querySelectorAll('input[name="level"]');
+        setLevelRadios.forEach(radio => {
+            if (radio.id === "{{ $item->level }}") {
+                radio.checked = true;
+                selectedLevelDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            }
+        });
+
+        // Set initial value of type
+        let setTypeRadios = document.querySelectorAll('input[name="type"]');
+        setTypeRadios.forEach(radio => {
+            if (radio.id === "{{ $item->type }}") {
+                radio.checked = true;
+                selectedTypeDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            }
+        });
+
+        // Set initial value of type of funding
+        let setTypeFundingRadios = document.querySelectorAll('input[name="typefunding"]');
+        setTypeFundingRadios.forEach(radio => {
+            if (radio.id === "{{ $item->type_of_funding }}") {
+                radio.checked = true;
+                selectedTypeFundingDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            }
+        });
+
+        // Set initial value of status
+        let setStatusRadios = document.querySelectorAll('input[name="status"]');
+        setStatusRadios.forEach(radio => {
+            if (radio.id === "{{ $item->status }}") {
+                radio.checked = true;
+                selectedStatusDisplay.textContent = radio.parentElement.querySelector('.text').textContent;
+            }
+        });
+
         // Form Handling
 
         function validateForm() {
-          let title = document.getElementById('title-input').value;
-          let date = document.getElementById('date-picker').value;
-          let partner = document.getElementById('partner-input').value;
-          let beneficiaries = document.getElementById('beneficiaries-input').value;
-          let evaluation = document.getElementById('evaluation-input').value;
+          let titleProgramInput = document.getElementById('title-program-input');
+            let titleProjectInput = document.getElementById('title-project-input');
+            let titleActivityInput = document.getElementById('title-activity-input');
+            let levelRadios = document.querySelectorAll('input[name="level"]');
+            let classificationInput = document.getElementById('classification-input');
+            let typeRadios = document.querySelectorAll('input[name="type"]');
+            let keywordsInput = document.getElementById('keywords-input');
+            let typeFundingRadios = document.querySelectorAll('input[name="typefunding"]');
+            let fundingAgencyInput = document.getElementById('funding-agency-input');
+            let amountFundingInput = document.getElementById('amount-funding-input');
+            let totalHoursInput = document.getElementById('total-hours-input');
+            let numberOfTraineesInput = document.getElementById('number-of-trainees-input');
+            let classificationOfTraineesInput = document.getElementById('classification-of-trainees-input');
+            let natureInput = document.getElementById('nature-input');
+            let statusRadios = document.querySelectorAll('input[name="status"]');
+            let datePickerFrom = document.getElementById('date-picker-from');
+            let datePickerTo = document.getElementById('date-picker-to');
 
-          if (title.trim() === '') {
-              showNotification('Please enter a title.', '#fe3232bc');
-              return false;
-          }
+            // Check if any of titleProgram, titleProject, titleActivity is empty
+            if (titleProgramInput.value.trim() === '' && titleProjectInput.value.trim() === '' && titleActivityInput.value.trim() === '') {
+                showNotification('Please enter the title of the extension program, project or activity.', '#fe3232bc');
+                return false;
+            }
 
-          if (date.trim() === '') {
-              showNotification('Please enter a date.', '#fe3232bc');
-              return false;
-          }
+            let levelChecked = false;
+            levelRadios.forEach(radio => {
+                if (radio.checked) {
+                    levelChecked = true;
+                }
+            });
 
-          if (partner.trim() === '') {
-              showNotification('Please enter a partner / linkage.', '#fe3232bc');
-              return false;
-          }
+            if (!levelChecked) {
+                showNotification('Level is required.', '#fe3232bc');
+                return false;
+            }
 
-          if (beneficiaries.trim() === '') {
-              showNotification('Please enter beneficiaries.', '#fe3232bc');
-              return false;
-          }
+            if (classificationInput.value === '') {
+                showNotification('Classification is required.', '#fe3232bc');
+                return false;
+            }
 
-          if (evaluation.trim() === '') {
-              showNotification('Please enter an evaluation.', '#fe3232bc');
-              return false;
-          }
+            let typeChecked = false;
+            typeRadios.forEach(radio => {
+                if (radio.checked) {
+                    typeChecked = true;
+                }
+            });
 
-          return true;
+            if (!typeChecked) {
+                showNotification('Type is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (keywordsInput.value === '') {
+                showNotification('Keywords is required.', '#fe3232bc');
+                return false;
+            }
+
+            let typeFundingChecked = false;
+            typeFundingRadios.forEach(radio => {
+                if (radio.checked) {
+                    typeFundingChecked = true;
+                }
+            });
+
+            if (!typeFundingChecked) {
+                showNotification('Type of Funding is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (fundingAgencyInput.value === '') {
+                showNotification('Funding Agency is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (amountFundingInput.value === '') {
+                showNotification('Amount of Funding is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (totalHoursInput.value === '') {
+                showNotification('Total No. of Hours is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (numberOfTraineesInput.value === '') {
+                showNotification('No. of Trainees/Beneficiaries is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (classificationOfTraineesInput.value === '') {
+                showNotification('Classification of Trainees/Beneficiaries is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (natureInput.value === '') {
+                showNotification('Nature of Involvement is required.', '#fe3232bc');
+                return false;
+            }
+
+            let statusChecked = false;
+            statusRadios.forEach(radio => {
+                if (radio.checked) {
+                    statusChecked = true;
+                }
+            });
+
+            if (!statusChecked) {
+                showNotification('Status is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (datePickerFrom.value === '') {
+                showNotification('From is required.', '#fe3232bc');
+                return false;
+            }
+
+            if (datePickerTo.value === '') {
+                showNotification('To is required.', '#fe3232bc');
+                return false;
+            }
+
+            return true;
         }
 
         function submitForm() {
@@ -449,20 +986,26 @@
                 return;
             }
 
-            let title = document.getElementById('title-input').value;
-            let date = document.getElementById('date-picker').value;
-            let partner = document.getElementById('partner-input').value;
-            let beneficiaries = document.getElementById('beneficiaries-input').value;
-            let evaluation = document.getElementById('evaluation-input').value;
-
             let formData = new FormData();
             formData.append('id', itemId);
-
-            formData.append('title', title);
-            formData.append('date', date);
-            formData.append('partner', partner);
-            formData.append('beneficiaries', beneficiaries);
-            formData.append('evaluation', evaluation);
+            formData.append('title_program', document.getElementById('title-program-input').value);
+            formData.append('title_project', document.getElementById('title-project-input').value);
+            formData.append('title_activity', document.getElementById('title-activity-input').value);
+            formData.append('level', document.getElementById('selected-level-display').textContent);
+            formData.append('place', document.getElementById('place-input').value);
+            formData.append('classification', document.getElementById('classification-input').value);
+            formData.append('type', document.getElementById('selected-type-display').textContent);
+            formData.append('keywords', document.getElementById('keywords-input').value);
+            formData.append('type_of_funding', document.getElementById('selected-typefunding-display').textContent);
+            formData.append('funding_agency', document.getElementById('funding-agency-input').value);
+            formData.append('amount_of_funding', document.getElementById('amount-funding-input').value);
+            formData.append('total_no_of_hours', document.getElementById('total-hours-input').value);
+            formData.append('no_of_trainees', document.getElementById('number-of-trainees-input').value);
+            formData.append('classification_of_trainees', document.getElementById('classification-of-trainees-input').value);
+            formData.append('nature_of_involvement', document.getElementById('nature-input').value);
+            formData.append('status', document.getElementById('selected-status-display').textContent);
+            formData.append('from_date', document.getElementById('date-picker-from').value);
+            formData.append('to_date', document.getElementById('date-picker-to').value);
 
             document.getElementById('loading-overlay').style.display = 'flex';
             loadingMessage();

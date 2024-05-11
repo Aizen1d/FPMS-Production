@@ -1407,7 +1407,10 @@ class AdminController extends Controller
         if (Auth::guard('admin')->check()) {
             $query = $request->input('query');
 
-            $extensions = Extension::where('title', 'like', "%{$query}%")
+            // Search for extensions by title whether it is a program, project, or activity
+            $extensions = Extension::where('title_of_extension_program', 'like', "%{$query}%")
+                ->orWhere('title_of_extension_project', 'like', "%{$query}%")
+                ->orWhere('title_of_extension_activity', 'like', "%{$query}%")
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -1419,7 +1422,14 @@ class AdminController extends Controller
             // Format created_at date
             $formattedExtensions = $paginator->map(function ($item) {
                 return [
-                    'title' => $item->title,
+                    'id' => $item->id,
+                    'title_program' => $item->title_of_extension_program,
+                    'title_project' => $item->title_of_extension_project,
+                    'title_activity' => $item->title_of_extension_activity,
+                    'type_of_extension' => $item->type_of_extension,
+                    'level' => $item->level,
+                    'from_date' => Carbon::parse($item->from_date)->format('F j, Y'),
+                    'to_date' => Carbon::parse($item->to_date)->format('F j, Y'),
                     'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
                     'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
                 ];
@@ -1514,13 +1524,15 @@ class AdminController extends Controller
             $extension = Extension::find($id);
 
             if ($extension) {
-                // Format the date conducted to "yyyy-MM-dd".
-                $dateConducted = Carbon::parse($extension->date_conducted)->format('Y-m-d');
+                // Format the from_date and to_date to "yyyy-MM-dd".
+                $from_date = Carbon::parse($extension->from_date)->format('Y-m-d');
+                $to_date = Carbon::parse($extension->to_date)->format('Y-m-d');
 
                 return view('admin.admin_tasks_extensions_view', 
                 [
                     'item' => $extension,
-                    'date_conducted' => $dateConducted,
+                    'from_date' => $from_date,
+                    'to_date' => $to_date,
                     'id' => $id,
                 ]);
             } 
@@ -1542,34 +1554,56 @@ class AdminController extends Controller
             $id = $request->input('id');
             $extension = Extension::find($id);
 
-            $title = $request->input('title');
-            $date = $request->input('date');
-            $partner = $request->input('partner');
-            $beneficiaries = $request->input('beneficiaries');
-            $evaluation = $request->input('evaluation');
+            $titleProgram = $request->input('title_program');
+            $titleProject = $request->input('title_project');
+            $titleActivity = $request->input('title_activity');
+            $level = $request->input('level');
+            $place = $request->input('place');
+            $classification = $request->input('classification');
+            $type = $request->input('type');
+            $keywords = $request->input('keywords');
+            $typeFunding = $request->input('type_of_funding');
+            $fundingAgency = $request->input('funding_agency');
+            $amountFunding = $request->input('amount_of_funding');
+            $totalHours = $request->input('total_no_of_hours');
+            $numberOfTrainees = $request->input('no_of_trainees');
+            $classificationOfTrainees = $request->input('classification_of_trainees');
+            $nature = $request->input('nature_of_involvement');
+            $status = $request->input('status');
+            $dateFrom = $request->input('from_date');
+            $dateTo = $request->input('to_date');
 
-            // Check if the title is unique
-            if (Extension::where('title', $title)->where('id', '!=', $id)->exists()) {
-                return response()->json(['error' => 'An extension with this title already exists.']);
+            if ($extension) {
+                $extension->title_of_extension_program = $titleProgram;
+                $extension->title_of_extension_project = $titleProject;
+                $extension->title_of_extension_activity = $titleActivity;
+                $extension->level = $level;
+                $extension->place = $place;
+                $extension->classification = $classification;
+                $extension->type = $type;
+                $extension->keywords = $keywords;
+                $extension->type_of_funding = $typeFunding;
+                $extension->funding_agency = $fundingAgency;
+                $extension->amount_of_funding = $amountFunding;
+                $extension->total_no_of_hours = $totalHours;
+                $extension->no_of_trainees = $numberOfTrainees;
+                $extension->classification_of_trainees = $classificationOfTrainees;
+                $extension->nature_of_involvement = $nature;
+                $extension->status = $status;
+                $extension->from_date = $dateFrom;
+                $extension->to_date = $dateTo;
+                $extension->save();
+
+                $admin = Auth::guard('admin')->user();
+                $adminUsername = $admin->username;
+
+                Logs::create([
+                    'user_id' => $admin->id,
+                    'user_role' => 'Admin',
+                    'action_made' => '(' . $adminUsername . ') has updated an extension id (' . $id . ').',
+                    'type_of_action' => 'Update Extension',
+                ]);
             }
-
-            // Update the extension
-            $extension->title = $title;
-            $extension->date_conducted = $date;
-            $extension->partner = $partner;
-            $extension->beneficiaries = $beneficiaries;
-            $extension->evaluation = $evaluation;
-            $extension->save();
-
-            $admin = Auth::guard('admin')->user();
-            $adminUsername = $admin->username;
-
-            Logs::create([
-                'user_id' => $admin->id,
-                'user_role' => 'Admin',
-                'action_made' => '(' . $adminUsername . ') has updated an extension titled (' . $title . ').',
-                'type_of_action' => 'Update Extension',
-            ]);
 
             return response()->json(['success' => 'Extension updated successfully.']);
         } 

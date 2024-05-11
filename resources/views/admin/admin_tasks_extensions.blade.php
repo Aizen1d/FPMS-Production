@@ -21,7 +21,8 @@
             {{ $items->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-           
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search extension title...">
+            <div id="search-results"></div>
 
             <button class="my-4 create-btn" onclick="createNewTask()">Add Extension</button>
         </div>
@@ -76,19 +77,19 @@
                     
                             <div class="list create-list-level">
                                 <div class="item2">
-                                    <input type="radio" name="level" id="international">
+                                    <input type="radio" name="level" id="International">
                                     <div class="text">
                                         International
                                     </div>
                                 </div>
                                 <div class="item2">
-                                    <input type="radio" name="level" id="national">
+                                    <input type="radio" name="level" id="National">
                                     <div class="text">
                                         National
                                     </div>
                                 </div>
                                 <div class="item2">
-                                    <input type="radio" name="level" id="regional">
+                                    <input type="radio" name="level" id="Regional">
                                     <div class="text">
                                         Regional
                                     </div>
@@ -100,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="item2">
-                                    <input type="radio" name="level" id="local-pup">
+                                    <input type="radio" name="level" id="Local-PUP">
                                     <div class="text">
                                         Local-PUP
                                     </div>
@@ -127,19 +128,19 @@
                     
                             <div class="type create-list-type">
                                 <div class="item-type">
-                                    <input type="radio" name="type" id="training">
+                                    <input type="radio" name="type" id="Training">
                                     <div class="text">
                                         Training
                                     </div>
                                 </div>
                                 <div class="item-type">
-                                    <input type="radio" name="type" id="technical">
+                                    <input type="radio" name="type" id="Technical/Advisory Services">
                                     <div class="text">
                                         Technical/Advisory Services
                                     </div>
                                 </div>
                                 <div class="item-type">
-                                    <input type="radio" name="type" id="outreach">
+                                    <input type="radio" name="type" id="Outreach">
                                     <div class="text">
                                         Outreach
                                     </div>
@@ -163,19 +164,19 @@
                     
                             <div class="type create-list-typefunding">
                                 <div class="item-typefunding">
-                                    <input type="radio" name="typefunding" id="university-funded">
+                                    <input type="radio" name="typefunding" id="University Funded">
                                     <div class="text">
                                         University Funded
                                     </div>
                                 </div>
                                 <div class="item-typefunding">
-                                    <input type="radio" name="typefunding" id="self-funded">
+                                    <input type="radio" name="typefunding" id="Self Funded">
                                     <div class="text">
                                         Self Funded
                                     </div>
                                 </div>
                                 <div class="item-typefunding">
-                                    <input type="radio" name="typefunding" id="externally-funded">
+                                    <input type="radio" name="typefunding" id="Externally Funded">
                                     <div class="text">
                                         Externally Funded
                                     </div>
@@ -227,13 +228,13 @@
                     
                             <div class="type create-list-status">
                                 <div class="item-status">
-                                    <input type="radio" name="status" id="ongoing">
+                                    <input type="radio" name="status" id="Ongoing">
                                     <div class="text">
                                         Ongoing
                                     </div>
                                 </div>
                                 <div class="item-status">
-                                    <input type="radio" name="status" id="completed">
+                                    <input type="radio" name="status" id="Completed">
                                     <div class="text">
                                         Completed
                                     </div>
@@ -553,23 +554,40 @@
                     const taskContainer = document.querySelector('.task-container');
                     taskContainer.innerHTML = '';
 
+                    console.log(items);
+
                     items.forEach(item => {
                         const row = `
-                            <div class="row task-row" onclick="getSelectedItemRow(${JSON.stringify(item)})">
-                                <div class="col-6">
-                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47.8%">${item.title}</h5>
+                            <div class="row task-row">
+                                <div class="col-4">
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 47%">
+                                        ${item.title_program ? item.title_program : (item.title_project ? item.title_project : item.title_activity)}
+                                    </h5>
                                 </div>
-                                <div class="col-6">
-                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 44.5%">
-                                        ${item.date_created_formatted}
+                                <div class="col-3">
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 30%; text-transform: capitalize;">${item.type_of_extension}</h5>
+                                </div>
+                                <div class="col-2">
+                                    <h5 class="task-row-content my-2 task-name-text" style="text-align:left; margin-left: 41%; text-transform: capitalize;">${item.level}</h5>
+                                </div>
+                                <div class="col-3">
+                                    <h5 class="task-row-content my-2 date-created" style="text-align:left; margin-left: 27%">
+                                        Fr: ${item.from_date}
                                         <br>
-                                        ${item.date_created_time}
+                                        To: ${item.to_date}
                                     </h5>
                                 </div>
                             </div>
                         `;
 
                         taskContainer.innerHTML += row;
+
+                        // Add the event listener to all the rows
+                        taskContainer.querySelectorAll('.task-row').forEach(row => {
+                            row.addEventListener('click', () => {
+                                getSelectedItemRow(item);
+                            });
+                        });
                     });
 
                     document.getElementById('loading-overlay-search').style.display = 'none';
@@ -583,7 +601,7 @@
                 });
         }, 50);
 
-        //searchInput.addEventListener('input', debouncedInputHandler);
+        searchInput.addEventListener('input', debouncedInputHandler);
 
         // Add event listener to titleProgram, Project and Activity
         const titleProgramInput = document.getElementById('title-program-input');
