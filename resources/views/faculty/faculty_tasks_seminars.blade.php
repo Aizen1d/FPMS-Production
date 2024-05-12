@@ -15,16 +15,16 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-4">
-            <h1 class="my-4 title">My Seminars</h1>
+            <h1 class="my-4 title">My Trainings & Seminars</h1>
         </div>
         <div class="col-2 pages">
             {{ $items->links()  }}
         </div>
         <div class="col-6 drop-down-container">
-            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search seminar...">
+            <input type="text" class="search-input mx-5" id="search-input" placeholder="Search title...">
             <div id="search-results"></div>
 
-            <button class="my-4 create-btn" onclick="createNewTask()">Add Seminar</button>
+            <button class="my-4 create-btn" onclick="createNewTask()">Add Training & Seminar</button>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         <div class="row">
           <div class="d-flex flex-col col-9">
             <h5 class="create-label">
-                Add Seminar
+                Add Training & Seminar
             </h5>
           </div>
           <div class="col-3">

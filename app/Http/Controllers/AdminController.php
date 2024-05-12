@@ -1146,11 +1146,11 @@ class AdminController extends Controller
     function showAdminDashboardResearchGetAnalytics(Request $request)
     {
         if (Auth::guard('admin')->check()) {
-            $member = $request->input('member');
+            $id = $request->input('id');
 
-            $researchesPresented = AdminTasksResearchesPresented::where('authors', 'like', "%{$member}%")->get();
-            $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', "%{$member}%")->get();
-            $researchesPublished = AdminTasksResearchesPublished::where('authors', 'like', "%{$member}%")->get();
+            $researchesPresented = AdminTasksResearchesPresented::where('faculty_id', $id)->get();
+            $researchesCompleted = AdminTasksResearchesCompleted::where('faculty_id', $id)->get();
+            $researchesPublished = AdminTasksResearchesPublished::where('faculty_id', $id)->get();
             
             $totalResearches = $researchesPresented->count() + $researchesCompleted->count() + $researchesPublished->count();
 
@@ -2177,6 +2177,71 @@ class AdminController extends Controller
         } else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');
         } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardAttendance()
+    {
+        if (Auth::guard('admin')->check()) {
+            $attendances = Attendance::orderBy('created_at', 'desc')
+                ->paginate(9);
+            
+            $faculties = Faculty::all();
+
+            return view('admin.admin_dashboard_attendance', 
+            [
+                'items' => $attendances,
+                'faculties' => $faculties,
+            ]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardAttendanceGetAnalytics(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+
+            $attendance = Attendance::where('faculty_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // Count the number of attendances
+            $totalAttendances = $attendance->count();
+            
+            // Count status Approved
+            $approved = $attendance->where('status', 'Approved')->count();
+
+            // Count status Rejected
+            $rejected = $attendance->where('status', 'Rejected')->count();
+
+            // Count status Pending
+            $pending = $attendance->where('status', 'Pending')->count();
+
+            $data = [
+                $approved,
+                $rejected,
+                $pending,
+            ];
+
+            return response()->json([
+                'data' => json_encode($data),
+                'totalItems' => $totalAttendances,
+                'approved' => $approved,
+                'rejected' => $rejected,
+                'pending' => $pending,
+            ]);
+        }
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        }
         else {
             return redirect('login-admin')->with('fail', 'You must be logged in');
         }

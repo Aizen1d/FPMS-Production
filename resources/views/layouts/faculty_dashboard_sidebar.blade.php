@@ -11,10 +11,6 @@
                         {{ (request()->is('faculty-dashboard/my-tasks')) ? 'active' : '' }}"  aria-expanded="true">
                     <span><b>Memo Analytics</b></span>
                 </a>
-                <a href="{{ route('faculty-dashboard/assigned-task/timeline') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
-                        {{ (request()->is('faculty-dashboard/assigned-task/timeline')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Submitted Memo Timeline</b></span>
-                </a>
             </div>
         </div>
     </nav>

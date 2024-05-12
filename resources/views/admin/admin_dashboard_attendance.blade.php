@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'PUPQC - Dashboard')
+@section('title', 'PUPQC - Attendance')
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_dashboard_researches.css') }}">
@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-12" style="display: flex;">
-            <h1 class="my-4 title">Research Analytics</h1>
+            <h1 class="my-4 title">Attendance Analytics</h1>
 
             <div class="drop-down create-dropdown2">
                 <div class="wrapper">
@@ -41,10 +41,10 @@
         <div class="row">
             <div class="col-5" style="position: relative;">
                 <div class="chart-info">
-                    <h3 class="chart-label"><b>Presented:</b> <span class="research-presented" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Completed:</b> <span class="research-completed" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Published:</b> <span class="research-published" style="font-weight: normal; color: #363636"></span></h3>
-                    <h3 class="chart-label"><b>Total:</b> <span class="research-total" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label" style="font-size: 40px;"><b>Approved Attendance:</b> <span class="research-presented item-approved" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label" style="font-size: 40px;"><b>Rejected Attendance:</b> <span class="research-completed item-rejected" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label" style="font-size: 40px;"><b>Pending Attendance:</b> <span class="research-published item-pending" style="font-weight: normal; color: #363636"></span></h3>
+                    <h3 class="chart-label" style="font-size: 40px;"><b>Total Attendance:</b> <span class="research-total item-total" style="font-weight: normal; color: #363636"></span></h3>
                 </div>
             </div>
             <div class="col-7" style="display: flex; justify-content: center; align-items: center;">
@@ -78,13 +78,13 @@
         let myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Presented', 'Completed', 'Published'],
+            labels: ['Approved Attendance', 'Rejected Attendance', 'Pending Attendance'],
             datasets: [{
                 label: 'Total',
                 data: data,
                 backgroundColor: [
                     '#06A64B',
-                    '#69BB37',
+                    '#fa1635',
                     '#F6B000',
                 ],
                 borderWidth: 2,
@@ -147,12 +147,12 @@
 
             let selectedMember = selected2.innerHTML.trim();
 
-            // selectedMember id 
-            let selectedMemberId = item.querySelector('.text').id;
+            // Get the selected id
+            selectedMemberId = item.querySelector('.text').id;
             
             //document.querySelector('#loading-overlay').style.display = 'flex';
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');  
-            fetch('/admin-dashboard/research/get-analytics', {
+            fetch('/admin-dashboard/attendance/get-analytics', {
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json, text-plain, */*",
@@ -168,7 +168,7 @@
             .then(response => response.json())
             .then(result => {
 
-                console.log(result.data);
+                console.log(result);
                 if (result.data) {
                     document.querySelector('#loading-overlay').style.display = 'none';
                     document.querySelector('.no-selected').style.display = 'none';
@@ -180,10 +180,10 @@
                     myChart.data.datasets[0].data = data;
                     myChart.update();
 
-                    document.querySelector('.research-total').innerHTML = result.totalResearches;
-                    document.querySelector('.research-presented').innerHTML = result.researchesPresented;
-                    document.querySelector('.research-completed').innerHTML = result.researchesCompleted;
-                    document.querySelector('.research-published').innerHTML = result.researchesPublished;
+                    document.querySelector('.item-total').innerHTML = result.totalItems;
+                    document.querySelector('.item-approved').innerHTML = result.approved;
+                    document.querySelector('.item-rejected').innerHTML = result.rejected;
+                    document.querySelector('.item-pending').innerHTML = result.pending;
                 }
                 else {
                     document.querySelector('#loading-overlay').style.display = 'none';

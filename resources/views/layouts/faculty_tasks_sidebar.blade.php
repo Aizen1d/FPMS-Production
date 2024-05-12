@@ -65,7 +65,7 @@
             
             <a href="{{ route('faculty-tasks/seminars') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                     {{ (request()->is('faculty-tasks/seminars')) ? 'active' : '' }}"  aria-expanded="true">
-                <span><b>Seminars</b></span>
+                <span><b>Trainings & Seminars</b></span>
             </a>
 
             </div>

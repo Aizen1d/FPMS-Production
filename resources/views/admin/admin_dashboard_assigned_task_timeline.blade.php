@@ -15,7 +15,7 @@
 <div class="container-fluid margin">
     <div class="row">
         <div class="col-12" style="display: flex;">
-            <h1 class="my-4 title">Statistics</h1>
+            <h1 class="my-4 title">Analytics</h1>
 
             <div class="drop-down create-dropdown1">
                 <div class="wrapper">
