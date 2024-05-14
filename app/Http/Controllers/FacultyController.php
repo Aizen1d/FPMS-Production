@@ -3352,6 +3352,37 @@ class FacultyController extends Controller
         }
     }
 
+    function facultyTasksAttendanceDelete(Request $request)
+    {
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+
+            $attendance = Attendance::find($id);
+
+            if ($attendance) {
+                // Check if there are files
+                if ($attendance->proof_of_attendance !== null or $attendance->proof_of_attendance !== '') {
+                    // Delete the folder and its contents
+                    $folderPath = $attendance->proof_of_attendance;
+                    Storage::disk('google')->deleteDirectory($folderPath);
+                }
+
+                $attendance->delete();
+
+                return response()->json(['message' => 'Attendance deleted successfully.']);
+            }
+            else {
+                return response()->json(['error' => 'Attendance not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
     function facultyTasksAttendanceIsAdded(Request $request)
     {
         $id = $request->input('id');

@@ -22,10 +22,6 @@
                     <a class="nav-link content mx-5 {{ (request()->is('faculty-tasks*')) ? 'navbar-active' : '' }}"
                      href="{{ route('faculty-tasks') }}">Accomplishments</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link content mx-5 {{ (request()->is('faculty-dashboard*')) ? 'navbar-active' : '' }}"
-                     href="{{ route('faculty-dashboard/my-tasks') }}">Dashboard</a>
-                </li>
             </ul>
         </div>
         

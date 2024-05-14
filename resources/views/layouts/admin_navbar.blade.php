@@ -24,7 +24,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link content mx-5 {{ (request()->is('admin-dashboard*')) ? 'navbar-active' : '' }}" 
-                    aria-current="page" href="{{ route('admin-dashboard/department-task/statistics') }}">Dashboard</a>
+                    aria-current="page" href="{{ route('admin-dashboard/department-task/statistics') }}">Analytics</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link content mx-5 {{ (request()->is('admin-requests/*')) ? 'navbar-active' : '' }}" 

@@ -239,7 +239,7 @@
 
             <div class="d-flex flex-column mt-4">
               <label for="" class="research-labels ms-3">Total No. of Hours*</label>
-              <input class="research-input" id="total-no-hours-input" type="number" placeholder="Enter budget" value="{{ $item->total_no_hours }}">
+              <input class="research-input" id="total-no-hours-input" type="number" placeholder="Enter total no. of hours" value="{{ $item->total_no_hours }}">
             </div>
 
             <div class="d-flex flex-column mt-4 ms-3">

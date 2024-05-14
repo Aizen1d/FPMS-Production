@@ -1175,6 +1175,142 @@ class AdminController extends Controller
         }
     }
 
+    function showAdminDashboardExtensions()
+    {
+        if (Auth::guard('admin')->check()) {
+            $extensions = Extension::all();
+
+            // Extension categories
+            $extensionProjectCount = Extension::where('title_of_extension_program', '!=', '')->count();
+            $extensionActivityCount = Extension::where('title_of_extension_project', '!=', '')->count();
+            $extensionProgramCount = Extension::where('title_of_extension_activity', '!=', '')->count();
+            $extensionCount = [$extensionProgramCount, $extensionProjectCount, $extensionActivityCount];
+
+            // Extension levels
+            $extensionLevelInternational = Extension::where('level', 'International')->count();
+            $extensionLevelNational = Extension::where('level', 'National')->count();
+            $extensionLevelRegional = Extension::where('level', 'Regional')->count();
+            $extensionLevelProvincial = Extension::where('level', 'Provincial/City/Municipal')->count();
+            $extensionLevelLocal = Extension::where('level', 'Local-PUP')->count();
+            $extensionLevelCount = [$extensionLevelInternational, $extensionLevelNational, $extensionLevelRegional, $extensionLevelProvincial, $extensionLevelLocal];
+
+            // Extension types
+            $extensionTypeTraining = Extension::where('type', 'Training')->count();
+            $extensionTypeTechnical = Extension::where('type', 'Technical/Advisory Services')->count();
+            $extensionTypeOutreach = Extension::where('type', 'Outreach')->count();
+            $extensionTypeCount = [$extensionTypeTraining, $extensionTypeTechnical, $extensionTypeOutreach];
+
+            // Extension funding types
+            $extensionFundingTypeUniversityFunded = Extension::where('type_of_funding', 'University Funded')->count();
+            $extensionFundingTypeSelfFunded = Extension::where('type_of_funding', 'Self Funded')->count();
+            $extensionFundingTypeExternallyFunded = Extension::where('type_of_funding', 'Externally Funded')->count();
+            $extensionFundingTypeCount = [$extensionFundingTypeUniversityFunded, $extensionFundingTypeSelfFunded, $extensionFundingTypeExternallyFunded];
+
+            // Identify, 1-10, 11-20, 21-30, 31-40, 41-50, 51 and above
+            $extensionTotalHours0_10 = Extension::whereBetween('total_no_of_hours', [1, 10])->count();
+            $extensionTotalHours11_20 = Extension::whereBetween('total_no_of_hours', [11, 20])->count();
+            $extensionTotalHours21_30 = Extension::whereBetween('total_no_of_hours', [21, 30])->count();
+            $extensionTotalHours31_40 = Extension::whereBetween('total_no_of_hours', [31, 40])->count();
+            $extensionTotalHours41_50 = Extension::whereBetween('total_no_of_hours', [41, 50])->count();
+            $extensionTotalHours51Above = Extension::where('total_no_of_hours', '>', 50)->count();
+            $extensionTotalHours = [$extensionTotalHours0_10, $extensionTotalHours11_20, $extensionTotalHours21_30, $extensionTotalHours31_40, $extensionTotalHours41_50, $extensionTotalHours51Above];
+
+            // Extension status
+            $extensionStatusOngoing= Extension::where('status', 'Ongoing')->count();
+            $extensionStatusCompleted = Extension::where('status', 'Completed')->count();
+            $extensionStatusCount = [$extensionStatusOngoing, $extensionStatusCompleted];
+
+            return view('admin.admin_dashboard_extensions',
+            [
+                'extensions' => $extensions,
+                'extensionCount' => $extensionCount,
+                'extensionLevelCount' => $extensionLevelCount,
+                'extensionTypeCount' => $extensionTypeCount,
+                'extensionFundingTypeCount' => $extensionFundingTypeCount,
+                'extensionTotalHours' => $extensionTotalHours,
+                'extensionStatusCount' => $extensionStatusCount,
+            ]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardSeminars(){
+        if (Auth::guard('admin')->check()) {
+            $faculties = Faculty::all();
+
+            return view('admin.admin_dashboard_seminars', ['faculties' => $faculties]);
+        }
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardSeminarsGetAnalytics(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+
+            $seminars = Seminars::where('faculty_id', $id)->get();
+            
+            // Get the count of faculty classification where is seminar/webinar
+            $seminarSeminarWebinarCount = Seminars::where('classification', 'Seminar')->where('faculty_id', $id)->count();
+            $seminarForaCount = Seminars::where('classification', 'Fora')->where('faculty_id', $id)->count();
+            $seminarConference = Seminars::where('classification', 'Conference')->where('faculty_id', $id)->count();
+            $seminarPlanning = Seminars::where('classification', 'Planning')->where('faculty_id', $id)->count();
+            $seminarWorkshop = Seminars::where('classification', 'Workshop')->where('faculty_id', $id)->count();  
+            $seminarProfessional = Seminars::where('classification', 'Professional/Continuing Professional Development')->where('faculty_id', $id)->count();
+            $seminarShortTerm = Seminars::where('classification', 'Short Term Courses')->where('faculty_id', $id)->count();
+            $seminarExecutive = Seminars::where('classification', 'Executive/Managerial')->where('faculty_id', $id)->count();
+            $seminarCount = [$seminarSeminarWebinarCount, $seminarForaCount, $seminarConference, $seminarPlanning, $seminarWorkshop, $seminarProfessional, $seminarShortTerm, $seminarExecutive];
+
+            $seminarNatureGad = Seminars::where('nature', 'GAD-Related')->where('faculty_id', $id)->count();
+            $seminarNatureInclusivity = Seminars::where('nature', 'Inclusivity and Diversity')->where('faculty_id', $id)->count();
+            $seminarNatureProfessional = Seminars::where('nature', 'Professional')->where('faculty_id', $id)->count();
+            $seminarNatureSkills = Seminars::where('nature', 'Skills/Technical')->where('faculty_id', $id)->count();
+            $seminarNatureCount = [$seminarNatureGad, $seminarNatureInclusivity, $seminarNatureProfessional, $seminarNatureSkills];
+
+            $seminarTypeExecutive = Seminars::where('type', 'Executive/Managerial')->where('faculty_id', $id)->count();
+            $seminarTypeFoundation = Seminars::where('type', 'Foundation')->where('faculty_id', $id)->count();
+            $seminarTypeSupervisory = Seminars::where('type', 'Supervisory')->where('faculty_id', $id)->count();
+            $seminarTypeTechnical = Seminars::where('type', 'Technical')->where('faculty_id', $id)->count();
+            $seminarTypeCount = [$seminarTypeExecutive, $seminarTypeFoundation, $seminarTypeSupervisory, $seminarTypeTechnical];
+
+            $seminarFundUniversity = Seminars::where('source_of_fund', 'University Funded')->where('faculty_id', $id)->count();
+            $seminarFundSelfFunded = Seminars::where('source_of_fund', 'Self-Funded')->where('faculty_id', $id)->count();
+            $seminarFundExternally = Seminars::where('source_of_fund', 'Externally-Funded')->where('faculty_id', $id)->count();
+            $seminarFundNot = Seminars::where('source_of_fund', 'Not a Paid Seminar/Training')->where('faculty_id', $id)->count();
+            $seminarFundCount = [$seminarFundUniversity, $seminarFundSelfFunded, $seminarFundExternally, $seminarFundNot];
+
+            $seminarLevelInternational = Seminars::where('level', 'International')->where('faculty_id', $id)->count();
+            $seminarLevelNational = Seminars::where('level', 'National')->where('faculty_id', $id)->count();
+            $seminarLevelLocal = Seminars::where('level', 'Local')->where('faculty_id', $id)->count();
+            $seminarLevelCount = [$seminarLevelInternational, $seminarLevelNational, $seminarLevelLocal];
+
+            return response()->json([
+                'seminars' => $seminars,
+                'seminarClassificationCount' => $seminarCount,
+                'seminarNatureCount' => $seminarNatureCount,
+                'seminarTypeCount' => $seminarTypeCount,
+                'seminarFundCount' => $seminarFundCount,
+                'seminarLevelCount' => $seminarLevelCount,
+            ]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
     // Get attachments of a specific research
     function showAdminTasksResearchGetAttachments(Request $request)
     {

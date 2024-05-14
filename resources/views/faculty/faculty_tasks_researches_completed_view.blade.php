@@ -36,7 +36,7 @@
             <div class="d-flex flex-column mt-4">
                 <label for="" class="research-labels ms-3">Authors*</label>
                 <label for="" class="research-labels ms-3 mb-1" id="selected-authors-label" style="font-size: 15px !important;">
-                    ({{ $research->authors }})
+                    Selected authors: ({{ $research->authors }})
                 </label>
 
                 <div class="drop-down create-dropdown-faculties">
@@ -46,6 +46,15 @@
                     <i class="fa fa-caret-down caret2"></i>
 
                     <div class="list create-list-faculties">
+                        <!-- Add search input here -->
+                        <input type="text" class="search-input-faculties" placeholder="Search faculty...">
+                        <!-- Add select all here -->
+                        <div class="item2">
+                            <input type="checkbox" id="all-checkbox">
+                            <div class="text select-all-checkbox">
+                                Select all
+                            </div>
+                        </div>
                         @foreach ($faculties as $faculty)
                         <div class="item2">
                             <input type="checkbox" id="all" class="select-checkbox">
@@ -207,20 +216,31 @@
           });
       });
 
+      // Don't close when searching
+        let searchInput2 = document.querySelector('.search-input-faculties');
+        searchInput2.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
         let selectedAuthors = [];
         selectedAuthors = "{{ $research->authors }}".split(', ');
 
         let facultyCheckboxes = document.querySelectorAll('.select-checkbox');
         facultyCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
-                let authorName = checkbox.nextElementSibling.textContent.trim();
-                if (checkbox.checked) {
-                    selectedAuthors.push(authorName);
-                } else {
-                    selectedAuthors = selectedAuthors.filter(author => author !== authorName);
-                }
+                let selectedAuthors = [];
+                facultyCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        let authorName = checkbox.parentElement.querySelector('.text').textContent.trim();
+                        selectedAuthors.push(authorName);
+                    }
+                });
 
-                selectedAuthorsLabel.textContent = '(' + selectedAuthors.join(', ') + ')';
+                selectedAuthorsLabel.textContent = `Selected authors: (${selectedAuthors.join(', ')})`;
+
+                if (selectedAuthors.length === 0) {
+                    selectedAuthorsLabel.textContent = '';
+                }
             });
         });
 
@@ -406,6 +426,47 @@
           }
       }
 
+      // Search functionality for faculties
+        const searchInputFaculties = document.querySelector('.search-input-faculties');
+        const faculties = document.querySelectorAll('.item2');
+
+        searchInputFaculties.addEventListener('input', (event) => {
+            const query = event.target.value.toLowerCase();
+
+            faculties.forEach(faculty => {
+                const text = faculty.querySelector('.text').textContent.toLowerCase();
+                if (text.includes(query)) {
+                    faculty.style.display = 'flex';
+                } else {
+                    faculty.style.display = 'none';
+                }
+            });
+        });
+
+        // Add functionality to select all checkbox
+        const selectAllCheckbox = document.getElementById('all-checkbox');
+        selectAllCheckbox.addEventListener('change', () => {
+            const checkboxes = document.querySelectorAll('.item2 input[id="all"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+
+            let selectedAuthors = [];
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const authorName = checkbox.parentElement.querySelector('.text').textContent.trim();
+                    selectedAuthors.push(authorName);
+                }
+            });
+
+            const selectedAuthorsLabel = document.getElementById('selected-authors-label');
+            selectedAuthorsLabel.textContent = `Selected authors: (${selectedAuthors.join(', ')}`
+
+            if (selectedAuthors.length === 0) {
+                selectedAuthorsLabel.textContent = '';
+            }
+        });
+
       /* Get all the radio buttons
       let radioButtons = document.querySelectorAll('.select-radio');
       for (let i = 0; i < radioButtons.length; i++) {
@@ -491,6 +552,9 @@
             authors.forEach(author => {
                 authorNames.push(author.nextElementSibling.textContent.trim());
             });
+
+            console.log(authorNames)
+            return
 
             let formData = new FormData();
             formData.append('category', category);

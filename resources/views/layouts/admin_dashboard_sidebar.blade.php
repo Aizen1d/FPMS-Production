@@ -15,9 +15,17 @@
                         {{ (request()->is('admin-dashboard/research')) ? 'active' : '' }}"  aria-expanded="true">
                     <span><b>Researches Analytics</b></span>
                 </a>
+                <a href="{{ route('admin-dashboard/extensions') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                        {{ (request()->is('admin-dashboard/extensions')) ? 'active' : '' }}"  aria-expanded="true">
+                    <span><b>Extension Analytics</b></span>
+                </a>
                 <a href="{{ route('admin-dashboard/attendance') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
                         {{ (request()->is('admin-dashboard/attendance')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Attendance Analytics</b></span>
+                    <span><b>Faculty Attendance Analytics</b></span>
+                </a>
+                <a href="{{ route('admin-dashboard/seminars') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                        {{ (request()->is('admin-dashboard/seminars')) ? 'active' : '' }}"  aria-expanded="true">
+                    <span><b>Training & Seminar Analytics</b></span>
                 </a>
             </div>
         </div>

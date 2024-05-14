@@ -254,7 +254,7 @@
 
                     <div class="d-flex flex-column mt-3">
                       <label for="" class="ms-3">Total No. of Hours*</label>
-                      <input class="research-input" id="total-no-hours-input" type="number" placeholder="Enter budget">
+                      <input class="research-input" id="total-no-hours-input" type="number" placeholder="Enter total no of hours">
                     </div>
 
                     <div class="d-flex flex-column mt-3 ms-2" style="margin-left: 2% !important">

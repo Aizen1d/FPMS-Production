@@ -139,7 +139,7 @@ body{
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 4.7px 13px;
+  box-shadow: rgba(0, 0, 0, 0.10) 0px 0px 5px;
   width: 200px;
   height: auto;
   padding: 0.5rem 1rem;
@@ -683,7 +683,7 @@ input[type="file"] {
   border-radius: 5px;
   padding-left: 2%;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.20) 0px 0px 13px;
+  box-shadow: rgba(0, 0, 0, 0.10) 0px 0px 5px;
   border-bottom-color: rgba(170, 170, 170, 0.759);
   transition: border-color 0.5s ease, box-shadow 0.4s ease;
 }
