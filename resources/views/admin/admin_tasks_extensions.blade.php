@@ -759,6 +759,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+                    localStorage.setItem('notif_green', 'Extension created successfully')
                     location.reload();
                     /*if (data.newlyAddedExtension) {
                         showNotification('Extension created successfully', '#32fe32bc');
@@ -781,6 +782,11 @@
                     loadingOverlay.style.display = 'none';
                     createResearchBtn.disabled = false;
                 });
+        }
+
+        if (localStorage.getItem('notif_green')) {
+            showNotification(localStorage.getItem('notif_green'), '#278a51');
+            localStorage.removeItem('notif_green');
         }
 
         function refreshTable(tasks, newlyAdded) {

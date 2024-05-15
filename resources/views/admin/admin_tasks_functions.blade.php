@@ -387,6 +387,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+                    localStorage.setItem('notif_green', `Function created successfully.`);
                     window.location.reload();
 
                     /*if (data.newlyAddedAttendance) {
@@ -410,6 +411,11 @@
                     loadingOverlay.style.display = 'none';
                     createResearchBtn.disabled = false;
                 });
+        }
+
+        if (localStorage.getItem('notif_green')) {
+            showNotification(localStorage.getItem('notif_green'), '#278a51');
+            localStorage.removeItem('notif_green');
         }
 
         function refreshTable(tasks, newlyAdded) {

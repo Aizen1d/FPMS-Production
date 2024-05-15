@@ -882,6 +882,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
+                    localStorage.setItem('notif_green', 'Research deleted successfully.');
                     window.location.href = '/faculty-tasks/researches/presented';
                 } 
                 else {

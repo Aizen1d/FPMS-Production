@@ -573,6 +573,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+                    localStorage.setItem('notif_green', 'Attendance added successfully');
                     window.location.href = '/faculty-tasks/attendance';
                     /*if (data.newlyAddedResearch) {
                         showNotification('Research created successfully', '#32fe32bc');

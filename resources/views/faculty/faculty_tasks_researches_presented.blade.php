@@ -572,6 +572,11 @@
                 });
         }
 
+        if (localStorage.getItem('notif_green')) {
+            showNotification(localStorage.getItem('notif_green'), '#278a51');
+            localStorage.removeItem('notif_green');
+        }
+
         function refreshTable(tasks, newlyAdded) {
             // Get the container element for the task rows
             const taskList = document.querySelector('.task-container');

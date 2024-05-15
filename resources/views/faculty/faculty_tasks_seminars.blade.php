@@ -1113,6 +1113,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+                    localStorage.setItem('notif_green', 'Seminar created successfully');
                     window.location.reload();
                     /*if (data.newlyAddedResearch) {
                         showNotification('Research created successfully', '#32fe32bc');
@@ -1135,6 +1136,11 @@
                     loadingOverlay.style.display = 'none';
                     createResearchBtn.disabled = false;
                 });
+        }
+
+        if (localStorage.getItem('notif_green')) {
+            showNotification(localStorage.getItem('notif_green'), '#278a51');
+            localStorage.removeItem('notif_green');
         }
 
         function refreshTable(tasks, newlyAdded) {

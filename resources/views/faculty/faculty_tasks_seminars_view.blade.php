@@ -1579,6 +1579,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
+                    localStorage.setItem('notif_green', 'Seminar deleted successfully.');
                     window.location.href = '/faculty-tasks/seminars';
                 } 
                 else {

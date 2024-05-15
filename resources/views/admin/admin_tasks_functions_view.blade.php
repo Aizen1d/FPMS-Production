@@ -300,6 +300,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
+                    localStorage.setItem('notif_green', 'Function deleted successfully.');
+                    
                     window.location.href = '/admin-tasks/functions';
                 } 
                 else {

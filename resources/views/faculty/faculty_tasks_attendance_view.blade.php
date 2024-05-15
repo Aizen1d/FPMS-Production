@@ -723,6 +723,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
+                    localStorage.setItem('notif_green', 'Attendance deleted successfully.');
                     window.location.href = '/faculty-tasks/attendance';
                 } 
                 else {

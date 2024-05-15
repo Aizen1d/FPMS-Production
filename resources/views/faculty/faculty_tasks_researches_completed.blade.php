@@ -1004,6 +1004,8 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+
+                    localStorage.setItem('notif_green', 'Research created successfully');
                     // reload the page
                     window.location.reload();
 
@@ -1119,6 +1121,7 @@
                         return;
                     } 
 
+                    localStorage.setItem('notif_green', 'Research marked as presented successfully');
                     window.location.href = '/faculty-tasks/researches/presented';
                 })
                 .catch((error) => {
@@ -1209,6 +1212,7 @@
                         return;
                     } 
 
+                    localStorage.setItem('notif_green', 'Research marked as published successfully');
                     window.location.href = '/faculty-tasks/researches/published';
                 })
                 .catch((error) => {
@@ -1220,6 +1224,11 @@
                     markAsPublishedButton.disabled = false;
                     closeMarkAsPublishedButton.disabled = false;
                 });
+        }
+
+        if (localStorage.getItem('notif_green')) {
+            showNotification(localStorage.getItem('notif_green'), '#278a51');
+            localStorage.removeItem('notif_green');
         }
 
         function refreshTable(tasks, newlyAdded) {
