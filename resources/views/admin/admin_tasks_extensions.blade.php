@@ -192,17 +192,17 @@
 
                     <div class="d-flex flex-column mt-3">
                         <label for="" class="ms-3" style="font-size: 12px">Amount of Funding (PHP)</label>
-                        <input class="research-input" id="amount-funding-input" type="number">
+                        <input class="research-input" id="amount-funding-input" type="number" min="0">
                     </div>
                     
                     <div class="d-flex flex-column mt-3">
                         <label for="" class="ms-3" style="font-size: 12px">Total No. of Hours</label>
-                        <input class="research-input" id="total-hours-input" type="number">
+                        <input class="research-input" id="total-hours-input" type="number" min="0">
                     </div>
 
                     <div class="d-flex flex-column mt-3">
                         <label for="" class="ms-3" style="font-size: 12px">No. of Trainees/Beneficiaries</label>
-                        <input class="research-input" id="number-of-trainees-input" type="number">
+                        <input class="research-input" id="number-of-trainees-input" type="number" min="0">
                     </div>
 
                     <div class="d-flex flex-column mt-3">

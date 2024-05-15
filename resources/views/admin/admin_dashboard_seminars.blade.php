@@ -110,7 +110,7 @@
         data: {
             labels: ['Seminar/Webinar', 'Fora', 'Conference', 'Planning', 'Workshop', 'Professional/Continuing Professional', 'Short Term Courses', 'Executive/Managerial'],
             datasets: [{
-                label: '',
+                label: 'Total',
                 data: classificationData,
                 backgroundColor: [
                     '#06A64B',
@@ -155,7 +155,7 @@
         data: {
             labels: ['GAD-Related', 'Inclusivity and Diversity', 'Professional', 'Skills/Technical'],
             datasets: [{
-                label: '',
+                label: 'Total',
                 data: natureData,
                 backgroundColor: [
                     '#06A64B',
@@ -196,7 +196,7 @@
         data: {
             labels: ['Executive/Managerial', 'Foundation', 'Supervisory', 'Technical'],
             datasets: [{
-                label: '',
+                label: 'Total',
                 data: typeData,
                 backgroundColor: [
                     '#06A64B',
@@ -237,7 +237,7 @@
         data: {
             labels: ['University Funded', 'Self-Funded', 'Externally-Funded', 'Not a Paid Seminar/Training'],
             datasets: [{
-                label: '',
+                label: 'Total',
                 data: sourceFundData,
                 backgroundColor: [
                     '#06A64B',
@@ -278,7 +278,7 @@
         data: {
             labels: ['International', 'National', 'Local'],
             datasets: [{
-                label: '',
+                label: 'Total',
                 data: levelData,
                 backgroundColor: [
                     '#06A64B',

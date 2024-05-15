@@ -173,17 +173,17 @@
 
             <div class="d-flex flex-column mt-4">
                 <label for="" class="research-labels ms-3">Amount of Funding (PHP)</label>
-                <input class="research-input" id="amount-funding-input" type="number" value="{{ $item->amount_of_funding }}">
+                <input class="research-input" id="amount-funding-input" type="number" min="0" value="{{ $item->amount_of_funding }}">
             </div>
             
             <div class="d-flex flex-column mt-4">
                 <label for="" class="research-labels ms-3">Total No. of Hours</label>
-                <input class="research-input" id="total-hours-input" type="number" value="{{ $item->total_no_of_hours }}">
+                <input class="research-input" id="total-hours-input" type="number" min="0" value="{{ $item->total_no_of_hours }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
                 <label for="" class="research-labels ms-3">No. of Trainees/Beneficiaries</label>
-                <input class="research-input" id="number-of-trainees-input" type="number" value="{{ $item->no_of_trainees }}">
+                <input class="research-input" id="number-of-trainees-input" type="number" min="0" value="{{ $item->no_of_trainees }}">
             </div>
 
             <div class="d-flex flex-column mt-4">

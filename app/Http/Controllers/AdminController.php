@@ -1181,9 +1181,9 @@ class AdminController extends Controller
             $extensions = Extension::all();
 
             // Extension categories
-            $extensionProjectCount = Extension::where('title_of_extension_program', '!=', '')->count();
-            $extensionActivityCount = Extension::where('title_of_extension_project', '!=', '')->count();
-            $extensionProgramCount = Extension::where('title_of_extension_activity', '!=', '')->count();
+            $extensionProgramCount = Extension::where('title_of_extension_program', '!=', '')->count();
+            $extensionProjectCount = Extension::where('title_of_extension_project', '!=', '')->count();
+            $extensionActivityCount = Extension::where('title_of_extension_activity', '!=', '')->count();
             $extensionCount = [$extensionProgramCount, $extensionProjectCount, $extensionActivityCount];
 
             // Extension levels

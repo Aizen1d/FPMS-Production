@@ -52,7 +52,7 @@
 
         <div class="row">
             <div class="col-6 d-flex flex-column justify-content-center align-items-center mt-4">
-                <label for="" style="font-weight: 700; font-size: 30px;">No. of Hours</label>
+                <label for="" style="font-weight: 700; font-size: 30px;">No. of Hours (per extension)</label>
                 <div style="width: 80%; height: 100%">
                     <canvas id="extension-totalhours-chart"></canvas>
                 </div>
@@ -100,7 +100,7 @@
         data: {
             labels: ['Extension Program', 'Extension Project', 'Extension Activity'],
             datasets: [{
-                label: 'Number of Extensions',
+                label: 'Total',
                 data: categoryOfExtensionData,
                 backgroundColor: [
                     '#06A64B',
@@ -145,7 +145,7 @@
         data: {
             labels: ['International', 'National', 'Regional', 'Provincial/City', 'Local-PUP'],
             datasets: [{
-                label: 'Number of Level of Extension',
+                label: 'Total',
                 data: levelData,
                 backgroundColor: [
                     '#06A64B',
@@ -236,7 +236,7 @@
         data: {
             labels: ['University Funded', 'Self Funded', 'Externally Funded'],
             datasets: [{
-                label: 'Funding Type',
+                label: 'Total',
                 data: fundingTypeData,
                 backgroundColor: [
                     '#06A64B',
@@ -279,9 +279,9 @@
     let myTotalNoHoursChart = new Chart(getTotalNoHoursChart, {
         type: 'bar',
         data: {
-            labels: ['1-10', '11-20', '21-30', '31-40', '41-50', '51 and above'],
+            labels: ['1-10 hours', '11-20 hours', '21-30 hours', '31-40 hours', '41-50 hours', '51 and above hours'],
             datasets: [{
-                label: 'Total no. of Hours',
+                label: 'Total',
                 data: totalNoHoursData,
                 backgroundColor: [
                     '#06A64B',
@@ -332,9 +332,8 @@
                 label: 'Type of Extension',
                 data: statusData,
                 backgroundColor: [
-                    '#06A64B',
-                    '#fa1635',
                     '#F6B000',
+                    '#06A64B',
                 ],
                 borderWidth: 2,
                 hoverOffset: 5
