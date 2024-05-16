@@ -1578,13 +1578,9 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.message) {
-                    localStorage.setItem('notif_green', 'Seminar deleted successfully.');
-                    window.location.href = '/faculty-tasks/seminars';
-                } 
-                else {
-                    showNotification('An error occurred while deleting the seminar.', '#fe3232bc');
-                }
+                localStorage.setItem('notif_green', 'Seminar deleted successfully.');
+                window.location.href = '/faculty-tasks/seminars';
+                showNotification('An error occurred while deleting the seminar.', '#fe3232bc');
             })
             .catch(error => {
                 console.error('Error:', error);

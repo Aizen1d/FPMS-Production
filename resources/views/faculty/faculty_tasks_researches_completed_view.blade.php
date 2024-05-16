@@ -553,9 +553,6 @@
                 authorNames.push(author.nextElementSibling.textContent.trim());
             });
 
-            console.log(authorNames)
-            return
-
             let formData = new FormData();
             formData.append('category', category);
             formData.append('id', researchId);
