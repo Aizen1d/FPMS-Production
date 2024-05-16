@@ -1271,7 +1271,7 @@ class AdminController extends Controller
             $seminars = Seminars::where('faculty_id', $id)->get();
             
             // Get the count of faculty classification where is seminar/webinar
-            $seminarSeminarWebinarCount = Seminars::where('classification', 'Seminar')->where('faculty_id', $id)->count();
+            $seminarSeminarWebinarCount = Seminars::where('classification', 'Seminar/Webinar')->where('faculty_id', $id)->count();
             $seminarForaCount = Seminars::where('classification', 'Fora')->where('faculty_id', $id)->count();
             $seminarConference = Seminars::where('classification', 'Conference')->where('faculty_id', $id)->count();
             $seminarPlanning = Seminars::where('classification', 'Planning')->where('faculty_id', $id)->count();
