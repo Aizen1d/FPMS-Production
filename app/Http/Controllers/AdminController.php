@@ -1147,10 +1147,20 @@ class AdminController extends Controller
     {
         if (Auth::guard('admin')->check()) {
             $id = $request->input('id');
+            $member = $request->input('member');
 
-            $researchesPresented = AdminTasksResearchesPresented::where('faculty_id', $id)->get();
-            $researchesCompleted = AdminTasksResearchesCompleted::where('faculty_id', $id)->get();
-            $researchesPublished = AdminTasksResearchesPublished::where('faculty_id', $id)->get();
+            // make a query to get the researches of the faculty member if in authors column
+            $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+        
+            // make a query to get the researches of the faculty member if in authors column, check in completed since it is the parent table
+            $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+
+            // make a query to get the researches of the faculty member if in authors column, check in presented since it is the parent table
+            $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
             
             $totalResearches = $researchesPresented->count() + $researchesCompleted->count() + $researchesPublished->count();
 

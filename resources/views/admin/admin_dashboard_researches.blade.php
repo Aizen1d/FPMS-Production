@@ -24,6 +24,7 @@
                 <i class="fa fa-caret-down caret2"></i>
 
                 <div class="list create-list2">
+                    <input type="text" placeholder="Search.." class="search2">
                   @foreach($faculties as $faculty)
                     <div class="item item2">
                         <div class="text" id="{{ $faculty->id }}">
@@ -117,6 +118,22 @@
         },
     });
 
+    // Add functionality for search bar
+    const search2 = document.querySelector('.search2');
+    const items2 = document.querySelectorAll('.item2');
+
+    search2.addEventListener('keyup', (e) => {
+        const term = e.target.value.toLowerCase();
+        items2.forEach(item => {
+            let text = item.querySelector('.text').textContent.toLowerCase();
+            if (text.includes(term)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
     // Select department members dropdown scripts
     const dropdown2 = document.querySelector('.create-dropdown2');
     const list2 = document.querySelector('.create-list2');
@@ -133,6 +150,11 @@
           list2.classList.remove('show');
           caret2.classList.remove('fa-rotate');
       }
+    });
+
+    // Don't close the dropdown on search
+    search2.addEventListener('click', (e) => {
+        e.stopPropagation();
     });
 
     list2.addEventListener('click', (e) => {
@@ -162,7 +184,8 @@
                 method: 'POST',
                 credentials: "same-origin",
                 body: JSON.stringify({
-                    id: selectedMemberId
+                    id: selectedMemberId,
+                    member: selectedMember
                 })
             })
             .then(response => response.json())

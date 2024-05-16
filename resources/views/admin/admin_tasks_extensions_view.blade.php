@@ -29,17 +29,17 @@
         <div class="col-12">
           <div class="ms-3 mt-4">
             <div class="d-flex flex-column">
-                <label class="research-labels ms-3" for="">Title of Extension Program*</label>
+                <label class="research-labels ms-3" for="">Title of Extension Program</label>
                 <input class="research-input" id="title-program-input" type="text" placeholder="Enter title of extension program" value="{{ $item->title_of_extension_program }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
-                <label class="research-labels ms-3" for="">Title of Extension Project*</label>
+                <label class="research-labels ms-3" for="">Title of Extension Project</label>
                 <input class="research-input" id="title-project-input" type="text" placeholder="Enter title of extension project" value="{{ $item->title_of_extension_project }}">
             </div>
 
             <div class="d-flex flex-column mt-4">
-                <label class="research-labels ms-3" for="">Title of Extension Activity*</label>
+                <label class="research-labels ms-3" for="">Title of Extension Activity</label>
                 <input class="research-input" id="title-activity-input" type="text" placeholder="Enter title of extension activity" value="{{ $item->title_of_extension_activity }}">
             </div>
             

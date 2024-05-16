@@ -25,6 +25,7 @@
                 <i class="fa fa-caret-down caret1"></i>
 
                 <div class="list create-list1">
+                    <input type="text" placeholder="Search.." class="search1">
                     @foreach ($departments as $department)
                     <div class="item item1">
                         <img src="{{ asset('admin/images/home.svg') }}" alt="">
@@ -155,6 +156,12 @@
             caret1.classList.remove('fa-rotate');
         }
     });
+    
+    // Don't close the dropdown when the search bar is clicked
+    const search1 = document.querySelector('.search1');
+    search1.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     var previousDepartment = '';
 
@@ -198,6 +205,13 @@
                         let list = document.querySelector('.list.create-list2');
                         list.innerHTML = '';
 
+                        // Add search input
+                        let search = document.createElement('input');
+                        search.setAttribute('type', 'text');
+                        search.setAttribute('placeholder', 'Search..');
+                        search.classList.add('search2');
+                        list.appendChild(search);
+
                         // Create and append the "All" option
                         let allItem = document.createElement('div');
                         allItem.classList.add('item2');
@@ -227,6 +241,28 @@
                         document.querySelector('.selected2').innerHTML = 'Select Member';
                         showNotification("There are no members in " + selectedDepartment + ' program.', '#fe3232bc');
                     }
+
+                    // Add functionality to the search input
+                    const search2 = document.querySelector('.search2');
+                    search2.addEventListener('keyup', () => {
+                        let filter, items, textValue;
+                        filter = search2.value.toUpperCase();
+                        items = list.querySelectorAll('.item2');
+
+                        items.forEach(item => {
+                            textValue = item.querySelector('.text').textContent || item.querySelector('.text').innerText;
+                            if (textValue.toUpperCase().indexOf(filter) > -1) {
+                                item.style.display = '';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                    });
+
+                    // Don't close the dropdown when the search bar is clicked
+                    search2.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                    });
 
                     // Department members list is ready
                     document.querySelector('.create-dropdown2').style.backgroundColor = '#fff';
@@ -263,6 +299,22 @@
                     showNotification("Error occured in getting program members.", '#fe3232bc');
                 });
             }
+        });
+
+        // Add functionality for search bar in department members dropdown
+        const getsearch1 = document.querySelector('.search1');
+        const getitems1 = document.querySelectorAll('.item1');
+        
+        getsearch1.addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            getitems1.forEach(item => {
+                let text = item.querySelector('.text').textContent.toLowerCase();
+                if (text.includes(term)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
 
          // Select department members dropdown scripts

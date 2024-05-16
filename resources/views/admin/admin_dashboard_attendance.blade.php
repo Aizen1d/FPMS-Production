@@ -24,6 +24,7 @@
                 <i class="fa fa-caret-down caret2"></i>
 
                 <div class="list create-list2">
+                    <input type="text" placeholder="Search.." class="search2">
                   @foreach($faculties as $faculty)
                     <div class="item item2">
                         <div class="text" id="{{ $faculty->id }}">
@@ -133,6 +134,28 @@
           list2.classList.remove('show');
           caret2.classList.remove('fa-rotate');
       }
+    });
+
+    // Don't close the dropdown on search
+    const search2 = document.querySelector('.search2');
+    search2.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Add functionality for search bar
+    const getsearch2 = document.querySelector('.search2');
+    const getitems2 = document.querySelectorAll('.item2');
+
+    getsearch2.addEventListener('keyup', (e) => {
+        const term = e.target.value.toLowerCase();
+        getitems2.forEach(item => {
+            let text = item.querySelector('.text').textContent.toLowerCase();
+            if (text.includes(term)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     });
 
     list2.addEventListener('click', (e) => {
