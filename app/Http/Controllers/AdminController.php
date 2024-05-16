@@ -37,6 +37,13 @@ use Illuminate\Support\Facades\Mail;
 // Import LengthAwarePaginator
 use Illuminate\Pagination\LengthAwarePaginator;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AdminTasksExport;
+use App\Exports\AdminResearchesExport;
+use App\Exports\AdminExtensionsExport;
+use App\Exports\AdminAttendanceExport;
+use App\Exports\AdminSeminarsExport;
+
 class AdminController extends Controller
 {
     function makeAndCreateFoldersPublic($selectFaculty, $taskName) {
@@ -5259,6 +5266,83 @@ class AdminController extends Controller
             $facultyNames = FacultyTasks::select('submitted_by')->distinct()->get();
 
             
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportMemoData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $department = $request->input('department');
+            $member = $request->input('member');
+    
+            return Excel::download(new AdminTasksExport($department, $member), 'Memo-' . $department . '-' . $member . '.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportResearchesData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $getSelectedMemberId = $request->input('getSelectedMemberId');
+            $memberFullName = $request->input('memberFullName');
+    
+            return Excel::download(new AdminResearchesExport($getSelectedMemberId, $memberFullName), 'Researches-' . $memberFullName . '.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportExtensionsData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            return Excel::download(new AdminExtensionsExport(), 'Extensions.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportAttendanceData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $memberId = $request->input('memberId');
+            $memberFullName = $request->input('memberFullName');
+
+            return Excel::download(new AdminAttendanceExport($memberId, $memberFullName), 'Attendance-' . $memberFullName . '.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportSeminarsData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $memberId = $request->input('memberId');
+            $memberFullName = $request->input('memberFullName');
+
+            return Excel::download(new AdminSeminarsExport($memberId, $memberFullName), 'Seminars-' . $memberFullName . '.xlsx');
         } 
         else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');

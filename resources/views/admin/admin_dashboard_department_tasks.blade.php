@@ -50,6 +50,7 @@
                 </div>
             </div>
 
+            <button class="create-btn" style="margin-left: auto; margin-top: 2%" onclick="exportData()">Export Data</button>
         </div>
     </div>
 
@@ -176,6 +177,8 @@
             selected1.innerHTML = text.innerHTML;
 
             let selectedDepartment = selected1.innerHTML;
+
+            getSelectedDepartment = selectedDepartment;
 
             document.querySelector('.create-dropdown2').style.backgroundColor = 'grey';
             document.querySelector('.create-dropdown2').style.cursor = 'default';
@@ -361,6 +364,8 @@
 
                 let selectedDepartment = selected1.innerHTML.trim();
                 let selectedMember = selected2.innerHTML.trim();
+
+                getSelectedMember = selectedMember;
                 
                 //document.querySelector('#loading-overlay').style.display = 'flex';
                 let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');  
@@ -414,6 +419,25 @@
             }
 
         });
+
+        let getSelectedDepartment = ''
+        let getSelectedMember = ''
+
+        function exportData(){
+            if (getSelectedDepartment === '') {
+                showNotification("Select program first.", '#fe3232bc');
+                return;
+            }
+            if (getSelectedMember === '') {
+                showNotification("Select member first.", '#fe3232bc');
+                return;
+            }
+
+            showNotification("Downloading file in a moment.", '#278a51');
+            
+            const endpoint = `/admin-dashboard/memo/export-data?department=${getSelectedDepartment}&member=${getSelectedMember}`;
+            window.location.href = endpoint
+        }
 
     </script>
     

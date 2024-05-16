@@ -35,6 +35,7 @@
                 </div>
             </div>
 
+            <button class="create-btn" style="margin-left: auto; margin-top: 2%" onclick="exportData()">Export Data</button>
         </div>
     </div>
 
@@ -169,9 +170,11 @@
             selected2.innerHTML = text.innerHTML;
 
             let selectedMember = selected2.innerHTML.trim();
+            getSelectedMemberName = selectedMember;
 
             // Get the selected id
             selectedMemberId = item.querySelector('.text').id;
+            getSelectedMemberId = selectedMemberId;
             
             //document.querySelector('#loading-overlay').style.display = 'flex';
             let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');  
@@ -223,6 +226,19 @@
         }
 
     });
+
+    let getSelectedMemberName = '';
+    let getSelectedMemberId = '';
+    function exportData() {
+        if (getSelectedMemberId === '') {
+            showNotification("Select a member to export data.", '#fe3232bc');
+            return;
+        }
+
+        showNotification("Downloading file in a moment.", '#278a51');
+        const endpoint = `/admin-dashboard/attendance/export-data?memberId=${getSelectedMemberId}&memberFullName=${getSelectedMemberName}`;
+        window.location.href = endpoint;
+    }
 
     </script>
     

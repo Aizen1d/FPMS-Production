@@ -16,6 +16,8 @@
     <div class="row">
         <div class="col-12" style="display: flex;">
             <h1 class="my-4 title">Extensions Analytics</h1>
+
+            <button class="create-btn" style="margin-left: auto; margin-top: 2%" onclick="exportData()">Export Data</button>
         </div>
     </div>
 
@@ -366,6 +368,13 @@
     // Update the status chart data
     myStatusChart.data.datasets[0].data = statusData;
     myStatusChart.update();
+
+    function exportData(){
+        showNotification("Downloading file in a moment.", '#278a51');
+
+        const endpoint = `/admin-dashboard/extensions/export-data`;
+        window.location.href = endpoint;
+    }
             
     </script>
     
