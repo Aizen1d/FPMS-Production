@@ -231,7 +231,7 @@
             </div>
         </div>
 
-        <div id="loading-overlay-mark-as-presented" class="loading-create-task" style="display: flex; justify-content: center; height: 80vh; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
+        <div id="loading-overlay-mark-as-presented" class="loading-create-task" style="display: none; justify-content: center; height: 80vh; align-items: center; border-radius: 25px; z-index: 99; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white;">
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <div class="spinner-border text-dark" role="status">
                     <span class="sr-only">Loading...</span>
