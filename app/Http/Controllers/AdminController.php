@@ -1439,7 +1439,7 @@ class AdminController extends Controller
             }
             
             $results = $service->files->listFiles([
-                'q' => "name = '$fileName'",
+                'q' => "name = '$fileName' and trashed = false",
                 'fields' => 'files(id, webViewLink)',
             ]);
 
@@ -2305,7 +2305,7 @@ class AdminController extends Controller
                 }
                 
                 $results = $service->files->listFiles([
-                    'q' => "name = '$fileName'",
+                    'q' => "name = '$fileName' and trashed = false",
                     'fields' => 'files(id, webViewLink)',
                 ]);
 
@@ -2999,7 +2999,7 @@ class AdminController extends Controller
                 }
                 
                 $results = $service->files->listFiles([
-                    'q' => "name = '$fileName'",
+                    'q' => "name = '$fileName' and trashed = false",
                     'fields' => 'files(id, webViewLink)',
                 ]);
 
@@ -3113,7 +3113,7 @@ class AdminController extends Controller
             // Find the file on Google Drive
             $file = 'Created Tasks/Departments/' . $department . '/Tasks/' . $taskName . '/' . $filename;
             $results = $service->files->listFiles([
-                'q' => "name = '$filename'",
+                'q' => "name = '$filename' and trashed = false",
                 'fields' => 'files(id, webViewLink)',
             ]);
     
@@ -3156,7 +3156,7 @@ class AdminController extends Controller
                 // Find the file on Google Drive
                 $file = 'Created Tasks/Departments/' . $department . '/Tasks/' . $taskName . '/Submissions/' . $memberName . '/' . $filename;
                 $results = $service->files->listFiles([
-                    'q' => "name = '$filename'",
+                    'q' => "name = '$filename' and trashed = false",
                     'fields' => 'files(id)',
                 ]);
     
@@ -3209,7 +3209,7 @@ class AdminController extends Controller
             try {
                 // Find the file or folder on Google Drive
                 $results = $service->files->listFiles([
-                    'q' => "name='$fileName'",
+                    'q' => "name = '$fileName' and trashed = false",
                     'fields' => 'files(id)',
                 ]);
 
@@ -3291,7 +3291,7 @@ class AdminController extends Controller
 
             // Find all files inside the folder
             $results = $service->files->listFiles([
-                'q' => "'$folderId' in parents",
+                'q' => "'$folderId' in parents and trashed = false",
                 'fields' => 'files(id, name)',
             ]);
 
