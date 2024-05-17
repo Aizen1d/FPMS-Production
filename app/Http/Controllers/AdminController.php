@@ -5294,7 +5294,7 @@ class AdminController extends Controller
     function exportResearchesData(Request $request)
     {
         if (Auth::guard('admin')->check()) {
-            $getSelectedMemberId = $request->input('getSelectedMemberId');
+            $getSelectedMemberId = $request->input('memberId');
             $memberFullName = $request->input('memberFullName');
     
             return Excel::download(new AdminResearchesExport($getSelectedMemberId, $memberFullName), 'Researches-' . $memberFullName . '.xlsx');

@@ -24,7 +24,7 @@ class AdminResearchesExport implements FromCollection, WithHeadings, WithCustomS
 
     public function collection()
     {
-        $member = Faculty::find($this->memberId);
+        $member = $this->memberFullName;
 
         // make a query to get the researches of the faculty member if in authors column
         $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->count();
