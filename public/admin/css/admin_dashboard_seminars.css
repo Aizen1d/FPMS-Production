@@ -68,11 +68,23 @@ body{
   margin: auto;
   margin-top: .4%;
   margin-left: -.85% !important;
-  height: 77.4vh;
+  height: 30%;
   width: 100%;
   border-radius: 30px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-bottom: 25px;
+}
+
+.task-list2{
+  background-color: rgb(251, 251, 251);
+  box-shadow: rgba(0, 0, 0, 0.07) 4.8px 4.8px 13.2px;
+  margin: auto;
+  margin-top: .4%;
+  margin-left: -.85% !important;
+  height: 30%;
+  width: 100%;
+  border-radius: 30px;
   padding-bottom: 25px;
 }
 
@@ -948,4 +960,21 @@ input[type="file"] {
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.17) 4.8px 4.8px 13.2px;
   transition: border-color 0.5s ease;
+}
+
+.voter-list{
+  margin-top: 0.5%;
+  margin-bottom: -1%;
+  width: 80%;
+  height: fit-content;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.chart-label-memo{
+  font-weight: 350 !important;
+  color: #212121;
+  font-weight: normal;
+  font-size: 2vh;
+  margin-bottom: 20px;
 }

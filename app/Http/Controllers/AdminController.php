@@ -43,6 +43,7 @@ use App\Exports\AdminResearchesExport;
 use App\Exports\AdminExtensionsExport;
 use App\Exports\AdminAttendanceExport;
 use App\Exports\AdminSeminarsExport;
+use App\Exports\AdminSummaryExport;
 
 class AdminController extends Controller
 {
@@ -5343,6 +5344,247 @@ class AdminController extends Controller
             $memberFullName = $request->input('memberFullName');
 
             return Excel::download(new AdminSeminarsExport($memberId, $memberFullName), 'Seminars-' . $memberFullName . '.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardSummary(Request $request){
+        if (Auth::guard('admin')->check()) {
+            $faculties = Faculty::all();
+
+            return view('admin.admin_dashboard_summary', ['faculties' => $faculties]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminDashboardSummaryGetAnalytics(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $department = $request->input('department');
+            $member = $request->input('member');
+            $id = $request->input('memberId');
+
+            $adminTaskTable = AdminTasks::where('faculty_name', $department)->first();
+            if (!$adminTaskTable) {
+                return response(['data' => 'null']);
+            }
+
+            $adminTasks = AdminTasks::where('faculty_name', $department)->pluck('id');
+            if (!$adminTasks) {
+                return response(['data' => 'null']);
+            }
+
+            if ($member === 'All Members') {
+                $assigned = FacultyTasks::whereIn('task_id', $adminTasks)->count();
+                
+                $completed = FacultyTasks::whereIn('task_id', $adminTasks)
+                            ->where('status', 'Completed')
+                            ->count();
+
+                $late_completed = FacultyTasks::whereIn('task_id', $adminTasks)
+                            ->where('status', 'Late Completed')
+                            ->count();
+
+                $ongoing = FacultyTasks::whereIn('task_id', $adminTasks)
+                            ->where('status', 'Ongoing')
+                            ->count();
+
+                $missing = FacultyTasks::whereIn('task_id', $adminTasks)
+                            ->where('status', 'Missing')
+                            ->count();
+            }
+            else {
+                $assigned = FacultyTasks::whereIn('task_id', $adminTasks)
+                            ->where('submitted_by', $member)
+                            ->count();
+
+                // Get All Tasks Data for the member, not count
+                $allMemo = FacultyTasks::where('submitted_by', $member)
+                            ->get();
+
+                // append in allMemo query the task_name from adminTasks table
+                $allMemo = $allMemo->map(function ($item) {
+                    $task_name = AdminTasks::where('id', $item->task_id)->first()->task_name;
+                    $item['task_name'] = $task_name;
+                    return $item;
+                });
+
+                $completed = FacultyTasks::where('submitted_by', $member)
+                            ->where('status', 'Completed')
+                            ->count();
+
+                $late_completed = FacultyTasks::where('submitted_by', $member)
+                            ->where('status', 'Late Completed')
+                            ->count();
+
+                $ongoing = FacultyTasks::where('submitted_by', $member)
+                            ->where('status', 'Ongoing')
+                            ->count();
+
+                $missing = FacultyTasks::where('submitted_by', $member)
+                            ->where('status', 'Missing')
+                            ->count();
+            }
+
+            $Memodata = [$completed, $late_completed, $ongoing, $missing];
+
+            // Researches Data //
+
+            // Get all completed researches of the faculty member, and find if the research is in published and presented table
+            $allCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+           
+            $allPublished = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+
+            $allPresented = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+
+
+            // make a query to get the researches of the faculty member if in authors column
+            $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+        
+            // make a query to get the researches of the faculty member if in authors column, check in completed since it is the parent table
+            $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+
+            // make a query to get the researches of the faculty member if in authors column, check in presented since it is the parent table
+            $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+            
+            $totalResearches = $researchesPresented->count() + $researchesCompleted->count() + $researchesPublished->count();
+
+            $researchesData = [
+                $researchesPresented->count(),
+                $researchesCompleted->count(),
+                $researchesPublished->count(),
+            ];
+
+            // Faculty Attendance //
+            $attendance = Attendance::where('faculty_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // Get all the attendance of the faculty member
+            $allAttendance = Attendance::with('getFunction')->where('faculty_id', $id)->get();
+
+            // Count the number of attendances
+            $totalAttendances = $attendance->count();
+            
+            // Count status Approved
+            $approved = $attendance->where('status', 'Approved')->count();
+
+            // Count status Rejected
+            $rejected = $attendance->where('status', 'Rejected')->count();
+
+            // Count status Pending
+            $pending = $attendance->where('status', 'Pending')->count();
+
+            $attendanceData = [
+                $approved,
+                $rejected,
+                $pending,
+            ];
+
+            // Training Seminars //
+            $seminars = Seminars::where('faculty_id', $id)->get();
+
+            // Get all the seminars of the faculty member
+            $allSeminars = Seminars::where('faculty_id', $id)->get();
+            
+            // Get the count of faculty classification where is seminar/webinar
+            $seminarSeminarWebinarCount = Seminars::where('classification', 'Seminar/Webinar')->where('faculty_id', $id)->count();
+            $seminarForaCount = Seminars::where('classification', 'Fora')->where('faculty_id', $id)->count();
+            $seminarConference = Seminars::where('classification', 'Conference')->where('faculty_id', $id)->count();
+            $seminarPlanning = Seminars::where('classification', 'Planning')->where('faculty_id', $id)->count();
+            $seminarWorkshop = Seminars::where('classification', 'Workshop')->where('faculty_id', $id)->count();  
+            $seminarProfessional = Seminars::where('classification', 'Professional/Continuing Professional Development')->where('faculty_id', $id)->count();
+            $seminarShortTerm = Seminars::where('classification', 'Short Term Courses')->where('faculty_id', $id)->count();
+            $seminarExecutive = Seminars::where('classification', 'Executive/Managerial')->where('faculty_id', $id)->count();
+            $seminarCount = [$seminarSeminarWebinarCount, $seminarForaCount, $seminarConference, $seminarPlanning, $seminarWorkshop, $seminarProfessional, $seminarShortTerm, $seminarExecutive];
+
+            $seminarNatureGad = Seminars::where('nature', 'GAD-Related')->where('faculty_id', $id)->count();
+            $seminarNatureInclusivity = Seminars::where('nature', 'Inclusivity and Diversity')->where('faculty_id', $id)->count();
+            $seminarNatureProfessional = Seminars::where('nature', 'Professional')->where('faculty_id', $id)->count();
+            $seminarNatureSkills = Seminars::where('nature', 'Skills/Technical')->where('faculty_id', $id)->count();
+            $seminarNatureCount = [$seminarNatureGad, $seminarNatureInclusivity, $seminarNatureProfessional, $seminarNatureSkills];
+
+            $seminarTypeExecutive = Seminars::where('type', 'Executive/Managerial')->where('faculty_id', $id)->count();
+            $seminarTypeFoundation = Seminars::where('type', 'Foundation')->where('faculty_id', $id)->count();
+            $seminarTypeSupervisory = Seminars::where('type', 'Supervisory')->where('faculty_id', $id)->count();
+            $seminarTypeTechnical = Seminars::where('type', 'Technical')->where('faculty_id', $id)->count();
+            $seminarTypeCount = [$seminarTypeExecutive, $seminarTypeFoundation, $seminarTypeSupervisory, $seminarTypeTechnical];
+
+            $seminarFundUniversity = Seminars::where('source_of_fund', 'University Funded')->where('faculty_id', $id)->count();
+            $seminarFundSelfFunded = Seminars::where('source_of_fund', 'Self-Funded')->where('faculty_id', $id)->count();
+            $seminarFundExternally = Seminars::where('source_of_fund', 'Externally-Funded')->where('faculty_id', $id)->count();
+            $seminarFundNot = Seminars::where('source_of_fund', 'Not a Paid Seminar/Training')->where('faculty_id', $id)->count();
+            $seminarFundCount = [$seminarFundUniversity, $seminarFundSelfFunded, $seminarFundExternally, $seminarFundNot];
+
+            $seminarLevelInternational = Seminars::where('level', 'International')->where('faculty_id', $id)->count();
+            $seminarLevelNational = Seminars::where('level', 'National')->where('faculty_id', $id)->count();
+            $seminarLevelLocal = Seminars::where('level', 'Local')->where('faculty_id', $id)->count();
+            $seminarLevelCount = [$seminarLevelInternational, $seminarLevelNational, $seminarLevelLocal];
+
+            return response([
+                'data' => $Memodata,
+                'assigned' => $assigned,
+                'completed' => $completed,
+                'late_completed' => $late_completed,
+                'ongoing' => $ongoing,
+                'missing' => $missing,
+                'totalResearches' => $totalResearches,
+                'researchesData' => $researchesData,
+                'totalAttendances' => $totalAttendances,
+                'attendanceData' => $attendanceData,
+                'attendanceApproved' => $approved,
+                'attendanceRejected' => $rejected,
+                'attendancePending' => $pending,
+                'researchesCompleted' => $researchesCompleted,
+                'researchesPublished' => $researchesPublished,
+                'researchesPresented' => $researchesPresented,
+                'totalSeminars' => $seminars->count(),
+                'seminarClassificationCount' => $seminarCount,
+                'seminarNatureCount' => $seminarNatureCount,
+                'seminarTypeCount' => $seminarTypeCount,
+                'seminarFundCount' => $seminarFundCount,
+                'seminarLevelCount' => $seminarLevelCount,
+                'allMemo' => $allMemo,
+                'allCompleted' => $allCompleted,
+                'allPublished' => $allPublished,
+                'allPresented' => $allPresented,
+                'allAttendance' => $allAttendance,
+                'allSeminars' => $allSeminars,
+            ]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportSummaryData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $memberId = $request->input('memberId');
+            $memberFullName = $request->input('memberFullName');
+
+            return Excel::download(new AdminSummaryExport($memberId, $memberFullName), 'Summary-' . $memberFullName . '.xlsx');
         } 
         else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');

@@ -219,6 +219,9 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-dashboard/seminars', [AdminController::class, 'showAdminDashboardSeminars'])->name("admin-dashboard/seminars");
     Route::post('/admin-dashboard/seminars/get-analytics', [AdminController::class, 'showAdminDashboardSeminarsGetAnalytics'])->name("admin-dashboard/seminars/get-analytics");
 
+    Route::get('/admin-dashboard/summary', [AdminController::class, 'showAdminDashboardSummary'])->name("admin-dashboard/summary");
+    Route::post('/admin-dashboard/summary/get-analytics', [AdminController::class, 'showAdminDashboardSummaryGetAnalytics'])->name("admin-dashboard/summary/get-analytics");
+
     Route::get('/admin-tasks/extensions', [AdminController::class, 'showAdminTasksExtensions'])->name("admin-tasks/extensions");
     Route::get('/admin-tasks/extensions/view', [AdminController::class, 'showAdminTasksExtensionsView'])->name("admin-tasks/extensions/view");
     Route::get('/admin-tasks/extensions/search', [AdminController::class, 'showAdminTasksExtensionsSearch'])->name("admin-tasks/extensions/search");
@@ -288,7 +291,8 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-dashboard/extensions/export-data', [AdminController::class, 'exportExtensionsData'])->name("admin-dashboard/extensions/export-data");
     Route::get('/admin-dashboard/attendance/export-data', [AdminController::class, 'exportAttendanceData'])->name("admin-dashboard/attendance/export-data");
     Route::get('/admin-dashboard/seminars/export-data', [AdminController::class, 'exportSeminarsData'])->name("admin-dashboard/seminars/export-data");
-
+    Route::get('/admin-dashboard/summary/export-data', [AdminController::class, 'exportSummaryData'])->name("admin-dashboard/summary/export-data");
+    
     //Route::get('/admin-ranks', [AdminController::class, 'showAdminRanks'])->name("admin-ranks");
 });
 

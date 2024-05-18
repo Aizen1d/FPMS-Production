@@ -27,6 +27,10 @@
                         {{ (request()->is('admin-dashboard/seminars')) ? 'active' : '' }}"  aria-expanded="true">
                     <span><b>Training & Seminar Analytics</b></span>
                 </a>
+                <a href="{{ route('admin-dashboard/summary') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                        {{ (request()->is('admin-dashboard/summary')) ? 'active' : '' }}"  aria-expanded="true">
+                    <span><b>Accomplishments Summary</b></span>
+                </a>
             </div>
         </div>
     </nav>
