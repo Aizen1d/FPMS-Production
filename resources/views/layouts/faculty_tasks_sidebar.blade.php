@@ -49,6 +49,11 @@
                 </a>
             </div>
 
+            <a href="{{ route('faculty-tasks/extensions') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                    {{ (request()->is('faculty-tasks/extensions')) ? 'active' : '' }}"  aria-expanded="true">
+                <span><b>Extensions</b></span>
+            </a>
+
             <label class="main mx-3 py-2 ripple bg" aria-expanded="true">
                 <span><b>Attendance to Functions</b></span>
             </label>

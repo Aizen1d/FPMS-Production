@@ -10,4 +10,9 @@ class Extension extends Model
     use HasFactory;
 
     protected $table = 'extension';
+
+    public function getFaculty()
+    {
+        return $this->belongsTo(Faculty::class, 'faculty_id');
+    }
 }

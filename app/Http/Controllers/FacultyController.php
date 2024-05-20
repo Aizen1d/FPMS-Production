@@ -4100,4 +4100,239 @@ class FacultyController extends Controller
             return redirect('login-faculty')->with('fail', 'You must be logged in');
         }
     }
+
+    function showFacultyTasksExtensions(){
+        if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
+            $extensions = Extension::orderBy('created_at', 'desc')
+                ->where('faculty_id', $faculty_id)
+                ->paginate(9);
+
+            return view('faculty.faculty_tasks_extensions', ['items' => $extensions]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksExtensionsView(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $extension = Extension::find($id);
+
+            if ($extension) {
+                // Format the from_date and to_date to "yyyy-MM-dd".
+                $from_date = Carbon::parse($extension->from_date)->format('Y-m-d');
+                $to_date = Carbon::parse($extension->to_date)->format('Y-m-d');
+
+                return view('faculty.faculty_tasks_extensions_view', 
+                [
+                    'item' => $extension,
+                    'from_date' => $from_date,
+                    'to_date' => $to_date,
+                    'id' => $id,
+                ]);
+            } 
+            else {
+                return back();
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showFacultyTasksExtensionsSearch(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $query = $request->input('query');
+
+            // Search for extensions by title whether it is a program, project, or activity
+            $faculty_id = Auth::guard('faculty')->user()->id;
+
+            $extensions = Extension::where('title_of_extension_program', 'like', "%{$query}%")
+                ->orWhere('title_of_extension_project', 'like', "%{$query}%")
+                ->orWhere('title_of_extension_activity', 'like', "%{$query}%")
+                ->where('faculty_id', $faculty_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 9;
+            $currentItems = $extensions->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+            $paginator = new LengthAwarePaginator($currentItems, count($extensions), $perPage, $currentPage, ['path' => LengthAwarePaginator::resolveCurrentPath()]);
+
+            // Format created_at date
+            $formattedExtensions = $paginator->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title_program' => $item->title_of_extension_program,
+                    'title_project' => $item->title_of_extension_project,
+                    'title_activity' => $item->title_of_extension_activity,
+                    'type_of_extension' => $item->type_of_extension,
+                    'level' => $item->level,
+                    'from_date' => Carbon::parse($item->from_date)->format('F j, Y'),
+                    'to_date' => Carbon::parse($item->to_date)->format('F j, Y'),
+                    'date_created_formatted' => Carbon::parse($item->created_at)->format('F j, Y'),
+                    'date_created_time' => Carbon::parse($item->created_at)->format('g:i A'),
+                ];
+            });
+
+            return response()->json(['items' => $formattedExtensions]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return response()->json(['error' => 'You must be logged in.']);
+        }
+    }
+
+    function facultyTasksExtensionsCreate(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $faculty_id = Auth::guard('faculty')->user()->id;
+
+            $titleProgram = $request->input('titleProgram');
+            $titleProject = $request->input('titleProject');
+            $titleActivity = $request->input('titleActivity');
+            $place = $request->input('place');
+            $level = $request->input('level');
+            $classification = $request->input('classification');
+            $type = $request->input('type');
+            $keywords = $request->input('keywords');
+            $typeFunding = $request->input('typeFunding');
+            $fundingAgency = $request->input('fundingAgency');
+            $amountFunding = $request->input('amountFunding');
+            $totalHours = $request->input('totalHours');
+            $numberOfTrainees = $request->input('numberOfTrainees');
+            $classificationOfTrainees = $request->input('classificationOfTrainees');
+            $nature = $request->input('nature');
+            $status = $request->input('status');
+            $dateFrom = $request->input('dateFrom');
+            $dateTo = $request->input('dateTo');
+            $extensionType = $request->input('extensionType');         
+
+            // Create new extension object
+            $extension = new Extension;
+            $extension->title_of_extension_program = $titleProgram;
+            $extension->title_of_extension_project = $titleProject;
+            $extension->title_of_extension_activity = $titleActivity;
+            $extension->place = $place;
+            $extension->level = $level;
+            $extension->classification = $classification;
+            $extension->type = $type;
+            $extension->keywords = $keywords;
+            $extension->type_of_funding = $typeFunding;
+            $extension->funding_agency = $fundingAgency;
+            $extension->amount_of_funding = $amountFunding;
+            $extension->total_no_of_hours = $totalHours;
+            $extension->no_of_trainees = $numberOfTrainees;
+            $extension->classification_of_trainees = $classificationOfTrainees;
+            $extension->nature_of_involvement = $nature;
+            $extension->status = $status;
+            $extension->from_date = $dateFrom;
+            $extension->to_date = $dateTo;
+            $extension->type_of_extension = $extensionType;
+            $extension->faculty_id = $faculty_id;
+            $extension->save();
+
+            $newlyAddedExtension = Extension::where('title_of_extension_program', $titleProgram)->first();
+            $extensions = Extension::orderBy('created_at', 'desc')->get();
+        
+            return response()->json([
+                'newlyAddedExtension' => $newlyAddedExtension,
+                'allExtensions' => $extensions,
+            ]);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return redirect('login-faculty')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function facultyTasksExtensionsUpdate(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $extension = Extension::find($id);
+
+            $titleProgram = $request->input('title_program');
+            $titleProject = $request->input('title_project');
+            $titleActivity = $request->input('title_activity');
+            $level = $request->input('level');
+            $place = $request->input('place');
+            $classification = $request->input('classification');
+            $type = $request->input('type');
+            $keywords = $request->input('keywords');
+            $typeFunding = $request->input('type_of_funding');
+            $fundingAgency = $request->input('funding_agency');
+            $amountFunding = $request->input('amount_of_funding');
+            $totalHours = $request->input('total_no_of_hours');
+            $numberOfTrainees = $request->input('no_of_trainees');
+            $classificationOfTrainees = $request->input('classification_of_trainees');
+            $nature = $request->input('nature_of_involvement');
+            $status = $request->input('status');
+            $dateFrom = $request->input('from_date');
+            $dateTo = $request->input('to_date');
+
+            if ($extension) {
+                $extension->title_of_extension_program = $titleProgram;
+                $extension->title_of_extension_project = $titleProject;
+                $extension->title_of_extension_activity = $titleActivity;
+                $extension->level = $level;
+                $extension->place = $place;
+                $extension->classification = $classification;
+                $extension->type = $type;
+                $extension->keywords = $keywords;
+                $extension->type_of_funding = $typeFunding;
+                $extension->funding_agency = $fundingAgency;
+                $extension->amount_of_funding = $amountFunding;
+                $extension->total_no_of_hours = $totalHours;
+                $extension->no_of_trainees = $numberOfTrainees;
+                $extension->classification_of_trainees = $classificationOfTrainees;
+                $extension->nature_of_involvement = $nature;
+                $extension->status = $status;
+                $extension->from_date = $dateFrom;
+                $extension->to_date = $dateTo;
+                $extension->save();
+            }
+
+            return response()->json(['success' => 'Extension updated successfully.']);
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return response()->json(['error' => 'You must be logged in.']);
+        }
+    }
+
+    function facultyTasksExtensionsDelete(Request $request){
+        if (Auth::guard('faculty')->check()) {
+            $id = $request->input('id');
+            $extension = Extension::find($id);
+
+            if ($extension) {
+                // Delete the extension
+                $extension->delete();
+
+                return response()->json(['message' => 'Extension deleted successfully.']);
+            } 
+            else {
+                return response()->json(['error' => 'Extension not found.']);
+            }
+        } 
+        else if (Auth::guard('admin')->check()) {
+            return redirect('admin-home');
+        } 
+        else {
+            return response()->json(['error' => 'You must be logged in.']);
+        }
+    }
 }

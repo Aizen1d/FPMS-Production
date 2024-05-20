@@ -292,7 +292,10 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-dashboard/attendance/export-data', [AdminController::class, 'exportAttendanceData'])->name("admin-dashboard/attendance/export-data");
     Route::get('/admin-dashboard/seminars/export-data', [AdminController::class, 'exportSeminarsData'])->name("admin-dashboard/seminars/export-data");
     Route::get('/admin-dashboard/summary/export-data', [AdminController::class, 'exportSummaryData'])->name("admin-dashboard/summary/export-data");
-    
+
+    Route::get('/admin-tasks/faculty-performance', [AdminController::class, 'showAdminTasksFacultyPerformance'])->name("admin-tasks/faculty-performance");
+    Route::get('/admin-tasks/faculty-performance/getAnalytics', [AdminController::class, 'showAdminTasksFacultyPerformanceGetAnalytics'])->name("admin-tasks/faculty-performance/getAnalytics");
+
     //Route::get('/admin-ranks', [AdminController::class, 'showAdminRanks'])->name("admin-ranks");
 });
 

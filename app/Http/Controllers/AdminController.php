@@ -5386,7 +5386,7 @@ class AdminController extends Controller
 
             if ($member === 'All Members') {
                 $assigned = FacultyTasks::whereIn('task_id', $adminTasks)->count();
-                
+
                 $completed = FacultyTasks::whereIn('task_id', $adminTasks)
                             ->where('status', 'Completed')
                             ->count();
@@ -5442,7 +5442,7 @@ class AdminController extends Controller
 
             // Get all completed researches of the faculty member, and find if the research is in published and presented table
             $allCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
-           
+
             $allPublished = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
                 $query->where('authors', 'like', '%' . $member . '%');
             })->get();
@@ -5454,7 +5454,7 @@ class AdminController extends Controller
 
             // make a query to get the researches of the faculty member if in authors column
             $researchesCompleted = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
-        
+
             // make a query to get the researches of the faculty member if in authors column, check in completed since it is the parent table
             $researchesPublished = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
                 $query->where('authors', 'like', '%' . $member . '%');
@@ -5464,7 +5464,7 @@ class AdminController extends Controller
             $researchesPresented = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
                 $query->where('authors', 'like', '%' . $member . '%');
             })->get();
-            
+
             $totalResearches = $researchesPresented->count() + $researchesCompleted->count() + $researchesPublished->count();
 
             $researchesData = [
@@ -5483,7 +5483,7 @@ class AdminController extends Controller
 
             // Count the number of attendances
             $totalAttendances = $attendance->count();
-            
+
             // Count status Approved
             $approved = $attendance->where('status', 'Approved')->count();
 
@@ -5504,7 +5504,7 @@ class AdminController extends Controller
 
             // Get all the seminars of the faculty member
             $allSeminars = Seminars::where('faculty_id', $id)->get();
-            
+
             // Get the count of faculty classification where is seminar/webinar
             $seminarSeminarWebinarCount = Seminars::where('classification', 'Seminar/Webinar')->where('faculty_id', $id)->count();
             $seminarForaCount = Seminars::where('classification', 'Fora')->where('faculty_id', $id)->count();
@@ -5585,6 +5585,21 @@ class AdminController extends Controller
             $memberFullName = $request->input('memberFullName');
 
             return Excel::download(new AdminSummaryExport($memberId, $memberFullName), 'Summary-' . $memberFullName . '.xlsx');
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksFacultyPerformance()
+    {
+        if (Auth::guard('admin')->check()) {
+            $faculties = Faculty::all();
+
+            return view('admin.admin_tasks_faculty_performance', ['faculties' => $faculties]);
         } 
         else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');

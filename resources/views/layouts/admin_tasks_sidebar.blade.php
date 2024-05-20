@@ -32,13 +32,6 @@
             </div>
 
             <div class="list-group list-group-flush mx-3">
-                <a href="{{ route('admin-tasks/extensions') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
-                        {{ (request()->is('admin-tasks/extensions')) ? 'active' : '' }}"  aria-expanded="true">
-                    <span><b>Extensions</b></span>
-                </a>
-            </div>
-
-            <div class="list-group list-group-flush mx-3">
                 <label class="main mx-3 py-2 ripple bg" aria-expanded="true">
                     <span><b>Attendance to Functions</b></span>
                 </label>
@@ -52,6 +45,13 @@
                         <span>Functions</span>
                     </a>
                 </div>
+            </div>
+
+            <div class="list-group list-group-flush mx-3">
+                <a href="{{ route('admin-tasks/faculty-performance') }}" class="main list-group-item list-group-item-action py-2 ripple bg 
+                        {{ (request()->is('admin-tasks/faculty-performance')) ? 'active' : '' }}"  aria-expanded="true">
+                    <span><b>Faculty Performance</b></span>
+                </a>
             </div>
         </div>
     </nav>
