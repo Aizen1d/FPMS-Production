@@ -4,7 +4,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('admin/css/admin_navbar.css') }}">
     </head>
 <body>
-<nav class="navbar navbar-expand-lg nav navbar-dark sticky">
+<nav class="navbar navbar-expand-lg nav navbar-dark sticky-navbar2">
     <div class="container-fluid">
         <a href="{{ route('admin-home') }}" class="navbar-brand mx-2">
             <img src="{{ asset('admin/images/home.svg') }}" width="50vw" height="50vh" alt="">

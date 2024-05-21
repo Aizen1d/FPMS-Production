@@ -213,13 +213,13 @@
         <div class="d-flex flex-row mt-5">
             <div class="research-completed-total-table data-table ml-3 mt-1 mx-3">
                 <div class="d-flex justify-content-center align-items-center">
-                    <label for="" style="font-weight: 700; font-size: 20px;">Completed Total</label>
+                    <label for="" style="font-weight: 700; font-size: 20px;">Completed Tally</label>
                 </div>
                 <table class="table table-bordered">
                     <thead class="function-thead">
                         <tr>
                             <th scope="col"><span class="table-padding1">Faculty</span></th>
-                            <th scope="col"><span class="table-padding1">Total</span></th>
+                            <th scope="col"><span class="table-padding1">Total Completed Research</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,13 +230,13 @@
             </div>
             <div class="research-presented-total-table data-table ml-3 mt-1 mx-3">
                 <div class="d-flex justify-content-center align-items-center">
-                    <label for="" style="font-weight: 700; font-size: 20px;">Presented Total</label>
+                    <label for="" style="font-weight: 700; font-size: 20px;">Presented Tally</label>
                 </div>
                 <table class="table table-bordered">
                     <thead class="function-thead">
                         <tr>
                             <th scope="col"><span class="table-padding1">Faculty</span></th>
-                            <th scope="col"><span class="table-padding1">Total</span></th>
+                            <th scope="col"><span class="table-padding1">Total Presented Research</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,13 +247,13 @@
             </div>
             <div class="research-published-total-table data-table ml-3 mt-1 mx-3">
                 <div class="d-flex justify-content-center align-items-center">
-                    <label for="" style="font-weight: 700; font-size: 20px;">Published Total</label>
+                    <label for="" style="font-weight: 700; font-size: 20px;">Published Tally</label>
                 </div>
                 <table class="table table-bordered">
                     <thead class="function-thead">
                         <tr>
                             <th scope="col"><span class="table-padding1">Faculty</span></th>
-                            <th scope="col"><span class="table-padding1">Total</span></th>
+                            <th scope="col"><span class="table-padding1">Total Published Research</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -276,6 +276,7 @@
                         <tr>
                             <th scope="col"><span class="table-padding1">Title</span></th>
                             <th scope="col"><span class="table-padding1">Type</span></th>
+                            <th scope="col"><span class="table-padding1">Total no. of hours</span></th>
                             <th scope="col"><span class="table-padding1">Created By</span></th>
                         </tr>
                     </thead>
@@ -289,13 +290,13 @@
         <div class="d-flex flex-row">
             <div class="extensions-total-table data-table ml-3 mt-4 mx-3">
                 <div class="d-flex justify-content-center align-items-center">
-                    <label for="" style="font-weight: 700; font-size: 20px;">Total</label>
+                    <label for="" style="font-weight: 700; font-size: 20px;">Extensions Tally</label>
                 </div>
                 <table class="table table-bordered">
                     <thead class="extensions-total-thead">
                         <tr>
                             <th scope="col"><span class="table-padding1">Faculty</span></th>
-                            <th scope="col" ><span class="table-padding1">Total</span></th>
+                            <th scope="col" ><span class="table-padding1">Total Extension Created</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -318,6 +319,7 @@
                         <tr>
                             <th scope="col"><span class="table-padding1">Title</span></th>
                             <th scope="col"><span class="table-padding1">Classification</span></th>
+                            <th scope="col"><span class="table-padding1">Total no. of hours</span></th>
                             <th scope="col"><span class="table-padding1">Created By</span></th>
                         </tr>
                     </thead>
@@ -331,13 +333,13 @@
         <div class="d-flex flex-row">
             <div class="seminars-total-table data-table ml-3 mt-4 mx-3">
                 <div class="d-flex justify-content-center align-items-center">
-                    <label for="" style="font-weight: 700; font-size: 20px;">Total</label>
+                    <label for="" style="font-weight: 700; font-size: 20px;">Training & Seminars Tally</label>
                 </div>
                 <table class="table table-bordered">
                     <thead class="seminars-total-thead">
                         <tr>
                             <th scope="col"><span class="table-padding1">Faculty</span></th>
-                            <th scope="col" ><span class="table-padding1">Total</span></th>
+                            <th scope="col" ><span class="table-padding1">Total Training & Seminars</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -765,6 +767,8 @@
 
                         let title = document.createElement('td');
                         let type = document.createElement('td');
+                        let total_no_of_hours = document.createElement('td');
+                        total_no_of_hours.innerHTML = extension.total_no_of_hours;
 
                         if (extension.title_of_extension_activity) {
                             title.innerHTML = extension.title_of_extension_activity;
@@ -784,6 +788,7 @@
 
                         row.appendChild(title);
                         row.appendChild(type);
+                        row.appendChild(total_no_of_hours);
                         row.appendChild(createdBy);
                     });
 
@@ -802,6 +807,10 @@
                         let noData3 = document.createElement('td');
                         noData3.innerHTML = 'No data';
                         row.appendChild(noData3);
+
+                        let noData4 = document.createElement('td');
+                        noData4.innerHTML = 'No data';
+                        row.appendChild(noData4);
                     }
 
                     /*******************************************
@@ -843,6 +852,10 @@
                         classification.innerHTML = seminar.classification;
                         row.appendChild(classification);
 
+                        let total_no_hours = document.createElement('td');
+                        total_no_hours.innerHTML = seminar.total_no_hours;
+                        row.appendChild(total_no_hours);
+
                         let createdBy = document.createElement('td');
                         createdBy.innerHTML = seminar.faculty_fullname;
                         row.appendChild(createdBy);
@@ -863,6 +876,10 @@
                         let noData3 = document.createElement('td');
                         noData3.innerHTML = 'No data';
                         row.appendChild(noData3);
+
+                        let noData4 = document.createElement('td');
+                        noData4.innerHTML = 'No data';
+                        row.appendChild(noData4);
                     }
 
                     /*******************************************
@@ -1238,6 +1255,8 @@
 
                         let title = document.createElement('td');
                         let type = document.createElement('td');
+                        let total_no_of_hours = document.createElement('td');
+                        total_no_of_hours.innerHTML = extension.total_no_of_hours;
 
                         if (extension.title_of_extension_activity) {
                             title.innerHTML = extension.title_of_extension_activity;
@@ -1257,6 +1276,7 @@
 
                         row.appendChild(title);
                         row.appendChild(type);
+                        row.appendChild(total_no_of_hours);
                         row.appendChild(createdBy);
                     });
 
@@ -1275,6 +1295,10 @@
                         let noData3 = document.createElement('td');
                         noData3.innerHTML = 'No data';
                         row.appendChild(noData3);
+
+                        let noData4 = document.createElement('td');
+                        noData4.innerHTML = 'No data';
+                        row.appendChild(noData4);
                     }
                    
                     /*******************************************
@@ -1319,6 +1343,10 @@
                         classification.innerHTML = seminar.classification;
                         row.appendChild(classification);
 
+                        let total_no_of_hours = document.createElement('td');
+                        total_no_of_hours.innerHTML = seminar.total_no_hours;
+                        row.appendChild(total_no_of_hours);
+
                         let createdBy = document.createElement('td');
                         createdBy.innerHTML = selectedMember;
                         row.appendChild(createdBy);
@@ -1339,6 +1367,10 @@
                         let noData3 = document.createElement('td');
                         noData3.innerHTML = 'No data';
                         row.appendChild(noData3);
+
+                        let noData4 = document.createElement('td');
+                        noData4.innerHTML = 'No data';
+                        row.appendChild(noData4);
                     }
 
                     /*******************************************
