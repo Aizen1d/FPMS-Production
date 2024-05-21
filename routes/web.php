@@ -294,7 +294,9 @@ Route::group(['middleware'=>['RevalidateBackHistory']], function() {
     Route::get('/admin-dashboard/summary/export-data', [AdminController::class, 'exportSummaryData'])->name("admin-dashboard/summary/export-data");
 
     Route::get('/admin-tasks/faculty-performance', [AdminController::class, 'showAdminTasksFacultyPerformance'])->name("admin-tasks/faculty-performance");
-    Route::get('/admin-tasks/faculty-performance/getAnalytics', [AdminController::class, 'showAdminTasksFacultyPerformanceGetAnalytics'])->name("admin-tasks/faculty-performance/getAnalytics");
+    Route::post('/admin-tasks/faculty-performance/getAnalytics', [AdminController::class, 'showAdminTasksFacultyPerformanceGetAnalytics'])->name("admin-tasks/faculty-performance/getAnalytics");
+
+    Route::get('/admin-tasks/faculty-performance/export-data', [AdminController::class, 'exportFacultyPerformanceData'])->name("admin-tasks/faculty-performance/export-data");
 
     //Route::get('/admin-ranks', [AdminController::class, 'showAdminRanks'])->name("admin-ranks");
 });

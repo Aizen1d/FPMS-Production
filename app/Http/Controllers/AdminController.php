@@ -44,6 +44,8 @@ use App\Exports\AdminExtensionsExport;
 use App\Exports\AdminAttendanceExport;
 use App\Exports\AdminSeminarsExport;
 use App\Exports\AdminSummaryExport;
+use App\Exports\AdminFacultyPerformanceExport;
+use Google\Service\Dfareporting\Ad;
 
 class AdminController extends Controller
 {
@@ -5600,6 +5602,270 @@ class AdminController extends Controller
             $faculties = Faculty::all();
 
             return view('admin.admin_tasks_faculty_performance', ['faculties' => $faculties]);
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function showAdminTasksFacultyPerformanceGetAnalytics(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $id = $request->input('id');
+            $member = $request->input('member');
+
+            $allMemo = AdminTasks::all();
+            $allFunctions = Functions::all();
+            $allCompletedResearches = AdminTasksResearchesCompleted::all();
+            $allPublishedResearches = AdminTasksResearchesPublished::all();
+            $allPresentedResearches = AdminTasksResearchesPresented::all();
+            $allExtensions = Extension::all();
+            $allSeminars = Seminars::all();
+
+            if ($id == 'All Faculty'){
+                $all_faculty = Faculty::all();
+
+                // Get all faculty memos //
+                $allFacultyMemos = $all_faculty->map(function ($faculty) use ($allMemo) {
+                    $faculty_memos = FacultyTasks::where('submitted_by', $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name)->get();
+                    
+                    $faculty_memos = $faculty_memos->map(function ($item) {
+                        $task_name = AdminTasks::where('id', $item->task_id)->first()->task_name;
+                        $item['task_name'] = $task_name;
+                        return $item;
+                    });
+
+                    // append full name of faculty
+                    $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+
+                    return [
+                        'faculty' => $faculty,
+                        'faculty_memo' => $faculty_memos,
+                    ];
+                });
+
+                 // Sort by full name
+                $allFacultyMemos = $allFacultyMemos->sortBy('faculty.full_name');
+
+                // Convert the sorted collection back to an array
+                $allFacultyMemos = $allFacultyMemos->values()->all();
+
+                // Get all faculty attendance //
+                $allFacultyAttendance = $all_faculty->map(function ($faculty) use ($allFunctions) {
+                    $faculty_functions = Attendance::where('faculty_id', $faculty->id)->get();
+
+                    // Get function via function_id in the attendance table
+                    $faculty_functions = $faculty_functions->map(function ($item) use ($allFunctions) {
+                        $function = Functions::where('id', $item->function_id)->first();
+                        $item['brief_description'] = $function->brief_description;
+                        return $item;
+                    });
+                
+                    // append full name of faculty
+                    $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+
+                    return [
+                        'faculty' => $faculty,
+                        'faculty_function' => $faculty_functions,
+                    ];
+                });
+
+                // Sort by full name
+                $allFacultyAttendance = $allFacultyAttendance->sortBy('faculty.full_name');
+
+                // Convert the sorted collection back to an array
+                $allFacultyAttendance = $allFacultyAttendance->values()->all();
+
+                // Get all faculty researches //
+                $allFacultyResearches = $all_faculty->map(function ($faculty) use ($allCompletedResearches, $allPublishedResearches, $allPresentedResearches) {
+                    $completedResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name . '%')->get();
+                    
+                    $publishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($faculty) {
+                        $query->where('authors', 'like', '%' . $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name . '%');
+                    })->get();
+                    
+                    $presentedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($faculty) {
+                        $query->where('authors', 'like', '%' . $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name . '%');
+                    })->get();
+
+                    // append full name of faculty
+                    $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+
+                    return [
+                        'faculty' => $faculty,
+                        'completed_researches' => $completedResearches,
+                        'published_researches' => $publishedResearches,
+                        'presented_researches' => $presentedResearches,
+                    ];
+                });
+
+                // Append title in all_published_researches and all_presented_researches
+                $allPublishedResearches = $allPublishedResearches->map(function ($item) {
+                    $title = AdminTasksResearchesCompleted::where('id', $item->research_completed_id)->first()->title;
+                    $authors = AdminTasksResearchesCompleted::where('id', $item->research_completed_id)->first()->authors;
+
+                    $item['title'] = $title;
+                    $item['authors'] = $authors;
+                    return $item;
+                });
+
+                $allPresentedResearches = $allPresentedResearches->map(function ($item) {
+                    $title = AdminTasksResearchesCompleted::where('id', $item->research_completed_id)->first()->title;
+                    $authors = AdminTasksResearchesCompleted::where('id', $item->research_completed_id)->first()->authors;
+
+                    $item['title'] = $title;
+                    $item['authors'] = $authors;
+                    return $item;
+                });
+
+                // Sort by full name
+                $allFacultyResearches = $allFacultyResearches->sortBy('faculty.full_name');
+
+                // Convert the sorted collection back to an array
+                $allFacultyResearches = $allFacultyResearches->values()->all();
+
+                // Get all faculty extension //
+                $allFacultyExtensions = $all_faculty->map(function ($faculty) use ($allExtensions) {
+                    $extensions = Extension::where('faculty_id', $faculty->id)->get();
+
+                    // append full name of faculty
+                    $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+
+                    return [
+                        'faculty' => $faculty,
+                        'extensions' => $extensions,
+                    ];
+                });
+
+                // Append faculty full name in allExtensions
+                $allExtensions = $allExtensions->map(function ($item) {
+                    $faculty = Faculty::where('id', $item->faculty_id)->first();
+                    $item['faculty_fullname'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+                    return $item;
+                });
+
+                // Sort by full name
+                $allFacultyExtensions = $allFacultyExtensions->sortBy('faculty.full_name');
+
+                // Convert the sorted collection back to an array
+                $allFacultyExtensions = $allFacultyExtensions->values()->all();
+
+                // Get all faculty seminars //
+                $allFacultySeminars = $all_faculty->map(function ($faculty) use ($allSeminars) {
+                    $seminars = Seminars::where('faculty_id', $faculty->id)->get();
+
+                    // append full name of faculty
+                    $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+
+                    return [
+                        'faculty' => $faculty,
+                        'seminars' => $seminars,
+                    ];
+                });
+
+                // Append faculty full name in allSeminars
+                $allSeminars = $allSeminars->map(function ($item) {
+                    $faculty = Faculty::where('id', $item->faculty_id)->first();
+                    $item['faculty_fullname'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+                    return $item;
+                });
+
+                // Sort by full name
+                $allFacultySeminars = $allFacultySeminars->sortBy('faculty.full_name');
+
+                // Convert the sorted collection back to an array
+                $allFacultySeminars = $allFacultySeminars->values()->all();
+
+                return response([
+                    'all_memo' => $allMemo,
+                    'faculty_memo' => $allFacultyMemos,
+                    'all_functions' => $allFunctions,
+                    'faculty_function' => $allFacultyAttendance,
+                    'all_completed_researches' => $allCompletedResearches,
+                    'all_published_researches' => $allPublishedResearches,
+                    'all_presented_researches' => $allPresentedResearches,
+                    'faculty_researches' => $allFacultyResearches,
+                    'all_extensions' => $allExtensions,
+                    'faculty_extensions' => $allFacultyExtensions,
+                    'all_seminars' => $allSeminars,
+                    'faculty_seminars' => $allFacultySeminars,
+                ]);
+            }
+            else {
+                $faculty_memos = FacultyTasks::where('submitted_by', $member)->get();
+                $faculty_memos = $faculty_memos->map(function ($item) {
+                    $task_name = AdminTasks::where('id', $item->task_id)->first()->task_name;
+                    $item['task_name'] = $task_name;
+                    return $item;
+                });
+
+                // Get all faculty attendance //
+                $faculty_functions = Attendance::where('faculty_id', $id)->get();
+
+                // Get function via function_id in the attendance table
+                $faculty_functions = $faculty_functions->map(function ($item) use ($allFunctions) {
+                    $function = Functions::where('id', $item->function_id)->first();
+                    $item['brief_description'] = $function->brief_description;
+                    return $item;
+                });
+
+                // Get all faculty researches //
+                $completedResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+
+                $publishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                    $query->where('authors', 'like', '%' . $member . '%');
+                })->get();
+
+                $presentedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                    $query->where('authors', 'like', '%' . $member . '%');
+                })->get();
+
+                $faculty_researches = [
+                    'completed_researches' => $completedResearches,
+                    'published_researches' => $publishedResearches,
+                    'presented_researches' => $presentedResearches,
+                ];
+
+                // Get all faculty extension //
+                $extensions = Extension::where('faculty_id', $id)->get();
+
+                // Get all faculty seminars //
+                $seminars = Seminars::where('faculty_id', $id)->get();
+
+                return response([
+                    'all_memo' => $allMemo,
+                    'faculty_memo' => $faculty_memos,
+                    'all_functions' => $allFunctions,
+                    'faculty_function' => $faculty_functions,
+                    'all_completed_researches' => $completedResearches,
+                    'all_published_researches' => $publishedResearches,
+                    'all_presented_researches' => $presentedResearches,
+                    'faculty_researches' => $faculty_researches,
+                    'all_extensions' => $allExtensions,
+                    'faculty_extensions' => $extensions,
+                    'all_seminars' => $allSeminars,
+                    'faculty_seminars' => $seminars,
+                ]);
+            }
+        } 
+        else if (Auth::guard('faculty')->check()) {
+            return redirect('faculty-home');
+        } 
+        else {
+            return redirect('login-admin')->with('fail', 'You must be logged in');
+        }
+    }
+
+    function exportFacultyPerformanceData(Request $request)
+    {
+        if (Auth::guard('admin')->check()) {
+            $memberId = $request->input('memberId');
+            $memberFullName = $request->input('memberFullName');
+
+            return Excel::download(new AdminFacultyPerformanceExport($memberId, $memberFullName), 'Faculty-Performance-' . $memberFullName . '.xlsx');
         } 
         else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');
