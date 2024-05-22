@@ -9,6 +9,8 @@ use App\Models\AdminTasksResearchesCompleted;
 use App\Models\AdminTasksResearchesPresented;
 use App\Models\AdminTasksResearchesPublished;
 use App\Models\Attendance;
+use App\Models\Functions;
+use App\Models\Extension;
 use App\Models\Seminars;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -35,7 +37,13 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
 
         $all_faculty = Faculty::all();
         $allMemo = AdminTasks::all();
-
+        $allFunctions = Functions::all();
+        $allCompletedResearches = AdminTasksResearchesCompleted::all();
+        $allPresentedResearches = AdminTasksResearchesPresented::all();
+        $allPublishedResearches = AdminTasksResearchesPublished::all();
+        $allExtensions = Extension::all();
+        $allSeminars = Seminars::all();
+        
         if ($member == 'All Faculty') {
             $allFacultyMemos = $all_faculty->map(function ($faculty) use ($allMemo) {
                 $faculty_memos = FacultyTasks::where('submitted_by', $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name)->get();
@@ -83,8 +91,312 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
     
             // Add the header row to the beginning of the array
             array_unshift($allFacultyMemos, $headerRow);
-    
-            return collect($allFacultyMemos);
+
+            /*
+            * Faculty Attendance
+            */
+
+            $allFacultyAttendance = $all_faculty->map(function ($faculty) use ($allFunctions) {
+                $faculty_functions = Attendance::where('faculty_id', $faculty->id)->get();
+            
+                // Get function via function_id in the attendance table
+                $faculty_functions = $faculty_functions->map(function ($item) use ($allFunctions) {
+                    $function = Functions::where('id', $item->function_id)->first();
+                    $item['brief_description'] = $function->brief_description;
+                    return $item;
+                });
+            
+                // append full name of faculty
+                $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+            
+                // Calculate totals
+                $totalAttended = $faculty_functions->filter(function ($func) { return $func['status_of_attendace'] === 'Attended' && $func['status'] === 'Approved'; })->count();
+                $totalOnLeave = $faculty_functions->filter(function ($func) { return $func['status_of_attendace'] === 'On Leave' && $func['status'] === 'Approved'; })->count();
+                $totalPending = $faculty_functions->filter(function ($func) { return $func['status'] === 'Pending'; })->count();
+                $overallTotal = $allFunctions->count();
+                $totalNotAttended = $overallTotal - ($totalAttended + $totalOnLeave + $totalPending);
+            
+                // Create a row for the Excel file
+                $row = [$faculty['full_name']];
+                foreach ($allFunctions as $func) {
+                    $facultyFunction = $faculty_functions->firstWhere('brief_description', $func['brief_description']);
+                    $status = 'Not Attended';
+                    if ($facultyFunction) {
+                        if ($facultyFunction['status_of_attendace'] === 'Attended' && $facultyFunction['status'] === 'Approved') {
+                            $status = 'Attended';
+                        } else if ($facultyFunction['status_of_attendace'] === 'On Leave' && $facultyFunction['status'] === 'Approved') {
+                            $status = 'On Leave';
+                        } else if ($facultyFunction['status'] === 'Pending') {
+                            $status = 'Pending';
+                        }
+                    }
+                    $row[] = $status;
+                }
+            
+                // Add totals to row
+                $row = array_merge($row, [$totalAttended, $totalOnLeave, $totalPending, $totalNotAttended, $overallTotal]);
+            
+                return $row;
+            });
+
+            // Sort by full name
+            $allFacultyAttendance = $allFacultyAttendance->sortBy(function ($facultyAttendance) {
+                return $facultyAttendance[0]; // The first element of each row is the faculty's full name
+            });
+
+            // Convert the sorted collection back to an array
+            $allFacultyAttendance = $allFacultyAttendance->values()->all();
+            
+            // Create the header row
+            $headerRow = ['Faculty'];
+            foreach ($allFunctions as $func) {
+                $headerRow[] = $func['brief_description'];
+            }
+            $headerRow = array_merge($headerRow, ['Attended', 'On Leave', 'Pending', 'Not Attended', 'Overall']);
+            
+            // Add the header row to the beginning of the array
+            array_unshift($allFacultyAttendance, $headerRow);
+
+            /*
+            * Faculty Researches
+            */
+
+            // Completed researches
+            $completedResearches = $allCompletedResearches->map(function ($research) {
+                return [$research['title'], $research['authors']];
+            })->toArray();
+
+            if (count($completedResearches) === 0) {
+                $completedResearches = [['No data', 'No data']];
+            }
+            array_unshift($completedResearches, ['Title', 'Authors']);
+
+            // Presented researches
+            $presentedResearches = $allPresentedResearches->map(function ($research) {
+                // Get the title of the research from the completed researches table
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                return [$completedResearch->title, $completedResearch->authors];
+            })->toArray();
+
+            if (count($presentedResearches) === 0) {
+                $presentedResearches = [['No data', 'No data']];
+            }
+            array_unshift($presentedResearches, ['Title', 'Authors']);
+
+            // Published researches
+            $publishedResearches = $allPublishedResearches->map(function ($research) {
+                // Get the title of the research from the completed researches table
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                return [$completedResearch->title, $completedResearch->authors];
+            })->toArray();
+
+            if (count($publishedResearches) === 0) {
+                $publishedResearches = [['No data', 'No data']];
+            }
+            array_unshift($publishedResearches, ['Title', 'Authors']);
+
+            /*
+            * Faculty Researches Tallies
+            */
+
+            // Completed researches tally
+            $completedResearchesTally = $all_faculty->map(function ($faculty) use ($allCompletedResearches) {
+                $faculty_researches = $allCompletedResearches->filter(function ($research) use ($faculty) {
+                    return strpos($research->authors, $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name) !== false;
+                });
+                return [$faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name, $faculty_researches->count()];
+            })->toArray();
+
+            if (count($completedResearchesTally) === 0) {
+                $completedResearchesTally = [['No data', 'No data']];
+            }
+
+            // Sort by full name
+            $completedResearchesTally = collect($completedResearchesTally)->sortBy(function ($facultyResearch) {
+                return $facultyResearch[0]; // The first element of each row is the faculty's full name
+            })->values()->all();
+
+            array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
+
+            // Presented researches tally
+            $presentedResearchesTally = $all_faculty->map(function ($faculty) use ($allPresentedResearches) {
+                $faculty_researches = $allPresentedResearches->filter(function ($research) use ($faculty) {
+                    $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                    return strpos($completedResearch->authors, $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name) !== false;
+                });
+                return [$faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name, $faculty_researches->count()];
+            })->toArray();
+
+            if (count($presentedResearchesTally) === 0) {
+                $presentedResearchesTally = [['No data', 'No data']];
+            }
+
+            // Sort by full name
+            $presentedResearchesTally = collect($presentedResearchesTally)->sortBy(function ($facultyResearch) {
+                return $facultyResearch[0]; // The first element of each row is the faculty's full name
+            })->values()->all();
+            
+            array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
+
+            // Published researches tally
+            $publishedResearchesTally = $all_faculty->map(function ($faculty) use ($allPublishedResearches) {
+                $faculty_researches = $allPublishedResearches->filter(function ($research) use ($faculty) {
+                    $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                    return strpos($completedResearch->authors, $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name) !== false;
+                });
+                return [$faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name, $faculty_researches->count()];
+            })->toArray();
+
+            if (count($publishedResearchesTally) === 0) {
+                $publishedResearchesTally = [['No data', 'No data']];
+            }
+
+            // Sort by full name
+            $publishedResearchesTally = collect($publishedResearchesTally)->sortBy(function ($facultyResearch) {
+                return $facultyResearch[0]; // The first element of each row is the faculty's full name
+            })->values()->all();
+
+            array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
+
+            /*
+            All Extensions
+            */
+
+            // Return array of all extensions, headers are (Title, Type, Total no of hours, Faculty)
+            $allExtensions = $allExtensions->map(function ($extension) use ($all_faculty) {
+                $faculty = $all_faculty->where('id', $extension->faculty_id)->first();
+                
+                // Title could be (title_of_extension_activity, title_of_extension_program, title_of_extension_project) in the extension table
+                $title = $extension->title_of_extension_activity ? $extension->title_of_extension_activity : ($extension->title_of_extension_program ? $extension->title_of_extension_program : $extension->title_of_extension_project);
+
+                // Set type based on the title
+                $type = $extension->title_of_extension_activity ? 'Activity' : ($extension->title_of_extension_program ? 'Program' : 'Project');
+
+                return [$title, $type, $extension->total_no_of_hours, $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name];
+            })->toArray();
+
+            if (count($allExtensions) === 0) {
+                $allExtensions = [['No data', 'No data', 'No data', 'No data']];
+            }
+
+            array_unshift($allExtensions, ['Title', 'Type', 'Total no of hours', 'Faculty']);
+
+            /*
+            Faculty Extension Tallies
+            */
+
+            // Get the faculty, then total extension count
+            $getAllExtensions = Extension::all();
+
+            $facultyExtensions = $all_faculty->map(function ($faculty) use ($getAllExtensions) {
+                $faculty_extensions = $getAllExtensions->filter(function ($extension) use ($faculty) {
+                    return $extension->faculty_id === $faculty->id;
+                });
+                return [$faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name, $faculty_extensions->count()];
+            })->toArray();
+
+            if (count($facultyExtensions) === 0) {
+                $facultyExtensions = [['No data', 'No data']];
+            }
+
+            // Sort by full name
+            $facultyExtensions = collect($facultyExtensions)->sortBy(function ($facultyExtension) {
+                return $facultyExtension[0]; // The first element of each row is the faculty's full name
+            })->values()->all();
+
+            array_unshift($facultyExtensions, ['Faculty', 'Total Extension Created']);
+
+            /*
+            All Seminars
+            */
+
+            // Return array of all seminars, headers are (Title, Classification, Total no of hours, Faculty)
+            $allSeminars = $allSeminars->map(function ($seminar) use ($all_faculty) {
+                $faculty = $all_faculty->where('id', $seminar->faculty_id)->first();
+                return [$seminar->title, $seminar->classification, $seminar->total_no_hours, $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name];
+            })->toArray();
+
+            if (count($allSeminars) === 0) {
+                $allSeminars = [['No data', 'No data', 'No data', 'No data']];
+            }
+            
+            array_unshift($allSeminars, ['Title', 'Classification', 'Total no of hours', 'Faculty']);
+
+            /*
+            Faculty Seminar Tallies
+            */
+
+            // Get the faculty, then total seminar count
+            $getAllSeminars = Seminars::all();
+
+            $facultySeminars = $all_faculty->map(function ($faculty) use ($getAllSeminars) {
+                $faculty_seminars = $getAllSeminars->filter(function ($seminar) use ($faculty) {
+                    return $seminar->faculty_id === $faculty->id;
+                });
+                return [$faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name, $faculty_seminars->count()];
+            })->toArray();
+
+            if (count($facultySeminars) === 0) {
+                $facultySeminars = [['No data', 'No data']];
+            }
+
+            // Sort by full name
+            $facultySeminars = collect($facultySeminars)->sortBy(function ($facultySeminar) {
+                return $facultySeminar[0]; // The first element of each row is the faculty's full name
+            })->values()->all();
+
+            array_unshift($facultySeminars, ['Faculty', 'Total Seminar Created']);
+
+            return collect([
+                ['All Faculty Performance'],
+                [''],
+                ['Memo'],
+                $allFacultyMemos,
+                [''],
+                [''],
+                ['Attendance'],
+                $allFacultyAttendance,
+                [''],
+                [''],
+                ['Researches'],
+                [''],
+                ['Completed Researches'],
+                $completedResearches,
+                [''],
+                ['Presented Researches'],
+                $presentedResearches,
+                [''],
+                ['Published Researches'],
+                $publishedResearches,
+                [''],
+                [''],
+                ['Researches Tallies'],
+                [''],
+                ['Completed Tally'],
+                $completedResearchesTally,
+                [''],
+                ['Presented Tally'],
+                $presentedResearchesTally,
+                [''],
+                ['Published Tally'],
+                $publishedResearchesTally,
+                [''],
+                [''],
+                ['Extensions'],
+                $allExtensions,
+                [''],
+                [''],
+                ['Extension Tallies'],
+                $facultyExtensions,
+                [''],
+                [''],
+                ['Seminars'],
+                $allSeminars,
+                [''],
+                [''],
+                ['Seminar Tallies'],
+                $facultySeminars,
+            ]);
         }
         else {
             // Get the selected faculty
@@ -123,7 +435,260 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
             // Add the header row to the beginning of the array
             $facultyMemos = [$headerRow, $row];
     
-            return collect($facultyMemos);
+            /*
+            * Faculty Attendance
+            */
+
+            $faculty_functions = Attendance::where('faculty_id', $id)->get();
+
+            // Get function via function_id in the attendance table
+            $faculty_functions = $faculty_functions->map(function ($item) use ($allFunctions) {
+                $function = Functions::where('id', $item->function_id)->first();
+                $item['brief_description'] = $function->brief_description;
+                return $item;
+            });
+
+            // Calculate totals
+            $totalAttended = $faculty_functions->filter(function ($func) { return $func['status_of_attendace'] === 'Attended' && $func['status'] === 'Approved'; })->count();
+            $totalOnLeave = $faculty_functions->filter(function ($func) { return $func['status_of_attendace'] === 'On Leave' && $func['status'] === 'Approved'; })->count();
+            $totalPending = $faculty_functions->filter(function ($func) { return $func['status'] === 'Pending'; })->count();
+            $overallTotal = $allFunctions->count();
+            $totalNotAttended = $overallTotal - ($totalAttended + $totalOnLeave + $totalPending);
+
+            // Create a row for the Excel file
+            $row = [$selectedFaculty];
+            foreach ($allFunctions as $func) {
+                $facultyFunction = $faculty_functions->firstWhere('brief_description', $func['brief_description']);
+                $status = 'Not Attended';
+                if ($facultyFunction) {
+                    if ($facultyFunction['status_of_attendace'] === 'Attended' && $facultyFunction['status'] === 'Approved') {
+                        $status = 'Attended';
+                    } else if ($facultyFunction['status_of_attendace'] === 'On Leave' && $facultyFunction['status'] === 'Approved') {
+                        $status = 'On Leave';
+                    } else if ($facultyFunction['status'] === 'Pending') {
+                        $status = 'Pending';
+                    }
+                }
+                $row[] = $status;
+            }
+
+            // Add totals to row
+            $row = array_merge($row, [$totalAttended, $totalOnLeave, $totalPending, $totalNotAttended, $overallTotal]);
+
+            // Create the header row
+            $headerRow = ['Faculty'];
+            foreach ($allFunctions as $func) {
+                $headerRow[] = $func['brief_description'];
+            }
+            $headerRow = array_merge($headerRow, ['Attended', 'On Leave', 'Pending', 'Not Attended', 'Overall']);
+
+            // Add the header row to the beginning of the array
+            $facultyAttendance = [$headerRow, $row];
+
+            /*
+            * Faculty Researches
+            */
+
+            // Completed researches
+            $completedResearches = $allCompletedResearches->map(function ($research) use ($member) {
+                // check for the authors if %member% first before returning
+                if (strpos($research->authors, $member) !== false) {
+                    return [$research['title'], $research['authors']];
+                }
+            })->toArray();            
+
+            if (count($completedResearches) === 0 || $completedResearches[0] === null) {
+                $completedResearches = [['No data', 'No data']];
+            }
+            array_unshift($completedResearches, ['Title', 'Authors']);
+
+            // Presented researches
+            $presentedResearches = $allPresentedResearches->map(function ($research ) use ($member) {
+                // check for the authors if %member% in the completed researches table before returning
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                if (strpos($completedResearch->authors, $member) !== false) {
+                    return [$completedResearch->title, $completedResearch->authors];
+                }
+            })->toArray();
+
+            if (count($presentedResearches) === 0 || $presentedResearches[0] === null) {
+                $presentedResearches = [['No data', 'No data']];
+            }
+            array_unshift($presentedResearches, ['Title', 'Authors']);
+
+            // Published researches
+            $publishedResearches = $allPublishedResearches->map(function ($research) use ($member) {
+                // check for the authors if %member% in the completed researches table before returning
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                if (strpos($completedResearch->authors, $member) !== false) {
+                    return [$completedResearch->title, $completedResearch->authors];
+                }
+            })->toArray();
+
+            if (count($publishedResearches) === 0 || $publishedResearches[0] === null) {
+                $publishedResearches = [['No data', 'No data']];
+            }
+            array_unshift($publishedResearches, ['Title', 'Authors']);
+
+            /*
+            * Faculty Researches Tallies
+            */
+
+            // Completed researches tally for the selected faculty
+            $completedResearchesTally = $allCompletedResearches->map(function ($research) use ($member) {
+                $selectedFacultyResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+
+                return [$member, $selectedFacultyResearches->count()];
+            })->toArray();
+
+            if (count($completedResearchesTally) === 0) {
+                $completedResearchesTally = [[$member, 0]];
+            }
+
+            array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
+
+            // Presented researches tally for the selected faculty
+            $presentedResearchesTally = $allPresentedResearches->map(function ($research) use ($member) {
+                $publishedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                    $query->where('authors', 'like', '%' . $member . '%');
+                })->get();
+
+                return [$member, $publishedResearches->count()];
+            })->toArray();
+
+            if (count($presentedResearchesTally) === 0) {
+                $presentedResearchesTally = [[$member, 0]];
+            }
+
+            array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
+
+            // Published researches tally for the selected faculty
+            $publishedResearchesTally = $allPublishedResearches->map(function ($research) use ($member) {
+                $publishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                    $query->where('authors', 'like', '%' . $member . '%');
+                })->get();
+
+                return [$member, $publishedResearches->count()];
+            })->toArray();
+
+            if (count($publishedResearchesTally) === 0) {
+                $publishedResearchesTally = [[$member, 0]];
+            }
+
+            array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
+
+            /*
+            Faculty Extensions
+            */
+
+            // Selected faculty's extensions
+            $facultyExtensions = Extension::where('faculty_id', $id)->get();
+
+            // Return array of selected faculty's extensions, headers are (Title, Type, Total no of hours, Faculty)
+            $facultyExtensions = $facultyExtensions->map(function ($extension) use ($selectedFaculty) {
+                // Title could be (title_of_extension_activity, title_of_extension_program, title_of_extension_project) in the extension table
+                $title = $extension->title_of_extension_activity ? $extension->title_of_extension_activity : ($extension->title_of_extension_program ? $extension->title_of_extension_program : $extension->title_of_extension_project);
+
+                // Set type based on the title
+                $type = $extension->title_of_extension_activity ? 'Activity' : ($extension->title_of_extension_program ? 'Program' : 'Project');
+
+                return [$title, $type, $extension->total_no_of_hours, $selectedFaculty];
+            })->toArray();
+
+            if (count($facultyExtensions) === 0 || $facultyExtensions[0] === null) {
+                $facultyExtensions = [['No data', 'No data', 'No data', 'No data']];
+            }
+
+            array_unshift($facultyExtensions, ['Title', 'Type', 'Total no of hours', 'Faculty']);
+
+            /*
+            Faculty Extension Tallies
+            */
+
+            // Get the selected faculty's extensions
+            $getFacultyExtensionsTally = Extension::where('faculty_id', $id)->get();
+            $getFacultyExtensionsTally = [[$member, $getFacultyExtensionsTally->count()]]; 
+
+            array_unshift($getFacultyExtensionsTally, ['Faculty', 'Total Extension Created']);
+
+            /*
+            Faculty Seminars
+            */
+
+            // Selected faculty's seminars
+            $facultySeminars = Seminars::where('faculty_id', $id)->get();
+
+            // Return array of selected faculty's seminars, headers are (Title, Classification, Total no of hours, Faculty)
+            $facultySeminars = $facultySeminars->map(function ($seminar) use ($selectedFaculty) {
+                return [$seminar->title, $seminar->classification, $seminar->total_no_hours, $selectedFaculty];
+            })->toArray();
+
+            if (count($facultySeminars) === 0 || $facultySeminars[0] === null) {
+                $facultySeminars = [['No data', 'No data', 'No data', 'No data']];
+            }
+
+            array_unshift($facultySeminars, ['Title', 'Classification', 'Total no of hours', 'Faculty']);
+
+            /*
+            Faculty Seminar Tallies
+            */
+
+            // Get the selected faculty's seminars
+            $getFacultySeminarsTally = Seminars::where('faculty_id', $id)->get();
+            $getFacultySeminarsTally = [[$member, $getFacultySeminarsTally->count()]];
+
+            array_unshift($getFacultySeminarsTally, ['Faculty', 'Total Seminar Created']);
+
+            return collect([
+                [$selectedFaculty . ' Performance'],
+                [''],
+                ['Memo'],
+                $facultyMemos,
+                [''],
+                [''],
+                ['Attendance'],
+                $facultyAttendance,
+                [''],
+                [''],
+                ['Researches'],
+                [''],
+                ['Completed Researches'],
+                $completedResearches,
+                [''],
+                ['Presented Researches'],
+                $presentedResearches,
+                [''],
+                ['Published Researches'],
+                $publishedResearches,
+                [''],
+                [''],
+                ['Researches Tallies'],
+                [''],
+                ['Completed Tally'],
+                $completedResearchesTally,
+                [''],
+                ['Presented Tally'],
+                $presentedResearchesTally,
+                [''],
+                ['Published Tally'],
+                $publishedResearchesTally,
+                [''],
+                [''],
+                ['Extensions'],
+                $facultyExtensions,
+                [''],
+                [''],
+                ['Extension Tallies'],
+                $getFacultyExtensionsTally,
+                [''],
+                [''],
+                ['Seminars'],
+                $facultySeminars,
+                [''],
+                [''],
+                ['Seminar Tallies'],
+                $getFacultySeminarsTally,
+            ]);
         }
     }
 
@@ -136,13 +701,28 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:W1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setBold(true);
+                $titleCell = 'A1';
+                $event->sheet->getDelegate()->getStyle($titleCell)->getFont()->setBold(true)->setSize(16);
 
-                foreach (range('A', 'W') as $columnID) {
+                // Auto size all columns
+                foreach (range('A', 'Z') as $columnID) {
                     $event->sheet->getDelegate()->getColumnDimension($columnID)
                         ->setAutoSize(true);
                 }
+                
+                /* Memo stuff
+                $memoWordCell = 'A3';
+                $event->sheet->getDelegate()->getStyle($memoWordCell)->getFont()->setBold(true)->setSize(14);
+
+                $memoHeaders = 'A4:Z4';
+                $event->sheet->getDelegate()->getStyle($memoHeaders)->getFont()->setBold(true);
+
+                // Attendance stuff, but can't be fixed in row position because it's dynamic
+                $attendanceWordCell = 'A' . (count(Faculty::all()) + 7);
+                $event->sheet->getDelegate()->getStyle($attendanceWordCell)->getFont()->setBold(true)->setSize(14);
+
+                $attendanceHeaders = 'A' . (count(Faculty::all()) + 8) . ':Z' . (count(Faculty::all()) + 8);
+                */
             },
         ];
     }

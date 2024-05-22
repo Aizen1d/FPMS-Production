@@ -5601,7 +5601,18 @@ class AdminController extends Controller
         if (Auth::guard('admin')->check()) {
             $faculties = Faculty::all();
 
-            return view('admin.admin_tasks_faculty_performance', ['faculties' => $faculties]);
+            $full_name = $faculties->map(function ($faculty) {
+                $faculty['full_name'] = $faculty->first_name . ' ' . ($faculty->middle_name ? $faculty->middle_name . ' ' : '') . $faculty->last_name;
+                return $faculty;
+            });
+
+            // Sort by full name
+            $full_name = $full_name->sortBy('full_name');
+
+            // Convert the sorted collection back to an array
+            $full_name = $full_name->values()->all();
+
+            return view('admin.admin_tasks_faculty_performance', ['faculties' => $full_name]);
         } 
         else if (Auth::guard('faculty')->check()) {
             return redirect('faculty-home');
