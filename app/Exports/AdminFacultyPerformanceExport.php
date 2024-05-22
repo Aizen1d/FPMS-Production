@@ -24,6 +24,32 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
     protected $memberId;
     protected $memberFullName;
 
+    protected $facultyMemosCountRow;
+    protected $facultyAttendanceCountRow;
+    protected $facultyResearchesCompletedCountRow;
+    protected $facultyResearchesPresentedCountRow;
+    protected $facultyResearchesPublishedCountRow;
+    protected $facultyResearchesCompletedTallyCountRow;
+    protected $facultyResearchesPresentedTallyCountRow;
+    protected $facultyResearchesPublishedTallyCountRow;
+    protected $facultyExtensionsCountRow;
+    protected $facultyExtensionsTallyCountRow;
+    protected $facultySeminarsCountRow;
+    protected $facultySeminarsTallyCountRow;
+
+    protected $facultyMemosCountColumn;
+    protected $facultyAttendanceCountColumn;
+    protected $facultyResearchesCompletedCountColumn;
+    protected $facultyResearchesPresentedCountColumn;
+    protected $facultyResearchesPublishedCountColumn;
+    protected $facultyResearchesCompletedTallyCountColumn;
+    protected $facultyResearchesPresentedTallyCountColumn;
+    protected $facultyResearchesPublishedTallyCountColumn;
+    protected $facultyExtensionsCountColumn;
+    protected $facultyExtensionsTallyCountColumn;
+    protected $facultySeminarsCountColumn;
+    protected $facultySeminarsTallyCountColumn;
+
     public function __construct($memberId, $memberFullName)
     {
         $this->memberId = $memberId;
@@ -347,6 +373,32 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
 
             array_unshift($facultySeminars, ['Faculty', 'Total Seminar Created']);
 
+            $this->facultyMemosCountRow = $allFacultyMemos;
+            $this->facultyAttendanceCountRow = $allFacultyAttendance;
+            $this->facultyResearchesCompletedCountRow = $completedResearches;
+            $this->facultyResearchesPresentedCountRow = $presentedResearches;
+            $this->facultyResearchesPublishedCountRow = $publishedResearches;
+            $this->facultyResearchesCompletedTallyCountRow = $completedResearchesTally;
+            $this->facultyResearchesPresentedTallyCountRow = $presentedResearchesTally;
+            $this->facultyResearchesPublishedTallyCountRow = $publishedResearchesTally;
+            $this->facultyExtensionsCountRow = $allExtensions;
+            $this->facultyExtensionsTallyCountRow = $facultyExtensions;
+            $this->facultySeminarsCountRow = $allSeminars;
+            $this->facultySeminarsTallyCountRow = $facultySeminars;
+
+            $this->facultyMemosCountColumn = $allMemo->count() + 5; // 5 is the totals like Completed, Late Completed, Ongoing, Missing, Overall
+            $this->facultyAttendanceCountColumn = $allFunctions->count() + 5;
+            $this->facultyResearchesCompletedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesPresentedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesPublishedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesCompletedTallyCountColumn = 1; // 2 is the faculty and total completed research
+            $this->facultyResearchesPresentedTallyCountColumn = 1; // 2 is the faculty and total presented research
+            $this->facultyResearchesPublishedTallyCountColumn = 1; // 2 is the faculty and total published research
+            $this->facultyExtensionsCountColumn = 3; // 3 is the title, type, total no of hours
+            $this->facultyExtensionsTallyCountColumn = 1; // 2 is the faculty and total extension created
+            $this->facultySeminarsCountColumn = 3; // 3 is the title, classification, total no of hours
+            $this->facultySeminarsTallyCountColumn = 1; // 2 is the faculty and total seminar created
+
             return collect([
                 ['All Faculty Performance'],
                 [''],
@@ -639,6 +691,32 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
 
             array_unshift($getFacultySeminarsTally, ['Faculty', 'Total Seminar Created']);
 
+            $this->facultyMemosCountRow = $faculty_memos;
+            $this->facultyAttendanceCountRow = $faculty_functions;
+            $this->facultyResearchesCompletedCountRow = $completedResearches;
+            $this->facultyResearchesPresentedCountRow = $presentedResearches;
+            $this->facultyResearchesPublishedCountRow = $publishedResearches;
+            $this->facultyResearchesCompletedTallyCountRow = $completedResearchesTally;
+            $this->facultyResearchesPresentedTallyCountRow = $presentedResearchesTally;
+            $this->facultyResearchesPublishedTallyCountRow = $publishedResearchesTally;
+            $this->facultyExtensionsCountRow = $facultyExtensions;
+            $this->facultyExtensionsTallyCountRow = $getFacultyExtensionsTally;
+            $this->facultySeminarsCountRow = $facultySeminars;
+            $this->facultySeminarsTallyCountRow = $getFacultySeminarsTally;
+
+            $this->facultyMemosCountColumn = $allMemo->count() + 5; // 5 is the totals like Completed, Late Completed, Ongoing, Missing, Overall
+            $this->facultyAttendanceCountColumn = $allFunctions->count() + 5;
+            $this->facultyResearchesCompletedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesPresentedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesPublishedCountColumn = 1; // 2 is the title and authors
+            $this->facultyResearchesCompletedTallyCountColumn = 1; // 2 is the faculty and total completed research
+            $this->facultyResearchesPresentedTallyCountColumn = 1; // 2 is the faculty and total presented research
+            $this->facultyResearchesPublishedTallyCountColumn = 1; // 2 is the faculty and total published research
+            $this->facultyExtensionsCountColumn = 3; // 3 is the title, type, total no of hours
+            $this->facultyExtensionsTallyCountColumn = 1; // 2 is the faculty and total extension created
+            $this->facultySeminarsCountColumn = 3; // 3 is the title, classification, total no of hours
+            $this->facultySeminarsTallyCountColumn = 1; // 2 is the faculty and total seminar created
+
             return collect([
                 [$selectedFaculty . ' Performance'],
                 [''],
@@ -709,20 +787,146 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
                     $event->sheet->getDelegate()->getColumnDimension($columnID)
                         ->setAutoSize(true);
                 }
+
+                // Define the style
+                $boldStyle = [
+                    'font' => [
+                        'bold' => true,
+                    ],
+                ];
+
+                $increaseFontAndBoldStyle = [
+                    'font' => [
+                        'bold' => true,
+                        'size' => 14,
+                    ],
+                ];
+
+                $addBorderStyle = [
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['argb' => '00000000'],
+                        ],
+                    ],
+                ];
+
+                // Calculate the start and end rows for each section
+                $memoStartRow = 3;
+                $memoEndRow = $memoStartRow + count($this->facultyMemosCountRow);
+                $memoEndColumnLetter = chr(65 + $this->facultyMemosCountColumn);
+
+                $attendanceStartRow = $memoEndRow + 3;
+                $attendanceEndRow = $attendanceStartRow + count($this->facultyMemosCountRow);
+                $attendanceEndColumnLetter = chr(65 + $this->facultyAttendanceCountColumn);
+
+                $researchSectionTitleRow = $attendanceEndRow + 3; // Research
+
+                $completedResearchTitleRow = $researchSectionTitleRow + 2; // Completed Research
+                $completedResearcStartRow = $completedResearchTitleRow + 1; 
+                $completedResearchEndRow = $completedResearcStartRow + count($this->facultyResearchesCompletedCountRow) - 1;
+                $completedResearchEndColumnLetter = chr(65 + $this->facultyResearchesCompletedCountColumn);
+
+                $presentedResearchTitleRow = $completedResearchEndRow + 2; // Presented Research
+                $presentedResearchStartRow = $presentedResearchTitleRow + 1;
+                $presentedResearchEndRow = $presentedResearchStartRow + count($this->facultyResearchesPresentedCountRow) - 1;
+                $presentedResearchEndColumnLetter = chr(65 + $this->facultyResearchesPresentedCountColumn);
+
+                $publishedResearchTitleRow = $presentedResearchEndRow + 2; // Published Research
+                $publishedResearchStartRow = $publishedResearchTitleRow + 1;
+                $publishedResearchEndRow = $publishedResearchStartRow + count($this->facultyResearchesPublishedCountRow) - 1;
+                $publishedResearchEndColumnLetter = chr(65 + $this->facultyResearchesPublishedCountColumn);
+
+                $researchesTalliesTitleRow = $publishedResearchEndRow + 3; // Researches Tallies
+
+                $completedResearchesTallyTitleRow = $researchesTalliesTitleRow + 2; // Completed Tally
+                $completedResearchesTallyStartRow = $completedResearchesTallyTitleRow + 1;
+                $completedResearchesTallyEndRow = $completedResearchesTallyStartRow + count($this->facultyResearchesCompletedTallyCountRow) - 1;
+                $completedResearchesTallyEndColumnLetter = chr(65 + $this->facultyResearchesCompletedTallyCountColumn);
+
+                $presentedResearchesTallyTitleRow = $completedResearchesTallyEndRow + 2; // Presented Tally
+                $presentedResearchesTallyStartRow = $presentedResearchesTallyTitleRow + 1;
+                $presentedResearchesTallyEndRow = $presentedResearchesTallyStartRow + count($this->facultyResearchesPresentedTallyCountRow) - 1;
+                $presentedResearchesTallyEndColumnLetter = chr(65 + $this->facultyResearchesPresentedTallyCountColumn);
+
+                $publishedResearchesTallyTitleRow = $presentedResearchesTallyEndRow + 2; // Published Tally
+                $publishedResearchesTallyStartRow = $publishedResearchesTallyTitleRow + 1;
+                $publishedResearchesTallyEndRow = $publishedResearchesTallyStartRow + count($this->facultyResearchesPublishedTallyCountRow) - 1;
+                $publishedResearchesTallyEndColumnLetter = chr(65 + $this->facultyResearchesPublishedTallyCountColumn);
+
+                $extensionsSectionTitleRow = $publishedResearchesTallyEndRow + 3; // Extensions
+
+                $extensionsStartRow = $extensionsSectionTitleRow + 1; // Extensions
+                $extensionsEndRow = $extensionsStartRow + count($this->facultyExtensionsCountRow) - 1;
+                $extensionsEndColumnLetter = chr(65 + $this->facultyExtensionsCountColumn);
+
+                $extensionsTalliesTitleRow = $extensionsEndRow + 3; // Extensions Tallies
+
+                $extensionsTalliesStartRow = $extensionsTalliesTitleRow + 1; // Extensions
+                $extensionsTalliesEndRow = $extensionsTalliesStartRow + count($this->facultyExtensionsTallyCountRow) - 1;
+                $extensionsTalliesEndColumnLetter = chr(65 + $this->facultyExtensionsTallyCountColumn);
+
+                $seminarsSectionTitleRow = $extensionsTalliesEndRow + 3; // Seminars
+
+                $seminarsStartRow = $seminarsSectionTitleRow + 1; // Seminars
+                $seminarsEndRow = $seminarsStartRow + count($this->facultySeminarsCountRow) - 1;
+                $seminarsEndColumnLetter = chr(65 + $this->facultySeminarsCountColumn);
+
+                $seminarsTalliesTitleRow = $seminarsEndRow + 3; // Seminars Tallies
                 
-                /* Memo stuff
-                $memoWordCell = 'A3';
-                $event->sheet->getDelegate()->getStyle($memoWordCell)->getFont()->setBold(true)->setSize(14);
+                $seminarsTalliesStartRow = $seminarsTalliesTitleRow + 1; // Seminars
+                $seminarsTalliesEndRow = $seminarsTalliesStartRow + count($this->facultySeminarsTallyCountRow) - 1;
+                $seminarsTalliesEndColumnLetter = chr(65 + $this->facultySeminarsTallyCountColumn);
 
-                $memoHeaders = 'A4:Z4';
-                $event->sheet->getDelegate()->getStyle($memoHeaders)->getFont()->setBold(true);
-
-                // Attendance stuff, but can't be fixed in row position because it's dynamic
-                $attendanceWordCell = 'A' . (count(Faculty::all()) + 7);
-                $event->sheet->getDelegate()->getStyle($attendanceWordCell)->getFont()->setBold(true)->setSize(14);
-
-                $attendanceHeaders = 'A' . (count(Faculty::all()) + 8) . ':Z' . (count(Faculty::all()) + 8);
+                /*
+                Apply bold and font increase to the section titles
                 */
+                $event->sheet->getDelegate()->getStyle('A' . $memoStartRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $attendanceStartRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $researchSectionTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $completedResearchTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $presentedResearchTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $publishedResearchTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $researchesTalliesTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $completedResearchesTallyTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $presentedResearchesTallyTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $publishedResearchesTallyTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $extensionsSectionTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $extensionsTalliesTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $seminarsSectionTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . $seminarsTalliesTitleRow)->applyFromArray($increaseFontAndBoldStyle);
+                
+                /*
+                Apply bold to the headers
+                */
+                $event->sheet->getDelegate()->getStyle('A' . ($memoStartRow + 1) . ':Z' . ($memoStartRow + 1))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($attendanceStartRow + 1) . ':Z' . ($attendanceStartRow + 1))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($completedResearcStartRow) . ':Z' . ($completedResearcStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($presentedResearchStartRow) . ':Z' . ($presentedResearchStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($publishedResearchStartRow) . ':Z' . ($publishedResearchStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($completedResearchesTallyStartRow) . ':Z' . ($completedResearchesTallyStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($presentedResearchesTallyStartRow) . ':Z' . ($presentedResearchesTallyStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($publishedResearchesTallyStartRow) . ':Z' . ($publishedResearchesTallyStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($extensionsStartRow) . ':Z' . ($extensionsStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($extensionsTalliesStartRow) . ':Z' . ($extensionsTalliesStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($seminarsStartRow) . ':Z' . ($seminarsStartRow))->applyFromArray($boldStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($seminarsTalliesStartRow) . ':Z' . ($seminarsTalliesStartRow))->applyFromArray($boldStyle);
+                
+                /*
+                Apply borders to per section tables
+                */
+                $event->sheet->getDelegate()->getStyle('A' . ($memoStartRow + 1) . ':' . $memoEndColumnLetter . $memoEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($attendanceStartRow + 1) . ':' . $attendanceEndColumnLetter . $attendanceEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($completedResearcStartRow) . ':' . $completedResearchEndColumnLetter . $completedResearchEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($presentedResearchStartRow) . ':' . $presentedResearchEndColumnLetter . $presentedResearchEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($publishedResearchStartRow) . ':' . $publishedResearchEndColumnLetter . $publishedResearchEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($completedResearchesTallyStartRow) . ':' . $completedResearchesTallyEndColumnLetter . $completedResearchesTallyEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($presentedResearchesTallyStartRow) . ':' . $presentedResearchesTallyEndColumnLetter . $presentedResearchesTallyEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($publishedResearchesTallyStartRow) . ':' . $publishedResearchesTallyEndColumnLetter . $publishedResearchesTallyEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($extensionsStartRow) . ':' . $extensionsEndColumnLetter . $extensionsEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($extensionsTalliesStartRow) . ':' . $extensionsTalliesEndColumnLetter . $extensionsTalliesEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($seminarsStartRow) . ':' . $seminarsEndColumnLetter . $seminarsEndRow)->applyFromArray($addBorderStyle);
+                $event->sheet->getDelegate()->getStyle('A' . ($seminarsTalliesStartRow) . ':' . $seminarsTalliesEndColumnLetter . $seminarsTalliesEndRow)->applyFromArray($addBorderStyle);
             },
         ];
     }
