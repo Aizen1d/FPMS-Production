@@ -691,8 +691,8 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
 
             array_unshift($getFacultySeminarsTally, ['Faculty', 'Total Seminar Created']);
 
-            $this->facultyMemosCountRow = $faculty_memos;
-            $this->facultyAttendanceCountRow = $faculty_functions;
+            $this->facultyMemosCountRow = $facultyMemos;
+            $this->facultyAttendanceCountRow = $facultyAttendance;
             $this->facultyResearchesCompletedCountRow = $completedResearches;
             $this->facultyResearchesPresentedCountRow = $presentedResearches;
             $this->facultyResearchesPublishedCountRow = $publishedResearches;
