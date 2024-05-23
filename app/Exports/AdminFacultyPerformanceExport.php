@@ -601,38 +601,38 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
             */
 
             // Completed researches tally for the selected faculty
-$selectedFacultyCompletedResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
-$completedResearchesCount = $selectedFacultyCompletedResearches->count();
-$completedResearchesTally = [[$member, $completedResearchesCount]];
+            $selectedFacultyCompletedResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+            $completedResearchesCount = $selectedFacultyCompletedResearches->count();
+            $completedResearchesTally = [[$member, $completedResearchesCount]];
 
-if ($completedResearchesCount === 0) {
-    $completedResearchesTally = [[$member, 0]];
-}
-array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
+            if ($completedResearchesCount === 0) {
+                $completedResearchesTally = [[$member, 0]];
+            }
+            array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
 
-// Presented researches tally for the selected faculty
-$selectedFacultyPresentedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
-    $query->where('authors', 'like', '%' . $member . '%');
-})->get();
-$presentedResearchesCount = $selectedFacultyPresentedResearches->count();
-$presentedResearchesTally = [[$member, $presentedResearchesCount]];
+            // Presented researches tally for the selected faculty
+            $selectedFacultyPresentedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+            $presentedResearchesCount = $selectedFacultyPresentedResearches->count();
+            $presentedResearchesTally = [[$member, $presentedResearchesCount]];
 
-if ($presentedResearchesCount === 0) {
-    $presentedResearchesTally = [[$member, 0]];
-}
-array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
+            if ($presentedResearchesCount === 0) {
+                $presentedResearchesTally = [[$member, 0]];
+            }
+            array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
 
-// Published researches tally for the selected faculty
-$selectedFacultyPublishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
-    $query->where('authors', 'like', '%' . $member . '%');
-})->get();
-$publishedResearchesCount = $selectedFacultyPublishedResearches->count();
-$publishedResearchesTally = [[$member, $publishedResearchesCount]];
+            // Published researches tally for the selected faculty
+            $selectedFacultyPublishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+                $query->where('authors', 'like', '%' . $member . '%');
+            })->get();
+            $publishedResearchesCount = $selectedFacultyPublishedResearches->count();
+            $publishedResearchesTally = [[$member, $publishedResearchesCount]];
 
-if ($publishedResearchesCount === 0) {
-    $publishedResearchesTally = [[$member, 0]];
-}
-array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
+            if ($publishedResearchesCount === 0) {
+                $publishedResearchesTally = [[$member, 0]];
+            }
+            array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
 
             /*
             Faculty Extensions
