@@ -192,7 +192,7 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
                 return [$research['title'], $research['authors']];
             })->toArray();
 
-            if (count($completedResearches) === 0) {
+            if (count($completedResearches) === 0 || $completedResearches[0] === null) {
                 $completedResearches = [['No data', 'No data']];
             }
             array_unshift($completedResearches, ['Title', 'Authors']);
@@ -204,7 +204,7 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
                 return [$completedResearch->title, $completedResearch->authors];
             })->toArray();
 
-            if (count($presentedResearches) === 0) {
+            if (count($presentedResearches) === 0 || $presentedResearches[0] === null) {
                 $presentedResearches = [['No data', 'No data']];
             }
             array_unshift($presentedResearches, ['Title', 'Authors']);
@@ -216,7 +216,7 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
                 return [$completedResearch->title, $completedResearch->authors];
             })->toArray();
 
-            if (count($publishedResearches) === 0) {
+            if (count($publishedResearches) === 0 || $publishedResearches[0] === null) {
                 $publishedResearches = [['No data', 'No data']];
             }
             array_unshift($publishedResearches, ['Title', 'Authors']);
@@ -542,44 +542,58 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
             */
 
             // Completed researches
-            $completedResearches = $allCompletedResearches->map(function ($research) use ($member) {
-                // check for the authors if %member% first before returning
-                if (strpos($research->authors, $member) !== false) {
-                    return [$research['title'], $research['authors']];
-                }
-            })->toArray();            
+            $completedResearches = $allCompletedResearches->filter(function ($research) use ($member) {
+                // Check if the member is an author
+                return strpos($research->authors, $member) !== false;
+            })->map(function ($research) {
+                // Return the research details
+                return [$research['title'], $research['authors']];
+            })->toArray();
 
-            if (count($completedResearches) === 0 || $completedResearches[0] === null) {
+            // If there are no completed researches, provide a default value
+            if (empty($completedResearches)) {
                 $completedResearches = [['No data', 'No data']];
             }
+
+            // Add the header row
             array_unshift($completedResearches, ['Title', 'Authors']);
 
             // Presented researches
-            $presentedResearches = $allPresentedResearches->map(function ($research ) use ($member) {
-                // check for the authors if %member% in the completed researches table before returning
+            $presentedResearches = $allPresentedResearches->filter(function ($research) use ($member) {
+                // Check for the authors in the completed researches table
                 $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
-                if (strpos($completedResearch->authors, $member) !== false) {
-                    return [$completedResearch->title, $completedResearch->authors];
-                }
+                return $completedResearch && strpos($completedResearch->authors, $member) !== false;
+            })->map(function ($research) {
+                // Return the research details
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                return [$completedResearch->title, $completedResearch->authors];
             })->toArray();
 
-            if (count($presentedResearches) === 0 || $presentedResearches[0] === null) {
+            // If there are no presented researches, provide a default value
+            if (empty($presentedResearches)) {
                 $presentedResearches = [['No data', 'No data']];
             }
+
+            // Add the header row
             array_unshift($presentedResearches, ['Title', 'Authors']);
 
             // Published researches
-            $publishedResearches = $allPublishedResearches->map(function ($research) use ($member) {
-                // check for the authors if %member% in the completed researches table before returning
+            $publishedResearches = $allPublishedResearches->filter(function ($research) use ($member) {
+                // Check for the authors in the completed researches table
                 $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
-                if (strpos($completedResearch->authors, $member) !== false) {
-                    return [$completedResearch->title, $completedResearch->authors];
-                }
+                return $completedResearch && strpos($completedResearch->authors, $member) !== false;
+            })->map(function ($research) {
+                // Return the research details
+                $completedResearch = AdminTasksResearchesCompleted::where('id', $research->research_completed_id)->first();
+                return [$completedResearch->title, $completedResearch->authors];
             })->toArray();
 
-            if (count($publishedResearches) === 0 || $publishedResearches[0] === null) {
+            // If there are no published researches, provide a default value
+            if (empty($publishedResearches)) {
                 $publishedResearches = [['No data', 'No data']];
             }
+
+            // Add the header row
             array_unshift($publishedResearches, ['Title', 'Authors']);
 
             /*
@@ -587,47 +601,38 @@ class AdminFacultyPerformanceExport implements FromCollection, WithCustomStartCe
             */
 
             // Completed researches tally for the selected faculty
-            $completedResearchesTally = $allCompletedResearches->map(function ($research) use ($member) {
-                $selectedFacultyResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+$selectedFacultyCompletedResearches = AdminTasksResearchesCompleted::where('authors', 'like', '%' . $member . '%')->get();
+$completedResearchesCount = $selectedFacultyCompletedResearches->count();
+$completedResearchesTally = [[$member, $completedResearchesCount]];
 
-                return [$member, $selectedFacultyResearches->count()];
-            })->toArray();
+if ($completedResearchesCount === 0) {
+    $completedResearchesTally = [[$member, 0]];
+}
+array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
 
-            if (count($completedResearchesTally) === 0) {
-                $completedResearchesTally = [[$member, 0]];
-            }
+// Presented researches tally for the selected faculty
+$selectedFacultyPresentedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+    $query->where('authors', 'like', '%' . $member . '%');
+})->get();
+$presentedResearchesCount = $selectedFacultyPresentedResearches->count();
+$presentedResearchesTally = [[$member, $presentedResearchesCount]];
 
-            array_unshift($completedResearchesTally, ['Faculty', 'Total Completed Research']);
+if ($presentedResearchesCount === 0) {
+    $presentedResearchesTally = [[$member, 0]];
+}
+array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
 
-            // Presented researches tally for the selected faculty
-            $presentedResearchesTally = $allPresentedResearches->map(function ($research) use ($member) {
-                $publishedResearches = AdminTasksResearchesPresented::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
-                    $query->where('authors', 'like', '%' . $member . '%');
-                })->get();
+// Published researches tally for the selected faculty
+$selectedFacultyPublishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
+    $query->where('authors', 'like', '%' . $member . '%');
+})->get();
+$publishedResearchesCount = $selectedFacultyPublishedResearches->count();
+$publishedResearchesTally = [[$member, $publishedResearchesCount]];
 
-                return [$member, $publishedResearches->count()];
-            })->toArray();
-
-            if (count($presentedResearchesTally) === 0) {
-                $presentedResearchesTally = [[$member, 0]];
-            }
-
-            array_unshift($presentedResearchesTally, ['Faculty', 'Total Presented Research']);
-
-            // Published researches tally for the selected faculty
-            $publishedResearchesTally = $allPublishedResearches->map(function ($research) use ($member) {
-                $publishedResearches = AdminTasksResearchesPublished::with('completedResearch')->whereHas('completedResearch', function ($query) use ($member) {
-                    $query->where('authors', 'like', '%' . $member . '%');
-                })->get();
-
-                return [$member, $publishedResearches->count()];
-            })->toArray();
-
-            if (count($publishedResearchesTally) === 0) {
-                $publishedResearchesTally = [[$member, 0]];
-            }
-
-            array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
+if ($publishedResearchesCount === 0) {
+    $publishedResearchesTally = [[$member, 0]];
+}
+array_unshift($publishedResearchesTally, ['Faculty', 'Total Published Research']);
 
             /*
             Faculty Extensions
